@@ -1,0 +1,22 @@
+{% load static tailwind_tags %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}آموزش گواهینامه آلمان{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}آموزش فارسی گواهینامه آلمان، آزمون تئوری، تابلوها، قوانین رانندگی و ویدیوهای آموزشی برای فارسی‌زبان‌های آلمان.{% endblock %}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+
+    {% tailwind_css %}
+</head>
+
+<body class="bg-slate-950 text-white antialiased" style="font-family: Vazirmatn, sans-serif;">
+    {% block content %}{% endblock %}
+</body>
+</html>

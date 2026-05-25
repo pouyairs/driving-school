@@ -1,0 +1,245 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+آموزش گواهینامه آلمان به زبان فارسی
+{% endblock %}
+
+{% block meta_description %}
+آموزش قدم‌به‌قدم گواهینامه آلمان به زبان فارسی؛
+ویدیوهای آموزشی، تابلوهای رانندگی، قوانین،
+آزمون تئوری و مسیر یادگیری مخصوص فارسی‌زبان‌ها.
+{% endblock %}
+
+{% block content %}
+
+<header
+    class="sticky top-0 z-50 border-b border-white/10 bg-slate-950/80 backdrop-blur"
+>
+    <nav
+        class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4"
+    >
+        <!-- Logo -->
+        <a href="/" class="flex items-center gap-3">
+            <div
+                class="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-500 font-bold"
+            >
+                آ
+            </div>
+
+            <div>
+                <p class="font-bold">آموزش گواهینامه آلمان</p>
+
+                <p class="text-xs text-slate-400">
+                    ویژه فارسی‌زبان‌ها
+                </p>
+            </div>
+        </a>
+
+        <!-- Menu -->
+        <div
+            class="hidden items-center gap-8 text-sm text-slate-300 md:flex"
+        >
+            <a href="#" class="hover:text-white">
+                ویدیوها
+            </a>
+
+            <a href="#" class="hover:text-white">
+                مسیر یادگیری
+            </a>
+
+            <a href="#" class="hover:text-white">
+                سوالات پرتکرار
+            </a>
+
+            <a href="#" class="hover:text-white">
+                درباره ما
+            </a>
+        </div>
+
+        <!-- Auth -->
+        <div class="flex items-center gap-3">
+
+            {% if request.user.is_authenticated %}
+
+                <a
+                    href="/dashboard/"
+                    class="hidden rounded-xl px-4 py-2 text-sm font-semibold text-slate-300 hover:bg-white/10 md:block"
+                >
+                    {{ request.user.username }}
+                </a>
+
+                <a
+                    href="/accounts/logout/"
+                    class="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-300 hover:bg-red-500/20"
+                >
+                    خروج
+                </a>
+
+            {% else %}
+
+                <a
+                    href="/accounts/login/"
+                    class="hidden rounded-xl px-4 py-2 text-sm font-semibold text-slate-300 hover:bg-white/10 md:block"
+                >
+                    ورود
+                </a>
+
+                <a
+                    href="/accounts/register/"
+                    class="rounded-xl bg-blue-500 px-4 py-2 text-sm font-semibold hover:bg-blue-600"
+                >
+                    شروع رایگان
+                </a>
+
+            {% endif %}
+
+        </div>
+    </nav>
+</header>
+
+<main>
+    <section class="relative overflow-hidden">
+
+        <!-- Background Glow -->
+        <div
+            class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.25),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.18),transparent_30%)]"
+        ></div>
+
+        <div
+            class="mx-auto grid min-h-[calc(100vh-73px)] max-w-7xl items-center gap-12 px-6 py-16 lg:grid-cols-2"
+        >
+
+            <!-- Left Content -->
+            <div>
+
+                <div
+                    class="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-2 text-sm text-blue-200"
+                >
+                    دوره رایگان اولیه + ویدیوهای YouTube
+                </div>
+
+                <h1
+                    class="mb-6 max-w-2xl text-4xl font-black leading-tight md:text-6xl"
+                >
+                    قبولی در آزمون تئوری گواهینامه آلمان،
+                    با آموزش فارسی و ساده
+                </h1>
+
+                <p
+                    class="mb-8 max-w-xl text-lg leading-8 text-slate-300"
+                >
+                    از صفر شروع کن:
+                    قوانین، تابلوها، حق تقدم،
+                    نکات آزمون و ویدیوهای آموزشی
+                    مرحله‌به‌مرحله برای فارسی‌زبان‌های ساکن آلمان.
+                </p>
+
+                <!-- CTA -->
+                <div class="flex flex-col gap-4 sm:flex-row">
+
+                    <a
+                        href="#"
+                        class="rounded-2xl bg-blue-500 px-7 py-4 text-center font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-600"
+                    >
+                        شروع یادگیری رایگان
+                    </a>
+
+                    <a
+                        href="#"
+                        class="rounded-2xl border border-white/10 bg-white/5 px-7 py-4 text-center font-bold hover:bg-white/10"
+                    >
+                        دیدن ویدیوها
+                    </a>
+
+                </div>
+
+                <!-- Stats -->
+                <div class="mt-10 grid max-w-xl grid-cols-3 gap-4">
+
+                    <div
+                        class="rounded-2xl border border-white/10 bg-white/5 p-4"
+                    >
+                        <p class="text-2xl font-black">+۳۰</p>
+
+                        <p class="text-sm text-slate-400">
+                            ویدیوی آموزشی
+                        </p>
+                    </div>
+
+                    <div
+                        class="rounded-2xl border border-white/10 bg-white/5 p-4"
+                    >
+                        <p class="text-2xl font-black">RTL</p>
+
+                        <p class="text-sm text-slate-400">
+                            کاملاً فارسی
+                        </p>
+                    </div>
+
+                    <div
+                        class="rounded-2xl border border-white/10 bg-white/5 p-4"
+                    >
+                        <p class="text-2xl font-black">SEO</p>
+
+                        <p class="text-sm text-slate-400">
+                            آماده رشد گوگل
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Dashboard Mockup -->
+            <div
+                class="rounded-[2rem] border border-white/10 bg-white/5 p-4 shadow-2xl shadow-blue-950/30"
+            >
+
+                <div class="rounded-[1.5rem] bg-slate-900 p-5">
+
+                    <div class="mb-5 flex items-center justify-between">
+
+                        <div>
+                            <p class="font-bold">
+                                داشبورد یادگیری
+                            </p>
+
+                            <p class="text-sm text-slate-400">
+                                پیشرفت امروز شما
+                            </p>
+                        </div>
+
+                        <span
+                            class="rounded-full bg-green-500/15 px-3 py-1 text-sm text-green-300"
+                        >
+                            فعال
+                        </span>
+
+                    </div>
+
+                    <!-- Progress -->
+                    <div class="mb-5 rounded-2xl bg-slate-800 p-4">
+
+                        <div class="mb-3 flex justify-between text-sm">
+                            <span>
+                                مسیر یادگیری آزمون تئوری
+                            </span>
+
+                            <span>۴۲٪</span>
+                        </div>
+
+                        <div class="h-3 rounded-full bg-slate-700">
+                            <div
+                                class="h-3 w-[42%] rounded-full bg-blue-500"
+                            ></div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+{% endblock %}

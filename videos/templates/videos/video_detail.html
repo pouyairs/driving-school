@@ -1,0 +1,80 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+{{ video.title }}
+{% endblock %}
+
+{% block meta_description %}
+{{ video.description }}
+{% endblock %}
+
+{% block content %}
+<main class="min-h-screen bg-slate-950 px-6 py-8 text-white">
+    <div class="mx-auto flex max-w-7xl gap-6">
+
+        <aside class="hidden w-80 shrink-0 rounded-[2rem] border border-white/10 bg-white/5 p-5 lg:block">
+            <h2 class="mb-6 text-2xl font-black">
+                درس‌ها
+            </h2>
+
+            <a
+                href="{{ video.youtube_url }}"
+                target="_blank"
+                class="mb-5 block rounded-2xl bg-red-500 px-5 py-4 text-center font-bold transition hover:bg-red-600"
+            >
+                تماشا در YouTube
+            </a>
+
+            <div class="space-y-3">
+                {% for item in all_videos %}
+                    <a
+                        href="/videos/{{ item.id }}/"
+                        class="block rounded-2xl p-4 transition {% if item.id == video.id %} bg-blue-500 text-white {% else %} bg-slate-900 hover:bg-slate-800 {% endif %}"
+                    >
+                        <p class="font-bold">
+                            {{ item.title }}
+                        </p>
+
+                        <p class="mt-2 text-sm opacity-70">
+                            مشاهده درس
+                        </p>
+                    </a>
+                {% endfor %}
+            </div>
+        </aside>
+
+        <div class="flex-1">
+            <a
+                href="/dashboard/"
+                class="mb-6 inline-block text-sm font-bold text-blue-300 hover:text-blue-200"
+            >
+                ← برگشت به داشبورد
+            </a>
+
+            <section class="rounded-[2rem] border border-white/10 bg-white/5 p-5 shadow-2xl shadow-blue-950/20">
+                <div class="aspect-video overflow-hidden rounded-[1.5rem] bg-slate-900">
+                    <iframe
+                        src="{{ video.youtube_embed_url }}"
+                        title="{{ video.title }}"
+                        class="h-full w-full"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen
+                    ></iframe>
+                </div>
+
+                <div class="mt-6">
+                    <h1 class="text-3xl font-black">
+                        {{ video.title }}
+                    </h1>
+
+                    <p class="mt-4 leading-8 text-slate-300">
+                        {{ video.description }}
+                    </p>
+                </div>
+            </section>
+        </div>
+
+    </div>
+</main>
+{% endblock %}
