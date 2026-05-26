@@ -13,32 +13,64 @@
     <div class="mx-auto flex max-w-7xl gap-6">
 
         <aside class="hidden w-80 shrink-0 rounded-[2rem] border border-white/10 bg-white/5 p-5 lg:block">
-            <h2 class="mb-6 text-2xl font-black">
-                درس‌ها
-            </h2>
+            <h2 class="mb-6 text-2xl font-black">درس‌ها</h2>
 
             <a
                 href="{{ video.youtube_url }}"
                 target="_blank"
-                class="mb-5 block rounded-2xl bg-red-500 px-5 py-4 text-center font-bold transition hover:bg-red-600"
+                class="mb-6 block rounded-2xl bg-red-500 px-5 py-4 text-center font-bold transition hover:bg-red-600"
             >
                 تماشا در YouTube
             </a>
 
-            <div class="space-y-3">
-                {% for item in all_videos %}
-                    <a
-                        href="/videos/{{ item.id }}/"
-                        class="block rounded-2xl p-4 transition {% if item.id == video.id %} bg-blue-500 text-white {% else %} bg-slate-900 hover:bg-slate-800 {% endif %}"
-                    >
-                        <p class="font-bold">
-                            {{ item.title }}
-                        </p>
+            <div class="space-y-6">
+                {% for category in categories %}
+                    <div>
+                        <h3 class="mb-3 text-sm font-bold text-blue-300">
+                            {{ category.name }}
+                        </h3>
 
-                        <p class="mt-2 text-sm opacity-70">
-                            مشاهده درس
-                        </p>
-                    </a>
+                        <div class="space-y-2">
+                            {% for item in category.videos.all %}
+                                {% if item.is_published %}
+                                    <div class="flex items-center justify-between gap-3 rounded-2xl p-4 transition {% if item.id == video.id %} bg-blue-500 text-white {% else %} bg-slate-900 hover:bg-slate-800 {% endif %}">
+                                        <a href="/videos/{{ item.id }}/" class="flex-1">
+                                            <p class="font-bold">{{ item.title }}</p>
+                                            <p class="mt-2 text-sm opacity-70">مشاهده درس</p>
+                                        </a>
+
+                                        {% if item.id in watched_video_ids %}
+                                            <div class="flex items-center gap-2">
+                                                <a
+                                                    href="/videos/{{ item.id }}/watched/"
+                                                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-500 text-white shadow-lg shadow-green-500/30 transition hover:scale-110"
+                                                >
+                                                    ✓
+                                                </a>
+
+                                                <span class="text-xs font-bold text-green-300">
+                                                    مشاهده شد
+                                                </span>
+                                            </div>
+                                        {% else %}
+                                            <div class="flex items-center gap-2">
+                                                <a
+                                                    href="/videos/{{ item.id }}/watched/"
+                                                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-white/20 bg-white/5 text-transparent transition hover:scale-110 hover:border-green-400 hover:bg-green-500/20 hover:text-green-300"
+                                                >
+                                                    ✓
+                                                </a>
+
+                                                <span class="text-xs font-bold text-slate-400">
+                                                    مشاهده نشده
+                                                </span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
                 {% endfor %}
             </div>
         </aside>
@@ -71,6 +103,35 @@
                     <p class="mt-4 leading-8 text-slate-300">
                         {{ video.description }}
                     </p>
+
+                    {% if next_videos %}
+                        <div class="mt-8 rounded-[2rem] border border-blue-400/20 bg-blue-500/10 p-6">
+                            <p class="text-sm font-bold text-blue-300">
+                                ادامه مسیر یادگیری
+                            </p>
+
+                            <h3 class="mt-2 text-2xl font-black">
+                                درس‌های پیشنهادی بعدی
+                            </h3>
+
+                            <div class="mt-5 grid gap-4 md:grid-cols-2">
+                                {% for item in next_videos %}
+                                    <a
+                                        href="/videos/{{ item.id }}/"
+                                        class="rounded-2xl bg-slate-900 p-4 transition hover:bg-slate-800"
+                                    >
+                                        <p class="font-bold">
+                                            {{ item.title }}
+                                        </p>
+
+                                        <p class="mt-2 text-sm text-slate-400">
+                                            شروع این درس
+                                        </p>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </section>
         </div>
