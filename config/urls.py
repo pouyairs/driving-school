@@ -23,6 +23,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('videos/', include('videos.urls')),
     path("__reload__/", include("django_browser_reload.urls")),
+    path("quiz/", include("quiz.urls")),
 ]
 
 

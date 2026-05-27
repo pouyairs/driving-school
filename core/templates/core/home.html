@@ -1,3 +1,69 @@
+ChatGPT
+
+
+
+Generated image: گواهینامه آلمان: آموزش آنلاین فارسی
+
+
+Edit
+
+
+
+Pasted code.html
+File
+ اینو مرتب کن بده قاط زد
+
+
+Pasted code.html
+File
+ این کدم درست کن چرت و پرت شد
+
+
+Pasted code.html
+File
+ کد رو اصلاح کن چون نمیشه
+
+
+Pasted code.html
+File
+ خودت کامل کن
+
+
+Pasted code.html
+File
+ کامل اصلاح کن
+
+
+Pasted code.html
+File
+ این کد رو کامل کن 
+
+
+Pasted code.html
+File
+ کد رو کامل کن به قبلی مطمین نیستک
+
+یه همچنین ساختاری داره
+
+
+Pasted code.html
+File
+ الان این درسته اگر درسته که هیچ
+
+
+Pasted code.html
+File
+نیاورد خودت فایل رو اصلاح کن و کامل منت 
+
+
+Pasted code.html
+File
+ این فایل ما هست ادیت کن هرچی لازمه انجام بده
+
+Thought for 4s
+کل فایل core/templates/core/home.html را با این نسخه جایگزین کن. لینک‌ها وصل شدند و بخش آزمون هم اضافه شد. 
+
+
 {% extends "base/base.html" %}
 
 {% block title %}
@@ -5,234 +71,353 @@
 {% endblock %}
 
 {% block meta_description %}
-آموزش قدم‌به‌قدم گواهینامه آلمان به زبان فارسی؛
-ویدیوهای آموزشی، تابلوهای رانندگی، قوانین،
-آزمون تئوری و مسیر یادگیری مخصوص فارسی‌زبان‌ها.
+آموزش قدم‌به‌قدم گواهینامه آلمان به زبان فارسی؛ ویدیوهای آموزشی، آزمون تئوری، شبیه‌ساز آزمون و مسیر یادگیری مخصوص فارسی‌زبان‌ها.
 {% endblock %}
 
 {% block content %}
 
-<header
-    class="sticky top-0 z-50 border-b border-white/10 bg-slate-950/80 backdrop-blur"
->
-    <nav
-        class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4"
-    >
-        <!-- Logo -->
+<header class="sticky top-0 z-50 border-b border-white/10 bg-slate-950/80 backdrop-blur">
+    <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <a href="/" class="flex items-center gap-3">
-            <div
-                class="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-500 font-bold"
-            >
+            <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-500 font-bold">
                 آ
             </div>
 
             <div>
                 <p class="font-bold">آموزش گواهینامه آلمان</p>
-
-                <p class="text-xs text-slate-400">
-                    ویژه فارسی‌زبان‌ها
-                </p>
+                <p class="text-xs text-slate-400">ویژه فارسی‌زبان‌ها</p>
             </div>
         </a>
 
-        <!-- Menu -->
-        <div
-            class="hidden items-center gap-8 text-sm text-slate-300 md:flex"
-        >
-            <a href="#" class="hover:text-white">
-                ویدیوها
-            </a>
-
-            <a href="#" class="hover:text-white">
-                مسیر یادگیری
-            </a>
-
-            <a href="#" class="hover:text-white">
-                سوالات پرتکرار
-            </a>
-
-            <a href="#" class="hover:text-white">
-                درباره ما
-            </a>
+        <div class="hidden items-center gap-8 text-sm text-slate-300 md:flex">
+            <a href="/videos/" class="hover:text-white">ویدیوها</a>
+            <a href="/dashboard/" class="hover:text-white">مسیر یادگیری</a>
+            <a href="/quiz/exam/start/" class="hover:text-white">آزمون شبیه‌ساز</a>
+            <a href="#faq" class="hover:text-white">سوالات پرتکرار</a>
         </div>
 
-        <!-- Auth -->
         <div class="flex items-center gap-3">
-
             {% if request.user.is_authenticated %}
-
-                <a
-                    href="/dashboard/"
-                    class="hidden rounded-xl px-4 py-2 text-sm font-semibold text-slate-300 hover:bg-white/10 md:block"
-                >
+                <a href="/dashboard/" class="hidden rounded-xl px-4 py-2 text-sm font-semibold text-slate-300 hover:bg-white/10 md:block">
                     {{ request.user.username }}
                 </a>
 
-                <a
-                    href="/accounts/logout/"
-                    class="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-300 hover:bg-red-500/20"
-                >
+                <a href="/accounts/logout/" class="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-300 hover:bg-red-500/20">
                     خروج
                 </a>
-
             {% else %}
-
-                <a
-                    href="/accounts/login/"
-                    class="hidden rounded-xl px-4 py-2 text-sm font-semibold text-slate-300 hover:bg-white/10 md:block"
-                >
+                <a href="/accounts/login/" class="hidden rounded-xl px-4 py-2 text-sm font-semibold text-slate-300 hover:bg-white/10 md:block">
                     ورود
                 </a>
 
-                <a
-                    href="/accounts/register/"
-                    class="rounded-xl bg-blue-500 px-4 py-2 text-sm font-semibold hover:bg-blue-600"
-                >
+                <a href="/accounts/register/" class="rounded-xl bg-blue-500 px-4 py-2 text-sm font-semibold hover:bg-blue-600">
                     شروع رایگان
                 </a>
-
             {% endif %}
-
         </div>
     </nav>
 </header>
 
 <main>
     <section class="relative overflow-hidden">
+        <div class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.25),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.18),transparent_30%)]"></div>
 
-        <!-- Background Glow -->
-        <div
-            class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.25),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.18),transparent_30%)]"
-        ></div>
-
-        <div
-            class="mx-auto grid min-h-[calc(100vh-73px)] max-w-7xl items-center gap-12 px-6 py-16 lg:grid-cols-2"
-        >
-
-            <!-- Left Content -->
+        <div class="mx-auto grid min-h-[calc(100vh-73px)] max-w-7xl items-center gap-12 px-6 py-16 lg:grid-cols-2">
             <div>
-
-                <div
-                    class="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-2 text-sm text-blue-200"
-                >
-                    دوره رایگان اولیه + ویدیوهای YouTube
+                <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-2 text-sm text-blue-200">
+                    ویدیوهای آموزشی + شبیه‌ساز آزمون تئوری
                 </div>
 
-                <h1
-                    class="mb-6 max-w-2xl text-4xl font-black leading-tight md:text-6xl"
-                >
-                    قبولی در آزمون تئوری گواهینامه آلمان،
-                    با آموزش فارسی و ساده
+                <h1 class="mb-6 max-w-2xl text-4xl font-black leading-tight md:text-6xl">
+                    قبولی در آزمون تئوری گواهینامه آلمان، با آموزش فارسی و ساده
                 </h1>
 
-                <p
-                    class="mb-8 max-w-xl text-lg leading-8 text-slate-300"
-                >
-                    از صفر شروع کن:
-                    قوانین، تابلوها، حق تقدم،
-                    نکات آزمون و ویدیوهای آموزشی
-                    مرحله‌به‌مرحله برای فارسی‌زبان‌های ساکن آلمان.
+                <p class="mb-8 max-w-xl text-lg leading-8 text-slate-300">
+                    از صفر شروع کن: قوانین، تابلوها، حق تقدم، نکات آزمون، ویدیوهای آموزشی و آزمون‌های شبیه‌سازی‌شده برای فارسی‌زبان‌های ساکن آلمان.
                 </p>
 
-                <!-- CTA -->
                 <div class="flex flex-col gap-4 sm:flex-row">
+                    {% if request.user.is_authenticated %}
+                        <a href="/dashboard/" class="rounded-2xl bg-blue-500 px-7 py-4 text-center font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-600">
+                            ادامه یادگیری
+                        </a>
+                    {% else %}
+                        <a href="/accounts/register/" class="rounded-2xl bg-blue-500 px-7 py-4 text-center font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-600">
+                            شروع یادگیری رایگان
+                        </a>
+                    {% endif %}
 
-                    <a
-                        href="#"
-                        class="rounded-2xl bg-blue-500 px-7 py-4 text-center font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-600"
-                    >
-                        شروع یادگیری رایگان
-                    </a>
-
-                    <a
-                        href="#"
-                        class="rounded-2xl border border-white/10 bg-white/5 px-7 py-4 text-center font-bold hover:bg-white/10"
-                    >
+                    <a href="/videos/" class="rounded-2xl border border-white/10 bg-white/5 px-7 py-4 text-center font-bold hover:bg-white/10">
                         دیدن ویدیوها
                     </a>
 
+                    <a href="/quiz/exam/start/" class="rounded-2xl bg-green-500 px-7 py-4 text-center font-bold hover:bg-green-600">
+                        شروع آزمون
+                    </a>
                 </div>
 
-                <!-- Stats -->
                 <div class="mt-10 grid max-w-xl grid-cols-3 gap-4">
-
-                    <div
-                        class="rounded-2xl border border-white/10 bg-white/5 p-4"
-                    >
-                        <p class="text-2xl font-black">+۳۰</p>
-
-                        <p class="text-sm text-slate-400">
-                            ویدیوی آموزشی
-                        </p>
+                    <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <p class="text-2xl font-black">ویدیو</p>
+                        <p class="text-sm text-slate-400">آموزش مرحله‌ای</p>
                     </div>
 
-                    <div
-                        class="rounded-2xl border border-white/10 bg-white/5 p-4"
-                    >
+                    <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <p class="text-2xl font-black">۳۰</p>
+                        <p class="text-sm text-slate-400">سوال آزمون</p>
+                    </div>
+
+                    <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
                         <p class="text-2xl font-black">RTL</p>
-
-                        <p class="text-sm text-slate-400">
-                            کاملاً فارسی
-                        </p>
+                        <p class="text-sm text-slate-400">کاملاً فارسی</p>
                     </div>
-
-                    <div
-                        class="rounded-2xl border border-white/10 bg-white/5 p-4"
-                    >
-                        <p class="text-2xl font-black">SEO</p>
-
-                        <p class="text-sm text-slate-400">
-                            آماده رشد گوگل
-                        </p>
-                    </div>
-
                 </div>
             </div>
 
-            <!-- Dashboard Mockup -->
-            <div
-                class="rounded-[2rem] border border-white/10 bg-white/5 p-4 shadow-2xl shadow-blue-950/30"
-            >
-
+            <div class="rounded-[2rem] border border-white/10 bg-white/5 p-4 shadow-2xl shadow-blue-950/30">
                 <div class="rounded-[1.5rem] bg-slate-900 p-5">
-
                     <div class="mb-5 flex items-center justify-between">
-
                         <div>
-                            <p class="font-bold">
-                                داشبورد یادگیری
-                            </p>
-
-                            <p class="text-sm text-slate-400">
-                                پیشرفت امروز شما
-                            </p>
+                            <p class="font-bold">داشبورد یادگیری</p>
+                            <p class="text-sm text-slate-400">پیشرفت، ویدیوها و آزمون‌ها</p>
                         </div>
 
-                        <span
-                            class="rounded-full bg-green-500/15 px-3 py-1 text-sm text-green-300"
-                        >
+                        <span class="rounded-full bg-green-500/15 px-3 py-1 text-sm text-green-300">
                             فعال
                         </span>
-
                     </div>
 
-                    <!-- Progress -->
                     <div class="mb-5 rounded-2xl bg-slate-800 p-4">
-
                         <div class="mb-3 flex justify-between text-sm">
-                            <span>
-                                مسیر یادگیری آزمون تئوری
-                            </span>
-
+                            <span>مسیر یادگیری آزمون تئوری</span>
                             <span>۴۲٪</span>
                         </div>
 
                         <div class="h-3 rounded-full bg-slate-700">
-                            <div
-                                class="h-3 w-[42%] rounded-full bg-blue-500"
-                            ></div>
+                            <div class="h-3 w-[42%] rounded-full bg-blue-500"></div>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-4 md:grid-cols-2">
+                        <a href="/videos/" class="rounded-2xl bg-white/5 p-4 hover:bg-white/10">
+                            <p class="font-bold">ویدیوهای آموزشی</p>
+                            <p class="mt-2 text-sm text-slate-400">یادگیری قدم‌به‌قدم</p>
+                        </a>
+
+                        <a href="/quiz/exam/start/" class="rounded-2xl bg-green-500/10 p-4 hover:bg-green-500/20">
+                            <p class="font-bold text-green-300">آزمون شبیه‌ساز</p>
+                            <p class="mt-2 text-sm text-slate-400">۳۰ سوالی مثل آزمون واقعی</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="mx-auto max-w-7xl px-6 py-16">
+        <div class="rounded-[2rem] border border-white/10 bg-white/5 p-8">
+            <h2 class="text-3xl font-black">
+                سوالات پرتکرار
+            </h2>
+
+            <div class="mt-8 grid gap-4 md:grid-cols-3">
+                <div class="rounded-2xl bg-slate-900 p-5">
+                    <p class="font-bold">آیا دوره رایگان است؟</p>
+                    <p class="mt-3 text-sm leading-7 text-slate-400">
+                        نسخه اولیه برای یادگیری و تست رایگان طراحی شده است.
+                    </p>
+                </div>
+
+                <div class="rounded-2xl bg-slate-900 p-5">
+                    <p class="font-bold">آزمون چطور کار می‌کند؟</p>
+                    <p class="mt-3 text-sm leading-7 text-slate-400">
+                        سیستم آزمون ۳۰ سوالی، جواب‌ها و امتیاز خطا را بررسی می‌کند.
+                    </p>
+                </div>
+
+                <div class="rounded-2xl bg-slate-900 p-5">
+                    <p class="font-bold">ویدیوها کجا هستند؟</p>
+                    <p class="mt-3 text-sm leading-7 text-slate-400">
+                        ویدیوها در بخش آموزشی دسته‌بندی شده‌اند و از داشبورد قابل پیگیری‌اند.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+{% endblock %}
+
+pgi
+
+فکر کنم اشتباهی تایپ شد 😄
+اگر منظورت PNG بوده یا می‌خوای کاری با تصویر/فایل انجام بدیم بگو دقیقاً چی می‌خوای.
+
+
+نه بریم مرحله بعد قرار بود مثل موکاپون باشه
+
+Thought for 45s
+آره دقیقاً. الان Home را شبیه mockup/product landing می‌کنیم.
+
+فایل زیر را کامل پاک کن:
+
+core/templates/core/home.html
+و این نسخه را بگذار:
+
+{% extends "base/base.html" %}
+
+{% block title %}
+آموزش گواهینامه آلمان به زبان فارسی
+{% endblock %}
+
+{% block meta_description %}
+آموزش گواهینامه آلمان به زبان فارسی همراه با ویدیو، مسیر یادگیری، آزمون شبیه‌ساز و تمرین سوالات تئوری.
+{% endblock %}
+
+{% block content %}
+
+<header class="sticky top-0 z-50 border-b border-white/10 bg-slate-950/80 backdrop-blur">
+    <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        <a href="/" class="flex items-center gap-3">
+            <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-500 text-xl font-black">
+                آ
+            </div>
+
+            <div>
+                <p class="font-black">آموزش گواهینامه آلمان</p>
+                <p class="text-xs text-slate-400">ویژه فارسی‌زبان‌ها</p>
+            </div>
+        </a>
+
+        <div class="hidden items-center gap-8 text-sm text-slate-300 md:flex">
+            <a href="/videos/" class="hover:text-white">ویدیوها</a>
+            <a href="/dashboard/" class="hover:text-white">مسیر یادگیری</a>
+            <a href="/quiz/exam/start/" class="hover:text-white">آزمون</a>
+            <a href="#features" class="hover:text-white">امکانات</a>
+        </div>
+
+        <div class="flex items-center gap-3">
+            {% if request.user.is_authenticated %}
+                <a href="/dashboard/" class="rounded-xl bg-blue-500 px-4 py-2 text-sm font-bold hover:bg-blue-600">
+                    داشبورد
+                </a>
+
+                <a href="/accounts/logout/" class="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-2 text-sm font-bold text-red-300 hover:bg-red-500/20">
+                    خروج
+                </a>
+            {% else %}
+                <a href="/accounts/login/" class="hidden rounded-xl px-4 py-2 text-sm font-bold text-slate-300 hover:bg-white/10 md:block">
+                    ورود
+                </a>
+
+                <a href="/accounts/register/" class="rounded-xl bg-blue-500 px-4 py-2 text-sm font-bold hover:bg-blue-600">
+                    شروع رایگان
+                </a>
+            {% endif %}
+        </div>
+    </nav>
+</header>
+
+<main class="overflow-hidden">
+
+    <!-- Hero -->
+    <section class="relative">
+        <div class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.25),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(34,197,94,0.15),transparent_30%)]"></div>
+
+        <div class="mx-auto grid min-h-[calc(100vh-76px)] max-w-7xl items-center gap-12 px-6 py-16 lg:grid-cols-2">
+
+            <div>
+                <div class="mb-6 inline-flex rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-2 text-sm font-bold text-blue-200">
+                    ویدیو + آزمون شبیه‌ساز + مسیر یادگیری
+                </div>
+
+                <h1 class="max-w-3xl text-4xl font-black leading-tight md:text-6xl">
+                    برای آزمون تئوری گواهینامه آلمان، فارسی و مرحله‌به‌مرحله آماده شو
+                </h1>
+
+                <p class="mt-6 max-w-xl text-lg leading-9 text-slate-300">
+                    ویدیوهای آموزشی، تمرین سوالات، شبیه‌ساز آزمون ۳۰ سوالی و پیگیری پیشرفت، همه در یک پلتفرم ساده برای فارسی‌زبان‌های ساکن آلمان.
+                </p>
+
+                <div class="mt-8 flex flex-col gap-4 sm:flex-row">
+                    {% if request.user.is_authenticated %}
+                        <a href="/dashboard/" class="rounded-2xl bg-blue-500 px-7 py-4 text-center font-black shadow-lg shadow-blue-500/20 hover:bg-blue-600">
+                            ادامه یادگیری
+                        </a>
+                    {% else %}
+                        <a href="/accounts/register/" class="rounded-2xl bg-blue-500 px-7 py-4 text-center font-black shadow-lg shadow-blue-500/20 hover:bg-blue-600">
+                            شروع یادگیری رایگان
+                        </a>
+                    {% endif %}
+
+                    <a href="/quiz/exam/start/" class="rounded-2xl bg-green-500 px-7 py-4 text-center font-black hover:bg-green-600">
+                        شروع آزمون
+                    </a>
+
+                    <a href="/videos/" class="rounded-2xl border border-white/10 bg-white/5 px-7 py-4 text-center font-black hover:bg-white/10">
+                        دیدن ویدیوها
+                    </a>
+                </div>
+
+                <div class="mt-10 grid max-w-xl grid-cols-3 gap-4">
+                    <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <p class="text-2xl font-black">۳۰</p>
+                        <p class="text-sm text-slate-400">سوال آزمون</p>
+                    </div>
+
+                    <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <p class="text-2xl font-black">Basic/B</p>
+                        <p class="text-sm text-slate-400">ساختار واقعی</p>
+                    </div>
+
+                    <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <p class="text-2xl font-black">RTL</p>
+                        <p class="text-sm text-slate-400">کاملاً فارسی</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mockup -->
+            <div class="rounded-[2.5rem] border border-white/10 bg-white/5 p-4 shadow-2xl shadow-blue-950/40">
+                <div class="rounded-[2rem] bg-slate-900 p-5">
+
+                    <div class="mb-5 flex items-center justify-between">
+                        <div>
+                            <p class="font-black">داشبورد یادگیری</p>
+                            <p class="text-sm text-slate-400">پیشرفت امروز شما</p>
                         </div>
 
+                        <span class="rounded-full bg-green-500/15 px-3 py-1 text-sm font-bold text-green-300">
+                            فعال
+                        </span>
+                    </div>
+
+                    <div class="rounded-2xl bg-slate-800 p-4">
+                        <div class="mb-3 flex justify-between text-sm">
+                            <span>مسیر یادگیری</span>
+                            <span>۴۲٪</span>
+                        </div>
+
+                        <div class="h-3 rounded-full bg-slate-700">
+                            <div class="h-3 w-[42%] rounded-full bg-blue-500"></div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 grid gap-4 md:grid-cols-2">
+                        <a href="/videos/" class="rounded-2xl bg-white/5 p-4 hover:bg-white/10">
+                            <p class="font-bold">ویدیوهای آموزشی</p>
+                            <p class="mt-2 text-sm text-slate-400">یادگیری قدم‌به‌قدم</p>
+                        </a>
+
+                        <a href="/quiz/exam/start/" class="rounded-2xl bg-green-500/10 p-4 hover:bg-green-500/20">
+                            <p class="font-bold text-green-300">آزمون شبیه‌ساز</p>
+                            <p class="mt-2 text-sm text-slate-400">مثل آزمون واقعی</p>
+                        </a>
+                    </div>
+
+                    <div class="mt-5 rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <p class="text-sm text-slate-400">درس بعدی پیشنهادی</p>
+                        <p class="mt-2 font-black">حق تقدم در تقاطع‌ها</p>
                     </div>
 
                 </div>
@@ -240,6 +425,67 @@
 
         </div>
     </section>
+
+    <!-- Features -->
+    <section id="features" class="mx-auto max-w-7xl px-6 py-16">
+        <div class="mb-10">
+            <p class="text-sm font-bold text-blue-300">امکانات پلتفرم</p>
+            <h2 class="mt-3 text-4xl font-black">
+                هر چیزی که برای شروع نیاز داری
+            </h2>
+        </div>
+
+        <div class="grid gap-6 md:grid-cols-3">
+            <div class="rounded-[2rem] border border-white/10 bg-white/5 p-6">
+                <p class="text-3xl">🎥</p>
+                <h3 class="mt-4 text-xl font-black">ویدیوهای دسته‌بندی‌شده</h3>
+                <p class="mt-3 leading-8 text-slate-400">
+                    آموزش‌ها بر اساس موضوع مثل تابلوها، حق تقدم و قوانین مرتب می‌شوند.
+                </p>
+            </div>
+
+            <div class="rounded-[2rem] border border-white/10 bg-white/5 p-6">
+                <p class="text-3xl">✅</p>
+                <h3 class="mt-4 text-xl font-black">پیگیری پیشرفت</h3>
+                <p class="mt-3 leading-8 text-slate-400">
+                    سیستم می‌فهمد کدام درس‌ها را دیده‌ای و درصد پیشرفتت را حساب می‌کند.
+                </p>
+            </div>
+
+            <div class="rounded-[2rem] border border-white/10 bg-white/5 p-6">
+                <p class="text-3xl">📝</p>
+                <h3 class="mt-4 text-xl font-black">آزمون شبیه‌ساز</h3>
+                <p class="mt-3 leading-8 text-slate-400">
+                    آزمون ۳۰ سوالی با Basic Knowledge و Class B برای تمرین جدی‌تر.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="mx-auto max-w-7xl px-6 pb-20">
+        <div class="rounded-[2.5rem] border border-blue-400/20 bg-blue-500/10 p-8 text-center">
+            <h2 class="text-3xl font-black">
+                آماده‌ای مسیر یادگیری را شروع کنی؟
+            </h2>
+
+            <p class="mx-auto mt-4 max-w-2xl leading-8 text-slate-300">
+                از داشبورد شروع کن، ویدیو ببین، تمرین کن و با آزمون شبیه‌ساز خودت را بسنج.
+            </p>
+
+            <div class="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
+                <a href="/dashboard/" class="rounded-2xl bg-blue-500 px-7 py-4 font-black hover:bg-blue-600">
+                    رفتن به داشبورد
+                </a>
+
+                <a href="/quiz/exam/start/" class="rounded-2xl bg-green-500 px-7 py-4 font-black hover:bg-green-600">
+                    شروع آزمون
+                </a>
+            </div>
+        </div>
+    </section>
+
 </main>
 
 {% endblock %}
+

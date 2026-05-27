@@ -1,0 +1,91 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+نتیجه آزمون
+{% endblock %}
+
+{% block content %}
+<main class="min-h-screen bg-slate-950 px-6 py-10 text-white">
+    <div class="mx-auto max-w-4xl">
+
+        <section class="rounded-[2rem] border border-white/10 bg-white/5 p-8 text-center">
+
+            {% if is_passed %}
+                <div class="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-green-500/20 text-5xl">
+                    ✅
+                </div>
+
+                <h1 class="text-4xl font-black text-green-300">
+                    قبول شدی
+                </h1>
+            {% else %}
+                <div class="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-red-500/20 text-5xl">
+                    ❌
+                </div>
+
+                <h1 class="text-4xl font-black text-red-300">
+                    قبول نشدی
+                </h1>
+            {% endif %}
+
+            <p class="mt-4 text-slate-400">
+                نتیجه آزمون شبیه‌سازی‌شده گواهینامه
+            </p>
+
+            <div class="mt-8 grid gap-4 md:grid-cols-4">
+                <div class="rounded-2xl bg-slate-900 p-5">
+                    <p class="text-sm text-slate-400">کل سوال‌ها</p>
+                    <p class="mt-2 text-3xl font-black">{{ total_questions }}</p>
+                </div>
+
+                <div class="rounded-2xl bg-slate-900 p-5">
+                    <p class="text-sm text-slate-400">پاسخ داده‌شده</p>
+                    <p class="mt-2 text-3xl font-black">{{ answered_count }}</p>
+                </div>
+
+                <div class="rounded-2xl bg-slate-900 p-5">
+                    <p class="text-sm text-slate-400">درست</p>
+                    <p class="mt-2 text-3xl font-black text-green-300">{{ correct_count }}</p>
+                </div>
+
+                <div class="rounded-2xl bg-slate-900 p-5">
+                    <p class="text-sm text-slate-400">غلط</p>
+                    <p class="mt-2 text-3xl font-black text-red-300">{{ wrong_count }}</p>
+                </div>
+            </div>
+
+            <div class="mt-6 rounded-[2rem] border border-white/10 bg-slate-900 p-6">
+                <p class="text-sm text-slate-400">
+                    Fehlerpunkte / امتیاز خطا
+                </p>
+
+                <p class="mt-3 text-5xl font-black">
+                    {{ total_error_points }}
+                </p>
+
+                <p class="mt-3 text-sm text-slate-400">
+                    فعلاً معیار قبولی: حداکثر ۱۰ امتیاز خطا
+                </p>
+            </div>
+
+            <div class="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
+                <a
+                    href="/quiz/exam/start/"
+                    class="rounded-2xl bg-blue-500 px-6 py-3 font-bold hover:bg-blue-600"
+                >
+                    شروع آزمون جدید
+                </a>
+
+                <a
+                    href="/dashboard/"
+                    class="rounded-2xl border border-white/10 bg-white/5 px-6 py-3 font-bold hover:bg-white/10"
+                >
+                    برگشت به داشبورد
+                </a>
+            </div>
+
+        </section>
+
+    </div>
+</main>
+{% endblock %}

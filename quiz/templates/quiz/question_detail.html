@@ -1,0 +1,191 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+سوال آزمون
+{% endblock %}
+
+{% block content %}
+<main class="min-h-screen bg-slate-950 px-6 py-10 text-white">
+
+    <div class="mx-auto w-full max-w-6xl">
+
+        <a
+            href="/dashboard/"
+            class="mb-6 inline-block text-sm font-bold text-blue-300 hover:text-blue-200"
+        >
+            ← برگشت
+        </a>
+
+        <section class="rounded-[2rem] border border-white/10 bg-white/5 p-8">
+
+            <div class="mb-8">
+
+                <p class="mb-3 text-sm font-bold text-blue-300">
+                    {{ question.category.name }}
+                </p>
+
+                <h1 class="text-3xl font-black leading-relaxed">
+                    {{ question.title }}
+                </h1>
+
+                {% if question.image %}
+
+    <div class="mt-6 overflow-hidden rounded-2xl bg-slate-900">
+
+        <img
+            src="{{ question.image.url }}"
+            alt="{{ question.title }}"
+            class="w-full object-cover"
+            style="height: 720px;"
+        >
+
+    </div>
+
+{% endif %}
+                {% if question.video_url %}
+
+    <div class="mt-6 overflow-hidden rounded-2xl bg-slate-900">
+
+        <iframe
+            src="{{ question.video_url }}"
+            class="w-full"
+            style="height: 720px;"
+            allowfullscreen
+        ></iframe>
+
+    </div>
+
+{% endif %}
+
+            </div>
+
+            <form method="post" class="space-y-4">
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    name="answer"
+                    value="1"
+                    class="block w-full rounded-2xl border p-5 text-right text-lg transition duration-200
+                    {% if selected_answer == 1 and is_correct %}
+                        border-green-400 bg-green-500 text-white
+                    {% elif selected_answer == 1 and not is_correct %}
+                        border-red-400 bg-red-500 text-white
+                    {% elif selected_answer and question.correct_answer == 1 %}
+                        border-green-400 bg-green-500/20 text-green-300
+                    {% else %}
+                        border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-600 hover:text-white
+                    {% endif %}
+                    "
+                >
+                    {{ question.option_1 }}
+                </button>
+
+                <button
+                    type="submit"
+                    name="answer"
+                    value="2"
+                    class="block w-full rounded-2xl border p-5 text-right text-lg transition duration-200
+                    {% if selected_answer == 2 and is_correct %}
+                        border-green-400 bg-green-500 text-white
+                    {% elif selected_answer == 2 and not is_correct %}
+                        border-red-400 bg-red-500 text-white
+                    {% elif selected_answer and question.correct_answer == 2 %}
+                        border-green-400 bg-green-500/20 text-green-300
+                    {% else %}
+                        border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-600 hover:text-white
+                    {% endif %}
+                    "
+                >
+                    {{ question.option_2 }}
+                </button>
+
+                <button
+                    type="submit"
+                    name="answer"
+                    value="3"
+                    class="block w-full rounded-2xl border p-5 text-right text-lg transition duration-200
+                    {% if selected_answer == 3 and is_correct %}
+                        border-green-400 bg-green-500 text-white
+                    {% elif selected_answer == 3 and not is_correct %}
+                        border-red-400 bg-red-500 text-white
+                    {% elif selected_answer and question.correct_answer == 3 %}
+                        border-green-400 bg-green-500/20 text-green-300
+                    {% else %}
+                        border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-600 hover:text-white
+                    {% endif %}
+                    "
+                >
+                    {{ question.option_3 }}
+                </button>
+
+                {% if question.option_4 %}
+                    <button
+                        type="submit"
+                        name="answer"
+                        value="4"
+                        class="block w-full rounded-2xl border p-5 text-right text-lg transition duration-200
+                        {% if selected_answer == 4 and is_correct %}
+                            border-green-400 bg-green-500 text-white
+                        {% elif selected_answer == 4 and not is_correct %}
+                            border-red-400 bg-red-500 text-white
+                        {% elif selected_answer and question.correct_answer == 4 %}
+                            border-green-400 bg-green-500/20 text-green-300
+                        {% else %}
+                            border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-600 hover:text-white
+                        {% endif %}
+                        "
+                    >
+                        {{ question.option_4 }}
+                    </button>
+                {% endif %}
+            </form>
+
+            {% if selected_answer %}
+                <div class="mt-8">
+                    {% if is_correct %}
+                        <div class="rounded-2xl border border-green-400/30 bg-green-500/10 p-5">
+                            <h2 class="text-2xl font-black text-green-300">
+                                جواب صحیح بود ✅
+                            </h2>
+                        </div>
+                    {% else %}
+                        <div class="rounded-2xl border border-red-400/30 bg-red-500/10 p-5">
+                            <h2 class="text-2xl font-black text-red-300">
+                                جواب اشتباه بود ❌
+                            </h2>
+
+                            <p class="mt-3 text-slate-300">
+                                جواب صحیح:
+                                گزینه {{ question.correct_answer }}
+                            </p>
+                        </div>
+                    {% endif %}
+
+                    {% if question.explanation %}
+                        <div class="mt-5 rounded-2xl bg-slate-900 p-5">
+                            <h3 class="font-bold">
+                                توضیح:
+                            </h3>
+
+                            <p class="mt-3 leading-8 text-slate-300">
+                                {{ question.explanation }}
+                            </p>
+                        </div>
+                    {% endif %}
+
+                    <a
+                        href="/quiz/"
+                        class="mt-6 inline-block rounded-2xl bg-blue-500 px-5 py-3 font-bold transition hover:bg-blue-600"
+                    >
+                        سوال بعدی
+                    </a>
+                </div>
+            {% endif %}
+
+        </section>
+
+    </div>
+
+</main>
+{% endblock %}
