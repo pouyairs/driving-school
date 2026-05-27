@@ -1,11 +1,24 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 from videos.models import Category, Video, WatchedVideo
 
 
+
 def home(request):
-    return render(request, "core/home.html")
+    User = get_user_model()
+
+    return render(
+        request,
+        "core/home.html",
+        {
+            "videos_count": Video.objects.filter(is_published=True).count(),
+            "courses_count": Category.objects.count(),
+            "students_count": User.objects.count(),
+            "blog_count": 3,
+        },
+    )
 
 
 @login_required
