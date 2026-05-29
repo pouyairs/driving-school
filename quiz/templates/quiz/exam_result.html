@@ -6,7 +6,7 @@
 
 {% block content %}
 <main class="min-h-screen bg-slate-950 px-6 py-10 text-white">
-    <div class="mx-auto max-w-4xl">
+    <div class="mx-auto max-w-5xl">
 
         <section class="rounded-[2rem] border border-white/10 bg-white/5 p-8 text-center">
 
@@ -67,6 +67,85 @@
                     فعلاً معیار قبولی: حداکثر ۱۰ امتیاز خطا
                 </p>
             </div>
+
+            {% if wrong_answers %}
+                <div class="mt-8 text-right">
+                    <div class="mb-5 flex items-center justify-between">
+                        <h2 class="text-2xl font-black text-red-300">
+                            سوال‌های اشتباه
+                        </h2>
+
+                        <span class="rounded-full bg-red-500/10 px-4 py-2 text-sm font-bold text-red-300">
+                            {{ wrong_count }} مورد
+                        </span>
+                    </div>
+
+                    <div class="space-y-4">
+                        {% for answer in wrong_answers %}
+                            <div class="rounded-2xl border border-red-400/20 bg-red-500/10 p-5">
+                                <div class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                                    <div>
+                                        <p class="text-sm font-bold text-red-300">
+                                            سوال {{ forloop.counter }}
+                                        </p>
+
+                                        <h3 class="mt-2 text-lg font-black leading-8 text-white">
+                                            {{ answer.question.title }}
+                                        </h3>
+                                    </div>
+
+                                    <div class="shrink-0 rounded-xl bg-slate-950 px-4 py-3 text-sm text-slate-300">
+                                        امتیاز خطا:
+                                        <span class="font-black text-red-300">
+                                            {{ answer.question.points }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="mt-5 grid gap-3 md:grid-cols-2">
+                                    <div class="rounded-xl bg-slate-950 p-4">
+                                        <p class="text-sm text-slate-400">
+                                            جواب شما
+                                        </p>
+
+                                        <p class="mt-2 font-black text-red-300">
+                                            گزینه {{ answer.selected_answer }}
+                                        </p>
+                                    </div>
+
+                                    <div class="rounded-xl bg-slate-950 p-4">
+                                        <p class="text-sm text-slate-400">
+                                            جواب صحیح
+                                        </p>
+
+                                        <p class="mt-2 font-black text-green-300">
+                                            گزینه {{ answer.question.correct_answer }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {% if answer.question.explanation %}
+                                    <div class="mt-4 rounded-xl bg-slate-950 p-4">
+                                        <p class="text-sm font-bold text-blue-300">
+                                            توضیح
+                                        </p>
+
+                                        <p class="mt-2 leading-8 text-slate-300">
+                                            {{ answer.question.explanation }}
+                                        </p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="mt-8 rounded-2xl border border-green-400/20 bg-green-500/10 p-5">
+                    <h2 class="text-2xl font-black text-green-300">
+                        هیچ سوال اشتباهی نداشتی 🎉
+                    </h2>
+                </div>
+            {% endif %}
 
             <div class="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
                 <a

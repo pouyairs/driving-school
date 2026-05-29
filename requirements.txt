@@ -9,12 +9,14 @@ Django==6.0.5
 django-allauth==65.17.0
 django-browser-reload==1.21.0
 django-tailwind==4.4.2
+et_xmlfile==2.0.0
 gunicorn==26.0.0
 idna==3.16
 Jinja2==3.1.6
 markdown-it-py==4.2.0
 MarkupSafe==3.0.3
 mdurl==0.1.2
+openpyxl==3.1.5
 packaging==26.0
 pillow==12.2.0
 Pygments==2.20.0

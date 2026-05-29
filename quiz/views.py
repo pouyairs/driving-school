@@ -6,9 +6,7 @@ from .models import ExamAnswer, ExamSession, Question
 
 def random_question(request):
     question = (
-        Question.objects.filter(
-            is_published=True
-        )
+        Question.objects.filter(is_published=True)
         .order_by("?")
         .first()
     )
@@ -16,10 +14,7 @@ def random_question(request):
     if not question:
         return redirect("/dashboard/")
 
-    return redirect(
-        "question_detail",
-        pk=question.pk,
-    )
+    return redirect("question_detail", pk=question.pk)
 
 
 def question_detail(request, pk):
@@ -33,14 +28,8 @@ def question_detail(request, pk):
     is_correct = None
 
     if request.method == "POST":
-
-        selected_answer = int(
-            request.POST.get("answer")
-        )
-
-        is_correct = (
-            selected_answer == question.correct_answer
-        )
+        selected_answer = int(request.POST.get("answer"))
+        is_correct = selected_answer == question.correct_answer
 
     return render(
         request,
@@ -64,10 +53,7 @@ def exam_player(request):
         section=Question.SECTION_CLASS_B,
     )[:10]
 
-    current_question = (
-        basic_questions.first()
-        or class_b_questions.first()
-    )
+    current_question = basic_questions.first() or class_b_questions.first()
 
     return render(
         request,
@@ -82,10 +68,7 @@ def exam_player(request):
 
 @login_required
 def start_exam(request):
-
-    exam = ExamSession.objects.create(
-        user=request.user,
-    )
+    exam = ExamSession.objects.create(user=request.user)
 
     basic_questions = list(
         Question.objects.filter(
@@ -103,6 +86,9 @@ def start_exam(request):
 
     questions = basic_questions + class_b_questions
 
+    if not questions:
+        return redirect("/dashboard/")
+
     exam.questions.set(questions)
 
     first_question = questions[0]
@@ -116,7 +102,6 @@ def start_exam(request):
 
 @login_required
 def exam_question(request, exam_id, question_id):
-
     exam = get_object_or_404(
         ExamSession,
         id=exam_id,
@@ -129,8 +114,11 @@ def exam_question(request, exam_id, question_id):
     )
 
     questions = list(exam.questions.all())
-
     current_index = questions.index(question)
+
+    progress_percent = int(
+        ((current_index + 1) / len(questions)) * 100
+    )
 
     selected_answer = None
     is_correct = None
@@ -145,14 +133,8 @@ def exam_question(request, exam_id, question_id):
         is_correct = existing_answer.is_correct
 
     if request.method == "POST":
-
-        selected_answer = int(
-            request.POST.get("answer")
-        )
-
-        is_correct = (
-            selected_answer == question.correct_answer
-        )
+        selected_answer = int(request.POST.get("answer"))
+        is_correct = selected_answer == question.correct_answer
 
         ExamAnswer.objects.update_or_create(
             exam=exam,
@@ -176,11 +158,14 @@ def exam_question(request, exam_id, question_id):
             "question": question,
             "questions": questions,
             "current_index": current_index,
+            "progress_percent": progress_percent,
             "selected_answer": selected_answer,
             "is_correct": is_correct,
             "next_question": next_question,
         },
     )
+
+
 @login_required
 def exam_result(request, exam_id):
     exam = get_object_or_404(
@@ -195,6 +180,12 @@ def exam_result(request, exam_id):
     wrong_count = exam.answers.filter(is_correct=False).count()
     total_error_points = exam.total_error_points()
 
+    wrong_answers = (
+        exam.answers.filter(is_correct=False)
+        .select_related("question")
+        .order_by("answered_at")
+    )
+
     is_passed = total_error_points <= 10
 
     return render(
@@ -207,6 +198,7 @@ def exam_result(request, exam_id):
             "correct_count": correct_count,
             "wrong_count": wrong_count,
             "total_error_points": total_error_points,
+            "wrong_answers": wrong_answers,
             "is_passed": is_passed,
         },
     )
