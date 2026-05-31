@@ -5,36 +5,120 @@
 {% endblock %}
 
 {% block content %}
-<main class="min-h-screen bg-slate-950 px-6 py-10 text-white">
-    <div class="mx-auto max-w-5xl">
+<main class="min-h-screen bg-slate-950 px-6 py-8 text-white">
+    <div class="mx-auto grid max-w-7xl gap-6 lg:grid-cols-4">
 
-        <div class="mb-6">
-            <div class="flex items-center justify-between gap-4">
+        <!-- SIDEBAR -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-6 rounded-[2rem] border border-white/10 bg-white/5 p-5">
+
+                <div class="mb-5 flex items-center justify-between">
+                    <p class="rounded-full bg-blue-500/10 px-4 py-2 text-sm font-bold text-blue-300">
+                        {{ current_index|add:1 }} / {{ questions|length }}
+                    </p>
+
+                    <p
+                        id="exam-timer"
+                        class="rounded-full bg-red-500/10 px-4 py-2 text-sm font-black text-red-300"
+                        data-seconds="{{ remaining_seconds }}"
+                        data-result-url="/quiz/exam/{{ exam.id }}/result/"
+                    >
+                        30:00
+                    </p>
+                </div>
+
+                <div class="mb-6 h-3 overflow-hidden rounded-full bg-slate-800">
+                    <div
+                        class="h-full rounded-full bg-blue-500 transition-all"
+                        style="width: {{ progress_percent }}%;"
+                    ></div>
+                </div>
+
+                <!-- QUESTION NAVIGATION -->
+                <div class="space-y-5">
+
+                    <!-- BASIC TAB -->
+                    <div>
+                        <div class="mb-3 rounded-xl bg-blue-500 px-4 py-3 text-center text-sm font-black">
+                            Basic Knowledge
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 rounded-2xl bg-slate-900 p-3">
+                            {% for item in nav_items %}
+                                {% if item.section == "basic" %}
+                                    <a
+                                        href="/quiz/exam/{{ exam.id }}/{{ item.question.id }}/"
+                                        class="relative flex h-12 w-12 items-center justify-center rounded-2xl shadow-md text-sm font-black transition                                        {% if item.is_current %}
+                                            bg-blue-500 text-white
+                                        {% elif item.status == 'correct' %}
+                                            bg-green-500 text-white
+                                        {% elif item.status == 'wrong' %}
+                                            bg-yellow-400 text-slate-900
+                                        {% else %}
+                                            bg-white text-slate-900 hover:bg-blue-100
+                                        {% endif %}"
+                                    >
+                            
+
+                                        {{ item.number }}
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- CLASS B TAB -->
+                    <div>
+                        <div class="mb-3 rounded-xl bg-green-500 px-4 py-3 text-center text-sm font-black">
+                            Class B
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 rounded-2xl bg-slate-900 p-3">
+                            {% for item in nav_items %}
+                                {% if item.section == "class_b" %}
+                                    <a
+                                        href="/quiz/exam/{{ exam.id }}/{{ item.question.id }}/"
+                                        class="relative flex h-12 w-12 items-center justify-center rounded-2xl shadow-md text-sm font-black transition
+                                        {% if item.is_current %}
+                                            bg-blue-500 text-white
+                                        {% elif item.status == 'correct' %}
+                                            bg-green-500 text-white
+                                        {% elif item.status == 'wrong' %}
+                                            bg-yellow-400 text-slate-900
+                                        {% else %}
+                                            bg-white text-slate-900 hover:bg-blue-100
+                                        {% endif %}"
+                                    >
+                                        
+
+                                        {{ item.number }}
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="mt-5 space-y-2 text-xs text-slate-300">
+                    <p>آبی: سوال فعلی</p>
+                    <p>سبز: پاسخ درست</p>
+                    <p>علامت زرد: پاسخ اشتباه</p>
+                    <p>سفید: بدون پاسخ</p>
+                </div>
+
                 <a
                     href="/dashboard/"
-                    class="text-sm font-bold text-blue-300 hover:text-blue-200"
+                    class="mt-5 block rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-center font-bold hover:bg-white/10"
                 >
-                    ← خروج از آزمون
+                    خروج از آزمون
                 </a>
 
-                <p class="rounded-full bg-blue-500/10 px-4 py-2 text-sm font-bold text-blue-300">
-                    سوال {{ current_index|add:1 }} از {{ questions|length }}
-                </p>
             </div>
+        </aside>
 
-            <div class="mt-4 h-3 overflow-hidden rounded-full bg-slate-800">
-                <div
-                    class="h-full rounded-full bg-blue-500 transition-all"
-                    style="width: {{ progress_percent }}%;"
-                ></div>
-            </div>
-
-            <p class="mt-2 text-left text-xs font-bold text-slate-400">
-                {{ progress_percent }}٪ تکمیل شده
-            </p>
-        </div>
-
-        <section class="rounded-[2rem] border border-white/10 bg-white/5 p-8">
+        <!-- QUESTION CONTENT -->
+        <section class="rounded-[2rem] border border-white/10 bg-white/5 p-8 lg:col-span-3">
 
             <p class="mb-3 text-sm font-bold text-blue-300">
                 {{ question.category.name }} / {{ question.get_section_display }}
@@ -42,7 +126,23 @@
 
             <h1 class="text-3xl font-black leading-relaxed">
                 {{ question.title }}
+                
             </h1>
+            <button
+    type="button"
+    onclick="toggleTranslation()"
+    class="mt-4 rounded-xl bg-yellow-400 px-4 py-2 font-bold text-slate-900"
+>
+            
+    🇮🇷 نمایش ترجمه فارسی
+</button>
+
+<div
+    id="translation-box"
+    class="mt-4 hidden rounded-2xl bg-blue-500/10 p-4 text-right"
+>
+    <p>{{ question.title_translation }}</p>
+</div>
 
             {% if question.image %}
                 <div class="mt-6 overflow-hidden rounded-2xl bg-slate-900">
@@ -67,82 +167,118 @@
             {% endif %}
 
             <form method="post" class="mt-8 space-y-4">
-                {% csrf_token %}
+    {% csrf_token %}
 
-                <button
-                    type="submit"
-                    name="answer"
-                    value="1"
-                    class="block w-full rounded-2xl border p-5 text-right text-lg transition
-                    {% if selected_answer == 1 and is_correct %}
-                        border-green-400 bg-green-500 text-white
-                    {% elif selected_answer == 1 and not is_correct %}
-                        border-red-400 bg-red-500 text-white
-                    {% elif selected_answer and question.correct_answer == 1 %}
-                        border-green-400 bg-green-500/20 text-green-300
-                    {% else %}
-                        border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-600
-                    {% endif %}"
-                >
-                    {{ question.option_1 }}
-                </button>
+    <label class="block cursor-pointer rounded-2xl border p-5 text-right text-lg transition
+        {% if selected_answer == 1 and is_correct %}
+            border-green-400 bg-green-500 text-white
+        {% elif 1 in selected_answers_list and not is_correct %}
+            border-red-400 bg-red-500 text-white
+        {% elif selected_answer and 1 in correct_answers_list %}
+            border-green-400 bg-green-500/20 text-green-300
+        {% else %}
+            border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-600
+        {% endif %}"
+    >
+        <input
+            type="checkbox"
+            name="answer"
+            value="1"
+            class="ml-3"
+            {% if 1 in selected_answers_list %}checked{% endif %}
+        >
+        {{ question.option_1 }}
+    </label>
+     <div class="translation-option mt-2 hidden text-sm text-yellow-200">
+    {{ question.option_1_translation }}
+</div>
 
-                <button
-                    type="submit"
-                    name="answer"
-                    value="2"
-                    class="block w-full rounded-2xl border p-5 text-right text-lg transition
-                    {% if selected_answer == 2 and is_correct %}
-                        border-green-400 bg-green-500 text-white
-                    {% elif selected_answer == 2 and not is_correct %}
-                        border-red-400 bg-red-500 text-white
-                    {% elif selected_answer and question.correct_answer == 2 %}
-                        border-green-400 bg-green-500/20 text-green-300
-                    {% else %}
-                        border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-600
-                    {% endif %}"
-                >
-                    {{ question.option_2 }}
-                </button>
+    <label class="block cursor-pointer rounded-2xl border p-5 text-right text-lg transition
+        {% if selected_answer == 2 and is_correct %}
+            border-green-400 bg-green-500 text-white
+        {% elif 2 in selected_answers_list and not is_correct %}
+            border-red-400 bg-red-500 text-white
+        {% elif selected_answer and 2 in correct_answers_list %}
+            border-green-400 bg-green-500/20 text-green-300
+        {% else %}
+            border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-600
+        {% endif %}"
+    >
+        <input
+            type="checkbox"
+            name="answer"
+            value="2"
+            class="ml-3"
+            {% if 2 in selected_answers_list %}checked{% endif %}
+        >
+        {{ question.option_2 }}
+        
+    </label>
+    <div class="translation-option mt-2 hidden text-sm text-yellow-200">
+    {{ question.option_2_translation }}
+</div>
 
-                <button
-                    type="submit"
-                    name="answer"
-                    value="3"
-                    class="block w-full rounded-2xl border p-5 text-right text-lg transition
-                    {% if selected_answer == 3 and is_correct %}
-                        border-green-400 bg-green-500 text-white
-                    {% elif selected_answer == 3 and not is_correct %}
-                        border-red-400 bg-red-500 text-white
-                    {% elif selected_answer and question.correct_answer == 3 %}
-                        border-green-400 bg-green-500/20 text-green-300
-                    {% else %}
-                        border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-600
-                    {% endif %}"
-                >
-                    {{ question.option_3 }}
-                </button>
+    <label class="block cursor-pointer rounded-2xl border p-5 text-right text-lg transition
+        {% if selected_answer == 3 and is_correct %}
+            border-green-400 bg-green-500 text-white
+        {% elif 3 in selected_answers_list and not is_correct %}
+            border-red-400 bg-red-500 text-white
+        {% elif selected_answer and 3 in correct_answers_list %}
+            border-green-400 bg-green-500/20 text-green-300
+        {% else %}
+            border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-600
+        {% endif %}"
+    >
+        <input
+            type="checkbox"
+            name="answer"
+            value="3"
+            class="ml-3"
+            {% if 3 in selected_answers_list %}checked{% endif %}
+        >
+        {{ question.option_3 }}
+        
+    </label>
+    <div class="translation-option mt-2 hidden text-sm text-yellow-200">
+    {{ question.option_3_translation }}
+</div>
 
-                {% if question.option_4 %}
-                    <button
-                        type="submit"
-                        name="answer"
-                        value="4"
-                        class="block w-full rounded-2xl border p-5 text-right text-lg transition
-                        {% if selected_answer == 4 and is_correct %}
-                            border-green-400 bg-green-500 text-white
-                        {% elif selected_answer == 4 and not is_correct %}
-                            border-red-400 bg-red-500 text-white
-                        {% elif selected_answer and question.correct_answer == 4 %}
-                            border-green-400 bg-green-500/20 text-green-300
-                        {% else %}
-                            border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-600
-                        {% endif %}"
-                    >
-                        {{ question.option_4 }}
-                    </button>
-                {% endif %}
-            </form>
+    {% if question.option_4 %}
+        <label class="block cursor-pointer rounded-2xl border p-5 text-right text-lg transition
+            {% if selected_answer == 4 and is_correct %}
+                border-green-400 bg-green-500 text-white
+            {% elif 4 in selected_answers_list and not is_correct %}
+                border-red-400 bg-red-500 text-white
+            {% elif selected_answer and 4 in correct_answers_list %}
+                border-green-400 bg-green-500/20 text-green-300
+            {% else %}
+                border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-600
+            {% endif %}"
+        >
+            <input
+                type="checkbox"
+                name="answer"
+                value="4"
+                class="ml-3"
+                {% if 4 in selected_answers_list %}checked{% endif %}
+            >
+            {{ question.option_4 }}
+           
+        </label>
+         <div class="translation-option mt-2 hidden text-sm text-yellow-200">
+    {{ question.option_4_translation }}
+</div>
+    {% endif %}
+
+    {% if not selected_answer %}
+        <button
+            type="submit"
+            class="mt-4 rounded-2xl bg-blue-500 px-6 py-3 font-bold hover:bg-blue-600"
+        >
+            ثبت پاسخ
+        </button>
+    {% endif %}
+</form>
 
             {% if selected_answer %}
                 <div class="mt-8">
@@ -159,7 +295,10 @@
                             </h2>
 
                             <p class="mt-3 text-slate-300">
-                                جواب صحیح: گزینه {{ question.correct_answer }}
+                                جواب صحیح:
+{% for item in correct_answers_list %}
+    گزینه {{ item }}{% if not forloop.last %}، {% endif %}
+{% endfor %}
                             </p>
                         </div>
                     {% endif %}
@@ -180,13 +319,6 @@
                                 مشاهده نتیجه آزمون
                             </a>
                         {% endif %}
-
-                        <a
-                            href="/dashboard/"
-                            class="inline-block rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-center font-bold hover:bg-white/10"
-                        >
-                            خروج
-                        </a>
                     </div>
                 </div>
             {% endif %}
@@ -195,4 +327,51 @@
 
     </div>
 </main>
+
+<script>
+    const timerElement = document.getElementById("exam-timer");
+
+    if (timerElement) {
+        let remainingSeconds = parseInt(timerElement.dataset.seconds);
+        const resultUrl = timerElement.dataset.resultUrl;
+
+        function updateTimer() {
+            if (remainingSeconds <= 0) {
+                window.location.href = resultUrl;
+                return;
+            }
+
+            const minutes = Math.floor(remainingSeconds / 60);
+            const seconds = remainingSeconds % 60;
+
+            timerElement.textContent =
+                String(minutes).padStart(2, "0") +
+                ":" +
+                String(seconds).padStart(2, "0");
+
+            remainingSeconds -= 1;
+        }
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
+    }
+</script>
+<script>
+function toggleTranslation() {
+    const box = document.getElementById("translation-box");
+    box.classList.toggle("hidden");
+}
+</script>
+<script>
+function toggleTranslation() {
+    const box = document.getElementById("translation-box");
+    const options = document.querySelectorAll(".translation-option");
+
+    box.classList.toggle("hidden");
+
+    options.forEach(function(option) {
+        option.classList.toggle("hidden");
+    });
+}
+</script>
 {% endblock %}

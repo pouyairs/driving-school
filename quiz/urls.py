@@ -33,4 +33,7 @@ urlpatterns = [
         name="question_detail",
     ),
     path("exam/<int:exam_id>/result/", views.exam_result, name="exam_result"),
+    
+    
+    path("exam/<int:exam_id>/review/", views.exam_review, name="exam_review"),
 ]

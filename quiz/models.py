@@ -37,6 +37,10 @@ class Question(models.Model):
     )
 
     title = models.TextField()
+    title_translation = models.TextField(
+    blank=True,
+    help_text="Persian translation of the question",
+)
 
     image = models.ImageField(
         upload_to="quiz/images/",
@@ -54,9 +58,17 @@ class Question(models.Model):
     )
 
     option_1 = models.CharField(max_length=255)
+    option_1_translation = models.CharField(max_length=255, blank=True)
+
     option_2 = models.CharField(max_length=255)
+    option_2_translation = models.CharField(max_length=255, blank=True)
+
     option_3 = models.CharField(max_length=255)
+    option_3_translation = models.CharField(max_length=255, blank=True)
+
     option_4 = models.CharField(max_length=255, blank=True)
+    option_4_translation = models.CharField(max_length=255, blank=True)
+
 
     correct_answer = models.PositiveSmallIntegerField(
         choices=[
@@ -66,6 +78,12 @@ class Question(models.Model):
             (4, "گزینه ۴"),
         ]
     )
+    correct_answers = models.CharField(
+    max_length=20,
+    blank=True,
+    default="",
+    help_text="For multiple correct answers, use comma format: 1,2,4",
+)
 
     points = models.PositiveSmallIntegerField(
         default=3,
@@ -125,6 +143,12 @@ class ExamAnswer(models.Model):
         related_name="exam_answers",
     )
     selected_answer = models.PositiveSmallIntegerField()
+    selected_answers = models.CharField(
+    max_length=20,
+    blank=True,
+    default="",
+    help_text="Selected answers for multiple choice, e.g. 1,2,4",
+)
     is_correct = models.BooleanField(default=False)
     answered_at = models.DateTimeField(auto_now_add=True)
 

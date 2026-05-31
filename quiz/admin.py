@@ -43,30 +43,40 @@ class QuestionAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (
-            "Question Info",
-            {
-                "fields": (
-                    "category",
-                    "section",
-                    "title",
-                    "image",
-                    "video_url",
-                    "max_video_replays",
-                )
-            },
-        ),
+    "Question Info",
+    {
+        "fields": (
+            "category",
+            "section",
+            "title",
+            "title_translation",
+            "image",
+            "video_url",
+            "max_video_replays",
+        )
+    },
+),
         (
-            "Answers",
-            {
-                "fields": (
-                    "option_1",
-                    "option_2",
-                    "option_3",
-                    "option_4",
-                    "correct_answer",
-                )
-            },
-        ),
+    "Answers",
+    {
+        "fields": (
+            "option_1",
+            "option_1_translation",
+
+            "option_2",
+            "option_2_translation",
+
+            "option_3",
+            "option_3_translation",
+
+            "option_4",
+            "option_4_translation",
+
+            "correct_answer",
+            "correct_answers",
+        )
+    },
+),
         (
             "Exam Settings",
             {

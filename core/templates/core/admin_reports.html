@@ -1,0 +1,202 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+
+<h1 style="margin-bottom:24px;">Project Reports</h1>
+
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;">
+
+    <div style="background:#111827;color:white;padding:20px;border-radius:16px;">
+        <h3>Total Users</h3>
+        <p style="font-size:34px;font-weight:bold;">{{ total_users }}</p>
+    </div>
+
+    <div style="background:#1d4ed8;color:white;padding:20px;border-radius:16px;">
+        <h3>Total Exams</h3>
+        <p style="font-size:34px;font-weight:bold;">{{ total_exams }}</p>
+    </div>
+
+    <div style="background:#15803d;color:white;padding:20px;border-radius:16px;">
+        <h3>Passed Exams</h3>
+        <p style="font-size:34px;font-weight:bold;">{{ passed_exams }}</p>
+        <p>{{ pass_rate }}% Pass Rate</p>
+    </div>
+
+    <div style="background:#b91c1c;color:white;padding:20px;border-radius:16px;">
+        <h3>Failed Exams</h3>
+        <p style="font-size:34px;font-weight:bold;">{{ failed_exams }}</p>
+        <p>{{ fail_rate }}% Fail Rate</p>
+    </div>
+
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;">
+
+    <div style="background:#0f766e;color:white;padding:20px;border-radius:16px;">
+        <h3>Videos</h3>
+        <p style="font-size:34px;font-weight:bold;">{{ total_videos }}</p>
+    </div>
+
+    <div style="background:#7c3aed;color:white;padding:20px;border-radius:16px;">
+        <h3>Watched Videos</h3>
+        <p style="font-size:34px;font-weight:bold;">{{ total_watched_videos }}</p>
+    </div>
+
+    <div style="background:#ea580c;color:white;padding:20px;border-radius:16px;">
+        <h3>Average Error Points</h3>
+        <p style="font-size:34px;font-weight:bold;">{{ average_error_points }}</p>
+    </div>
+
+    <div style="background:#ca8a04;color:white;padding:20px;border-radius:16px;">
+        <h3>Revenue</h3>
+        <p style="font-size:34px;font-weight:bold;">{{ total_revenue }} €</p>
+        <p>{{ total_payments }} Payments</p>
+    </div>
+
+</div>
+
+<h2>Most Wrong Questions</h2>
+
+<table style="width:100%;border-collapse:collapse;margin-bottom:32px;background:white;">
+    <thead>
+        <tr>
+            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Question</th>
+            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Category</th>
+            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Section</th>
+            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Wrong Count</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for item in most_wrong_questions %}
+            <tr>
+                <td style="padding:12px;border-bottom:1px solid #eee;">
+                    {{ item.question__title }}
+                </td>
+
+                <td style="padding:12px;border-bottom:1px solid #eee;">
+                    {{ item.question__category__name }}
+                </td>
+
+                <td style="padding:12px;border-bottom:1px solid #eee;">
+                    {{ item.question__section }}
+                </td>
+
+                <td style="padding:12px;border-bottom:1px solid #eee;font-weight:bold;color:#b91c1c;">
+                    {{ item.wrong_count }}
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="4" style="padding:12px;">
+                    No wrong answers yet.
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Hardest Categories</h2>
+
+<table style="width:100%;border-collapse:collapse;margin-bottom:32px;background:white;">
+    <thead>
+        <tr>
+            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Category</th>
+            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Wrong Count</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for item in hardest_categories %}
+            <tr>
+                <td style="padding:12px;border-bottom:1px solid #eee;">
+                    {{ item.question__category__name }}
+                </td>
+
+                <td style="padding:12px;border-bottom:1px solid #eee;font-weight:bold;color:#b91c1c;">
+                    {{ item.wrong_count }}
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="2" style="padding:12px;">
+                    No category data yet.
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Most Active Users</h2>
+
+<table style="width:100%;border-collapse:collapse;margin-bottom:32px;background:white;">
+    <thead>
+        <tr>
+            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Username</th>
+            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Email</th>
+            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Exam Count</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for user in most_active_users %}
+            <tr>
+                <td style="padding:12px;border-bottom:1px solid #eee;">
+                    {{ user.user__username }}
+                </td>
+
+                <td style="padding:12px;border-bottom:1px solid #eee;">
+                    {{ user.user__email }}
+                </td>
+
+                <td style="padding:12px;border-bottom:1px solid #eee;font-weight:bold;">
+                    {{ user.exam_count }}
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="3" style="padding:12px;">
+                    No user activity yet.
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Most Watched Videos</h2>
+
+<table style="width:100%;border-collapse:collapse;background:white;">
+    <thead>
+        <tr>
+            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Video</th>
+            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Category</th>
+            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Watched Count</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for video in most_watched_videos %}
+            <tr>
+                <td style="padding:12px;border-bottom:1px solid #eee;">
+                    {{ video.video__title }}
+                </td>
+
+                <td style="padding:12px;border-bottom:1px solid #eee;">
+                    {{ video.video__category__name }}
+                </td>
+
+                <td style="padding:12px;border-bottom:1px solid #eee;font-weight:bold;">
+                    {{ video.watched_count }}
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="3" style="padding:12px;">
+                    No watched video data yet.
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

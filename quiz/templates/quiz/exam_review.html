@@ -1,0 +1,160 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+مرور آزمون
+{% endblock %}
+
+{% block content %}
+<main class="min-h-screen bg-slate-950 px-6 py-10 text-white">
+    <div class="mx-auto max-w-5xl">
+
+        <div class="mb-8 flex items-center justify-between">
+            <div>
+                <h1 class="text-4xl font-black">
+                    مرور پاسخ‌های آزمون
+                </h1>
+
+                <p class="mt-2 text-slate-400">
+                    جواب‌های درست و اشتباه این آزمون را بررسی کن.
+                </p>
+            </div>
+            
+
+            <a
+                href="/quiz/exam/{{ exam.id }}/result/"
+                class="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 font-bold hover:bg-white/10"
+            >
+                برگشت به نتیجه
+            </a>
+            
+        </div>
+
+        <div class="space-y-5">
+            {% for item in review_items %}
+                <section class="rounded-[2rem] border border-white/10 bg-white/5 p-6">
+
+                    <div class="mb-4 flex items-center justify-between gap-4">
+                        <div>
+                            <p class="text-sm font-bold text-blue-300">
+                                سوال {{ forloop.counter }} — {{ item.question.category.name }}
+                            </p>
+
+                            <h2 class="mt-2 text-2xl font-black leading-9">
+                                {{ item.question.title }}
+                            </h2>
+                        </div>
+
+                        {% if item.answer.is_correct %}
+                            <span class="rounded-full bg-green-500/20 px-4 py-2 text-sm font-black text-green-300">
+                                درست ✅
+                            </span>
+                        {% else %}
+                            <span class="rounded-full bg-yellow-400 px-4 py-2 text-sm font-black text-slate-950">
+                                اشتباه ⚠
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    {% if item.question.image %}
+                        <div class="mb-5 overflow-hidden rounded-2xl bg-slate-900">
+                            <img
+                                src="{{ item.question.image.url }}"
+                                alt="{{ item.question.title }}"
+                                class="w-full object-cover"
+                                style="max-height: 420px;"
+                            >
+                        </div>
+                    {% endif %}
+
+                    <div class="grid gap-3 md:grid-cols-2">
+                        <div class="rounded-2xl border
+                            {% if answer.selected_answer == 1 %}
+                                border-blue-400 bg-blue-500/10
+                            {% else %}
+                                border-white/10 bg-slate-900
+                            {% endif %}
+                            p-4"
+                        >
+                            <p class="font-bold">1. {{ item.question.option_1 }}</p>
+                        </div>
+
+                        <div class="rounded-2xl border
+                            {% if answer.selected_answer == 2 %}
+                                border-blue-400 bg-blue-500/10
+                            {% else %}
+                                border-white/10 bg-slate-900
+                            {% endif %}
+                            p-4"
+                        >
+                            <p class="font-bold">2. {{ item.question.option_2 }}</p>
+                        </div>
+
+                        <div class="rounded-2xl border
+                            {% if answer.selected_answer == 3 %}
+                                border-blue-400 bg-blue-500/10
+                            {% else %}
+                                border-white/10 bg-slate-900
+                            {% endif %}
+                            p-4"
+                        >
+                            <p class="font-bold">3. {{ item.question.option_3 }}</p>
+                        </div>
+
+                        {% if item.question.option_4 %}
+                            <div class="rounded-2xl border
+                                {% if answer.selected_answer == 4 %}
+                                    border-blue-400 bg-blue-500/10
+                                {% else %}
+                                    border-white/10 bg-slate-900
+                                {% endif %}
+                                p-4"
+                            >
+                                <p class="font-bold">4. {{ item.question.option_4 }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-5 grid gap-4 md:grid-cols-2">
+                        <div class="rounded-2xl bg-slate-900 p-4">
+                            <p class="text-sm text-slate-400">جواب شما</p>
+                            <p class="mt-2 font-black text-blue-300">
+                               {% for selected in item.selected_answers %}
+    گزینه {{ selected }}{% if not forloop.last %}، {% endif %}
+{% endfor %}
+                            </p>
+                        </div>
+
+                        <div class="rounded-2xl bg-slate-900 p-4">
+    <p class="text-sm text-slate-400">جواب صحیح</p>
+
+    <p class="mt-2 font-black text-green-300">
+        {% for correct in item.correct_answers %}
+            گزینه {{ correct }}{% if not forloop.last %}، {% endif %}
+        {% endfor %}
+    </p>
+</div>
+                    </div>
+
+                    {% if item.question.explanation %}
+                        <div class="mt-5 rounded-2xl border border-blue-400/20 bg-blue-500/10 p-5">
+                            <p class="font-black text-blue-300">
+                                توضیح
+                            </p>
+
+                            <p class="mt-2 leading-8 text-slate-300">
+                                {{ item.question.explanation }}
+                            </p>
+                        </div>
+                    {% endif %}
+
+                </section>
+            {% empty %}
+                <div class="rounded-2xl bg-white/5 p-6 text-center text-slate-400">
+                    هنوز پاسخی برای این آزمون ثبت نشده است.
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</main>
+{% endblock %}

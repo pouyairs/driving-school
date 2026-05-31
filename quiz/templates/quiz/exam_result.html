@@ -68,7 +68,7 @@
                 </p>
             </div>
 
-            {% if wrong_answers %}
+            {% if wrong_answer_items %}
                 <div class="mt-8 text-right">
                     <div class="mb-5 flex items-center justify-between">
                         <h2 class="text-2xl font-black text-red-300">
@@ -81,7 +81,7 @@
                     </div>
 
                     <div class="space-y-4">
-                        {% for answer in wrong_answers %}
+                        {% for item in wrong_answer_items %}
                             <div class="rounded-2xl border border-red-400/20 bg-red-500/10 p-5">
                                 <div class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                                     <div>
@@ -90,14 +90,14 @@
                                         </p>
 
                                         <h3 class="mt-2 text-lg font-black leading-8 text-white">
-                                            {{ answer.question.title }}
+                                            {{ item.answer.question.title }}
                                         </h3>
                                     </div>
 
                                     <div class="shrink-0 rounded-xl bg-slate-950 px-4 py-3 text-sm text-slate-300">
                                         امتیاز خطا:
                                         <span class="font-black text-red-300">
-                                            {{ answer.question.points }}
+                                            {{ item.answer.question.points }}
                                         </span>
                                     </div>
                                 </div>
@@ -109,7 +109,13 @@
                                         </p>
 
                                         <p class="mt-2 font-black text-red-300">
-                                            گزینه {{ answer.selected_answer }}
+                                            {% if item.selected_answers %}
+                                                {% for selected in item.selected_answers %}
+                                                    گزینه {{ selected }}{% if not forloop.last %}، {% endif %}
+                                                {% endfor %}
+                                            {% else %}
+                                                گزینه {{ item.answer.selected_answer }}
+                                            {% endif %}
                                         </p>
                                     </div>
 
@@ -119,19 +125,21 @@
                                         </p>
 
                                         <p class="mt-2 font-black text-green-300">
-                                            گزینه {{ answer.question.correct_answer }}
+                                            {% for correct in item.correct_answers %}
+                                                گزینه {{ correct }}{% if not forloop.last %}، {% endif %}
+                                            {% endfor %}
                                         </p>
                                     </div>
                                 </div>
 
-                                {% if answer.question.explanation %}
+                                {% if item.answer.question.explanation %}
                                     <div class="mt-4 rounded-xl bg-slate-950 p-4">
                                         <p class="text-sm font-bold text-blue-300">
                                             توضیح
                                         </p>
 
                                         <p class="mt-2 leading-8 text-slate-300">
-                                            {{ answer.question.explanation }}
+                                            {{ item.answer.question.explanation }}
                                         </p>
                                     </div>
                                 {% endif %}
@@ -160,6 +168,13 @@
                     class="rounded-2xl border border-white/10 bg-white/5 px-6 py-3 font-bold hover:bg-white/10"
                 >
                     برگشت به داشبورد
+                </a>
+
+                <a
+                    href="/quiz/exam/{{ exam.id }}/review/"
+                    class="rounded-2xl bg-yellow-400 px-6 py-3 font-bold text-slate-950 hover:bg-yellow-300"
+                >
+                    مرور پاسخ‌ها
                 </a>
             </div>
 
