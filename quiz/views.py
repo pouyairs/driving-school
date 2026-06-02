@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
-from .models import ExamAnswer, ExamSession, Question
+from .models import ExamAnswer, ExamSession, Question, WrongQuestion
 
 
 EXAM_DURATION_MINUTES = 30
@@ -132,7 +132,6 @@ def exam_question(request, exam_id, question_id):
 
     selected_answer = None
     selected_answers_list = []
-    selected_answers_text = ""
     is_correct = None
 
     existing_answer = ExamAnswer.objects.filter(
@@ -142,7 +141,6 @@ def exam_question(request, exam_id, question_id):
 
     if existing_answer:
         selected_answer = existing_answer.selected_answer
-        selected_answers_text = existing_answer.selected_answers
         selected_answers_list = parse_answer_list(existing_answer.selected_answers)
 
         if not selected_answers_list and selected_answer:
@@ -165,6 +163,17 @@ def exam_question(request, exam_id, question_id):
             correct_answers = [question.correct_answer]
 
         is_correct = selected_answers_list == correct_answers
+
+        if not is_correct:
+            WrongQuestion.objects.get_or_create(
+                user=request.user,
+                question=question,
+            )
+        else:
+            WrongQuestion.objects.filter(
+                user=request.user,
+                question=question,
+            ).delete()
 
         selected_answer = (
             selected_answers_list[0]
@@ -219,10 +228,11 @@ def exam_question(request, exam_id, question_id):
                 "section": "basic" if index < 20 else "class_b",
             }
         )
-        
+
     correct_answers_list = parse_answer_list(question.correct_answers)
+
     if not correct_answers_list:
-         correct_answers_list = [question.correct_answer]
+        correct_answers_list = [question.correct_answer]
 
     return render(
         request,
@@ -263,23 +273,27 @@ def exam_result(request, exam_id):
         .select_related("question")
         .order_by("answered_at")
     )
+
     wrong_answer_items = []
 
     for answer in wrong_answers:
+        correct_answers = parse_answer_list(answer.question.correct_answers)
 
-        correct_answers = parse_answer_list(
-        answer.question.correct_answers
-    )
+        if not correct_answers:
+            correct_answers = [answer.question.correct_answer]
 
-    if not correct_answers:
-        correct_answers = [answer.question.correct_answer]
+        selected_answers = parse_answer_list(answer.selected_answers)
 
-    wrong_answer_items.append(
-        {
-            "answer": answer,
-            "correct_answers": correct_answers,
-        }
-    )
+        if not selected_answers and answer.selected_answer:
+            selected_answers = [answer.selected_answer]
+
+        wrong_answer_items.append(
+            {
+                "answer": answer,
+                "correct_answers": correct_answers,
+                "selected_answers": selected_answers,
+            }
+        )
 
     is_passed = total_error_points <= 10
 
@@ -342,4 +356,35 @@ def exam_review(request, exam_id):
             "exam": exam,
             "review_items": review_items,
         },
+    )
+@login_required
+def my_mistakes(request):
+    mistakes = (
+        WrongQuestion.objects.filter(user=request.user)
+        .select_related("question", "question__category")
+        .order_by("-created_at")
+    )
+
+    return render(
+        request,
+        "quiz/my_mistakes.html",
+        {
+            "mistakes": mistakes,
+        },
+    )
+@login_required
+def practice_mistakes(request):
+    first_mistake = (
+        WrongQuestion.objects.filter(user=request.user)
+        .select_related("question")
+        .order_by("created_at")
+        .first()
+    )
+
+    if not first_mistake:
+        return redirect("my_mistakes")
+
+    return redirect(
+        "question_detail",
+        pk=first_mistake.question.id,
     )

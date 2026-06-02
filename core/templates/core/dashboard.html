@@ -5,9 +5,11 @@
 {% endblock %}
 
 {% block content %}
-<main class="min-h-screen bg-slate-950 text-white">
-    <div class="flex">
 
+
+<main class="min-h-screen bg-slate-950 text-white">
+    
+    <div class="flex">
         <!-- Sidebar -->
         <aside class="hidden min-h-screen w-72 border-l border-white/10 bg-slate-900/50 p-6 lg:block">
 
@@ -80,6 +82,33 @@
 
         <!-- Main -->
         <div class="flex-1 px-6 py-8">
+            <div class="mt-12 grid gap-4 md:grid-cols-5 mb-8">
+        <div class="rounded-2xl bg-slate-900 p-5 text-center">
+        <div class="text-sm text-slate-400">Exams</div>
+        <div class="text-3xl font-black">{{ total_exams }}</div>
+    </div>
+
+    <div class="rounded-2xl bg-green-500/10 p-5 text-center">
+        <div class="text-sm text-green-300">Passed</div>
+        <div class="text-3xl font-black">{{ passed_exams }}</div>
+    </div>
+
+    <div class="rounded-2xl bg-red-500/10 p-5 text-center">
+        <div class="text-sm text-red-300">Failed</div>
+        <div class="text-3xl font-black">{{ failed_exams }}</div>
+    </div>
+
+    <div class="rounded-2xl bg-yellow-500/10 p-5 text-center">
+        <div class="text-sm text-yellow-300">Mistakes</div>
+        <div class="text-3xl font-black">{{ mistakes_count }}</div>
+    </div>
+
+    <div class="rounded-2xl bg-blue-500/10 p-5 text-center">
+        <div class="text-sm text-blue-300">Pass Rate</div>
+        <div class="text-3xl font-black">{{ pass_rate }}%</div>
+    </div>
+
+</div>
 
             <!-- Header -->
             <header class="mb-8 flex flex-col gap-4 rounded-[2rem] border border-white/10 bg-white/5 p-6 md:flex-row md:items-center md:justify-between">

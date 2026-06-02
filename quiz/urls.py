@@ -36,4 +36,6 @@ urlpatterns = [
     
     
     path("exam/<int:exam_id>/review/", views.exam_review, name="exam_review"),
+    path("my-mistakes/", views.my_mistakes, name="my_mistakes"),
+    path("practice-mistakes/", views.practice_mistakes, name="practice_mistakes"),
 ]
