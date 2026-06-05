@@ -178,3 +178,24 @@ class WrongQuestion(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.question.id}"
+    
+class FavoriteQuestion(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+
+    question = models.ForeignKey(
+        Question,
+        on_delete=models.CASCADE,
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    class Meta:
+        unique_together = ("user", "question")
+
+    def __str__(self):
+        return f"{self.user.username} - {self.question.id}"

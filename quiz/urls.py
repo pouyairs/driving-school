@@ -38,4 +38,12 @@ urlpatterns = [
     path("exam/<int:exam_id>/review/", views.exam_review, name="exam_review"),
     path("my-mistakes/", views.my_mistakes, name="my_mistakes"),
     path("practice-mistakes/", views.practice_mistakes, name="practice_mistakes"),
+    path("favorite/<int:question_id>/", views.toggle_favorite, name="toggle_favorite"),
+    path("favorites/", views.favorites, name="favorites"),
+    path(
+    "practice-favorites/",
+    views.practice_favorites,
+    name="practice_favorites",
+),
+    path("history/", views.exam_history, name="exam_history"),
 ]

@@ -1,0 +1,94 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+سوال‌های ذخیره شده
+{% endblock %}
+
+{% block content %}
+
+<main class="min-h-screen bg-slate-950 px-6 py-10 text-white">
+
+    <div class="mx-auto max-w-5xl">
+
+        <div class="mb-8 flex items-center justify-between">
+
+            <div>
+                <h1 class="text-4xl font-black">
+                    ⭐ سوال‌های ذخیره شده
+                </h1>
+
+                <p class="mt-2 text-slate-400">
+                    سوال‌هایی که برای مرور بعدی ذخیره کرده‌ای.
+                </p>
+            </div>
+
+            <a
+                href="/dashboard/"
+                class="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 font-bold hover:bg-white/10"
+            >
+                برگشت به داشبورد
+            </a>
+            <a
+    href="/quiz/practice-favorites/"
+    class="rounded-2xl bg-yellow-400 px-5 py-3 font-bold text-slate-950 hover:bg-yellow-300"
+>
+    ⭐ تمرین علاقه‌مندی‌ها
+</a>
+
+        </div>
+
+        <div class="space-y-5">
+
+            {% for favorite in favorites %}
+
+                <section class="rounded-[2rem] border border-yellow-400/20 bg-yellow-400/10 p-6">
+
+                    <h2 class="text-xl font-black">
+                        {{ favorite.question.title }}
+                    </h2>
+
+                    {% if favorite.question.title_translation %}
+                        <div class="mt-4 rounded-2xl bg-slate-950 p-4 text-slate-300">
+                            {{ favorite.question.title_translation }}
+                        </div>
+                    {% endif %}
+
+                    <div class="mt-5 flex gap-3">
+
+                        <a
+                            href="/quiz/{{ favorite.question.id }}/"
+                            class="rounded-xl bg-blue-500 px-4 py-2 font-bold hover:bg-blue-600"
+                        >
+                            باز کردن سوال
+                        </a>
+
+                        <a
+                            href="/quiz/favorite/{{ favorite.question.id }}/"
+                            class="rounded-xl bg-red-500 px-4 py-2 font-bold hover:bg-red-600"
+                        >
+                            حذف از علاقه‌مندی‌ها
+                        </a>
+
+                    </div>
+
+                </section>
+
+            {% empty %}
+
+                <div class="rounded-2xl border border-green-400/20 bg-green-500/10 p-8 text-center">
+
+                    <h2 class="text-2xl font-black text-green-300">
+                        هنوز سوال ذخیره شده‌ای نداری ⭐
+                    </h2>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</main>
+
+{% endblock %}

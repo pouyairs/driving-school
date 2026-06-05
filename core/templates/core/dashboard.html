@@ -5,344 +5,253 @@
 {% endblock %}
 
 {% block content %}
-
-
 <main class="min-h-screen bg-slate-950 text-white">
-    
     <div class="flex">
+
         <!-- Sidebar -->
         <aside class="hidden min-h-screen w-72 border-l border-white/10 bg-slate-900/50 p-6 lg:block">
-
             <div class="mb-10">
-                <h2 class="text-2xl font-black">
-                    داشبورد
-                </h2>
-
-                <p class="mt-2 text-sm text-slate-400">
-                    آموزش گواهینامه آلمان
-                </p>
+                <h2 class="text-2xl font-black">داشبورد</h2>
+                <p class="mt-2 text-sm text-slate-400">آموزش گواهینامه آلمان</p>
             </div>
 
             <nav class="space-y-3">
-
-                <a
-                    href="/dashboard/"
-                    class="flex items-center rounded-2xl bg-blue-500 px-4 py-3 font-bold"
-                >
+                <a href="/dashboard/" class="flex items-center rounded-2xl bg-blue-500 px-4 py-3 font-bold">
                     داشبورد
                 </a>
 
-                <a
-                    href="#videos"
-                    class="flex items-center rounded-2xl px-4 py-3 text-slate-300 transition hover:bg-white/5"
-                >
-                    ویدیوهای آموزشی
-                </a>
-
-                <a
-                    href="#progress"
-                    class="flex items-center rounded-2xl px-4 py-3 text-slate-300 transition hover:bg-white/5"
-                >
+                <a href="#progress" class="flex items-center rounded-2xl px-4 py-3 text-slate-300 transition hover:bg-white/5">
                     پیشرفت من
                 </a>
 
-                <!-- Categories -->
-                <div class="pt-4">
+                <a href="#videos" class="flex items-center rounded-2xl px-4 py-3 text-slate-300 transition hover:bg-white/5">
+                    ویدیوهای آموزشی
+                </a>
 
-                    <p class="mb-3 px-4 text-xs font-bold text-slate-500">
-                        دسته‌بندی‌ها
-                    </p>
+                <a href="/quiz/history/" class="flex items-center rounded-2xl px-4 py-3 text-slate-300 transition hover:bg-white/5">
+                    تاریخچه آزمون‌ها
+                </a>
 
-                    <div class="space-y-2">
+                <a href="/quiz/my-mistakes/" class="flex items-center rounded-2xl px-4 py-3 text-slate-300 transition hover:bg-white/5">
+                    سوال‌های اشتباه
+                </a>
 
-                        {% for category in categories %}
-
-                            <a
-                                href="#category-{{ category.id }}"
-                                class="block rounded-2xl px-4 py-3 text-sm text-slate-300 transition hover:bg-white/5 hover:text-white"
-                            >
-                                {{ category.name }}
-                            </a>
-
-                        {% empty %}
-
-                            <p class="px-4 text-sm text-slate-500">
-                                هنوز دسته‌بندی نداری
-                            </p>
-
-                        {% endfor %}
-
-                    </div>
-
-                </div>
-
+                <a href="/quiz/favorites/" class="flex items-center rounded-2xl px-4 py-3 text-slate-300 transition hover:bg-white/5">
+                    علاقه‌مندی‌ها
+                </a>
             </nav>
-
         </aside>
 
         <!-- Main -->
         <div class="flex-1 px-6 py-8">
-            <div class="mt-12 grid gap-4 md:grid-cols-5 mb-8">
-        <div class="rounded-2xl bg-slate-900 p-5 text-center">
-        <div class="text-sm text-slate-400">Exams</div>
-        <div class="text-3xl font-black">{{ total_exams }}</div>
-    </div>
-
-    <div class="rounded-2xl bg-green-500/10 p-5 text-center">
-        <div class="text-sm text-green-300">Passed</div>
-        <div class="text-3xl font-black">{{ passed_exams }}</div>
-    </div>
-
-    <div class="rounded-2xl bg-red-500/10 p-5 text-center">
-        <div class="text-sm text-red-300">Failed</div>
-        <div class="text-3xl font-black">{{ failed_exams }}</div>
-    </div>
-
-    <div class="rounded-2xl bg-yellow-500/10 p-5 text-center">
-        <div class="text-sm text-yellow-300">Mistakes</div>
-        <div class="text-3xl font-black">{{ mistakes_count }}</div>
-    </div>
-
-    <div class="rounded-2xl bg-blue-500/10 p-5 text-center">
-        <div class="text-sm text-blue-300">Pass Rate</div>
-        <div class="text-3xl font-black">{{ pass_rate }}%</div>
-    </div>
-
-</div>
 
             <!-- Header -->
-            <header class="mb-8 flex flex-col gap-4 rounded-[2rem] border border-white/10 bg-white/5 p-6 md:flex-row md:items-center md:justify-between">
+            <header class="mb-8 rounded-[2rem] border border-white/10 bg-white/5 p-6">
+                <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
 
-                <div>
+                    <div>
+                        <p class="mb-2 text-sm text-blue-300">داشبورد کاربری</p>
 
-                    <p class="mb-2 text-sm text-blue-300">
-                        داشبورد کاربری
-                    </p>
+                        <h1 class="text-3xl font-black">
+                            سلام {{ request.user.username }} 👋
+                        </h1>
 
-                    <h1 class="text-3xl font-black">
-                        سلام {{ request.user.username }} 👋
-                    </h1>
+                        <p class="mt-2 text-slate-400">
+                            مسیر یادگیری گواهینامه آلمان را از اینجا ادامه بده.
+                        </p>
+                    </div>
 
-                    <p class="mt-2 text-slate-400">
-                        مسیر یادگیری گواهینامه آلمان را از اینجا ادامه بده.
-                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <a href="/" class="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-center font-bold text-slate-200 hover:bg-white/10">
+                            صفحه اصلی
+                        </a>
 
+                        <a href="/accounts/logout/" class="rounded-2xl border border-red-400/30 bg-red-500/10 px-5 py-3 text-center font-bold text-red-300 hover:bg-red-500/20">
+                            خروج
+                        </a>
+                    </div>
                 </div>
 
-                <div class="flex flex-col gap-3 sm:flex-row">
-
-                    <a
-                        href="/"
-                        class="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-center font-bold text-slate-200 hover:bg-white/10"
-                    >
-                        صفحه اصلی
+                <div class="mt-6 flex flex-wrap gap-3">
+                    <a href="/quiz/exam/start/" class="rounded-2xl bg-blue-500 px-5 py-3 text-center font-bold hover:bg-blue-600">
+                        شروع آزمون
                     </a>
 
-                    <a
-                        href="/accounts/logout/"
-                        class="rounded-2xl border border-red-400/30 bg-red-500/10 px-5 py-3 text-center font-bold text-red-300 hover:bg-red-500/20"
-                    >
-                        خروج
+                    <a href="/quiz/history/" class="rounded-2xl bg-purple-500 px-5 py-3 text-center font-bold hover:bg-purple-600">
+                        تاریخچه آزمون‌ها
                     </a>
 
+                    <a href="/quiz/my-mistakes/" class="rounded-2xl bg-yellow-400 px-5 py-3 text-center font-bold text-slate-950 hover:bg-yellow-300">
+                        سوال‌های اشتباه
+                    </a>
+
+                    <a href="/quiz/favorites/" class="rounded-2xl bg-pink-500 px-5 py-3 text-center font-bold hover:bg-pink-600">
+                        علاقه‌مندی‌ها
+                    </a>
                 </div>
+                <div class="mt-5 flex flex-wrap items-center gap-2 text-sm">
 
+    <span class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-slate-300">
+        آزمون‌ها: <strong class="text-white">{{ total_exams }}</strong>
+    </span>
+
+    <span class="rounded-full border border-green-400/20 bg-green-500/10 px-4 py-2 text-green-300">
+        قبولی: <strong>{{ passed_exams }}</strong>
+    </span>
+
+    <span class="rounded-full border border-red-400/20 bg-red-500/10 px-4 py-2 text-red-300">
+        مردودی: <strong>{{ failed_exams }}</strong>
+    </span>
+
+    <span class="rounded-full border border-yellow-400/20 bg-yellow-500/10 px-4 py-2 text-yellow-300">
+        اشتباهات: <strong>{{ mistakes_count }}</strong>
+    </span>
+
+    <span class="rounded-full border border-blue-400/20 bg-blue-500/10 px-4 py-2 text-blue-300">
+        نرخ قبولی: <strong>{{ pass_rate }}٪</strong>
+    </span>
+
+</div>
             </header>
 
-            <!-- Stats -->
+            <!-- Exam Stats -->
+            <section class="mb-8 grid gap-4 md:grid-cols-5">
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-5 text-center">
+                    <div class="text-sm text-slate-400">Exams</div>
+                    <div class="mt-2 text-3xl font-black">{{ total_exams }}</div>
+                </div>
+
+                <div class="rounded-2xl border border-green-400/20 bg-green-500/10 p-5 text-center">
+                    <div class="text-sm text-green-300">Passed</div>
+                    <div class="mt-2 text-3xl font-black">{{ passed_exams }}</div>
+                </div>
+
+                <div class="rounded-2xl border border-red-400/20 bg-red-500/10 p-5 text-center">
+                    <div class="text-sm text-red-300">Failed</div>
+                    <div class="mt-2 text-3xl font-black">{{ failed_exams }}</div>
+                </div>
+
+                <div class="rounded-2xl border border-yellow-400/20 bg-yellow-500/10 p-5 text-center">
+                    <div class="text-sm text-yellow-300">Mistakes</div>
+                    <div class="mt-2 text-3xl font-black">{{ mistakes_count }}</div>
+                </div>
+
+                <div class="rounded-2xl border border-blue-400/20 bg-blue-500/10 p-5 text-center">
+                    <div class="text-sm text-blue-300">Pass Rate</div>
+                    <div class="mt-2 text-3xl font-black">{{ pass_rate }}%</div>
+                </div>
+            </section>
+
+            <!-- Learning Stats -->
             <section id="progress" class="grid gap-6 md:grid-cols-3">
-
                 <div class="rounded-[2rem] border border-white/10 bg-white/5 p-6">
-
-                    <p class="text-sm text-slate-400">
-                        پیشرفت کلی
-                    </p>
+                    <p class="text-sm text-slate-400">پیشرفت کلی</p>
 
                     <p class="mt-3 text-4xl font-black">
                         {{ progress_percent }}٪
                     </p>
 
                     <div class="mt-5 h-3 rounded-full bg-slate-800">
-
                         <div
                             class="h-3 rounded-full bg-blue-500"
                             style="width: {{ progress_percent|stringformat:'s' }}%;"
                         ></div>
-
                     </div>
-
                 </div>
 
                 <div class="rounded-[2rem] border border-white/10 bg-white/5 p-6">
-
-                    <p class="text-sm text-slate-400">
-                        درس‌های دیده‌شده
-                    </p>
+                    <p class="text-sm text-slate-400">درس‌های دیده‌شده</p>
 
                     <p class="mt-3 text-4xl font-black">
                         {{ watched_count }} / {{ total_videos }}
                     </p>
-
                 </div>
 
                 <div class="rounded-[2rem] border border-white/10 bg-white/5 p-6">
-
-                    <p class="text-sm text-slate-400">
-                        مرحله فعلی
-                    </p>
+                    <p class="text-sm text-slate-400">مرحله فعلی</p>
 
                     <p class="mt-3 text-2xl font-black">
-
                         {% if next_video %}
                             {{ next_video.category.name|default:"ادامه مسیر" }}
                         {% else %}
                             تکمیل شده ✅
                         {% endif %}
-
                     </p>
-
                 </div>
-
             </section>
 
             <!-- Videos -->
             <section id="videos" class="mt-8 grid gap-6 lg:grid-cols-3">
-
-                <div class="lg:col-span-2 rounded-[2rem] border border-white/10 bg-white/5 p-6">
-
+                <div class="rounded-[2rem] border border-white/10 bg-white/5 p-6 lg:col-span-2">
                     <div class="mb-6">
-
-                        <h2 class="text-2xl font-black">
-                            مسیر ویدیوهای آموزشی
-                        </h2>
-
+                        <h2 class="text-2xl font-black">مسیر ویدیوهای آموزشی</h2>
                         <p class="mt-1 text-slate-400">
                             ویدیوها بر اساس دسته‌بندی آموزشی نمایش داده می‌شوند.
                         </p>
-
                     </div>
 
                     <div class="space-y-10">
-
                         {% if categories %}
-
                             {% for category in categories %}
-
                                 <div id="category-{{ category.id }}">
-
                                     <div class="mb-5">
-
-                                        <h3 class="text-2xl font-black">
-                                            {{ category.name }}
-                                        </h3>
-
+                                        <h3 class="text-2xl font-black">{{ category.name }}</h3>
                                         <p class="mt-1 text-sm text-slate-400">
                                             آموزش‌های مربوط به {{ category.name }}
                                         </p>
-
                                     </div>
 
                                     <div class="grid gap-5 md:grid-cols-2">
-
                                         {% for video in category.videos.all %}
-
                                             {% if video.is_published %}
-
                                                 <article class="rounded-3xl bg-slate-900 p-4">
-
-                                                    <a
-                                                        href="/videos/{{ video.id }}/"
-                                                        class="group relative block aspect-video overflow-hidden rounded-2xl bg-slate-800"
-                                                    >
-
+                                                    <a href="/videos/{{ video.id }}/" class="group relative block aspect-video overflow-hidden rounded-2xl bg-slate-800">
                                                         <img
                                                             src="{{ video.youtube_thumbnail }}"
                                                             alt="{{ video.title }}"
                                                             class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                                                         />
 
-                                                        <div
-                                                            class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"
-                                                        ></div>
+                                                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
 
-                                                        <div
-                                                            class="absolute inset-0 flex items-center justify-center"
-                                                        >
-
-                                                            <div
-                                                                class="flex h-16 w-16 items-center justify-center rounded-full bg-white/20 backdrop-blur transition duration-300 group-hover:scale-110 group-hover:bg-blue-500"
-                                                            >
-
-                                                                <svg
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    fill="currentColor"
-                                                                    viewBox="0 0 16 16"
-                                                                    class="h-6 w-6 text-white"
-                                                                >
-                                                                    <path
-                                                                        d="M11.596 8.697l-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692c.541.314.541 1.09 0 1.393z"
-                                                                    />
+                                                        <div class="absolute inset-0 flex items-center justify-center">
+                                                            <div class="flex h-16 w-16 items-center justify-center rounded-full bg-white/20 backdrop-blur transition duration-300 group-hover:scale-110 group-hover:bg-blue-500">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16" class="h-6 w-6 text-white">
+                                                                    <path d="M11.596 8.697l-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692c.541.314.541 1.09 0 1.393z" />
                                                                 </svg>
-
                                                             </div>
-
                                                         </div>
-
                                                     </a>
 
                                                     <div class="mt-4 flex items-center justify-between gap-3">
-
-                                                        <h4 class="font-bold">
-                                                            {{ video.title }}
-                                                        </h4>
+                                                        <h4 class="font-bold">{{ video.title }}</h4>
 
                                                         {% if video.id in watched_video_ids %}
-
-                                                            <span
-                                                                class="rounded-full bg-green-500/15 px-3 py-1 text-xs font-bold text-green-300"
-                                                            >
+                                                            <span class="rounded-full bg-green-500/15 px-3 py-1 text-xs font-bold text-green-300">
                                                                 مشاهده شد
                                                             </span>
-
                                                         {% endif %}
-
                                                     </div>
 
                                                     <p class="mt-2 text-sm text-slate-400">
                                                         {{ video.description }}
                                                     </p>
 
-                                                    <a
-                                                        href="/videos/{{ video.id }}/"
-                                                        class="mt-4 inline-block rounded-xl bg-blue-500 px-4 py-2 text-sm font-bold hover:bg-blue-600"
-                                                    >
+                                                    <a href="/videos/{{ video.id }}/" class="mt-4 inline-block rounded-xl bg-blue-500 px-4 py-2 text-sm font-bold hover:bg-blue-600">
                                                         تماشای درس
                                                     </a>
-
                                                 </article>
-
                                             {% endif %}
-
                                         {% empty %}
-
                                             <p class="text-sm text-slate-500">
                                                 هنوز ویدیویی داخل این دسته‌بندی نیست.
                                             </p>
-
                                         {% endfor %}
-
                                     </div>
-
                                 </div>
-
                             {% endfor %}
-
                         {% else %}
-
-                            <div
-                                class="rounded-[2rem] border border-dashed border-white/10 bg-white/5 p-10 text-center"
-                            >
-
+                            <div class="rounded-[2rem] border border-dashed border-white/10 bg-white/5 p-10 text-center">
                                 <h3 class="text-2xl font-black">
                                     هنوز دسته‌بندی‌ای ساخته نشده
                                 </h3>
@@ -351,70 +260,36 @@
                                     اول از پنل مدیریت یک Category بساز، بعد ویدیوها را به آن وصل کن.
                                 </p>
 
-                                <a
-                                    href="/admin/"
-                                    class="mt-6 inline-block rounded-2xl bg-blue-500 px-5 py-3 font-bold hover:bg-blue-600"
-                                >
+                                <a href="/admin/" class="mt-6 inline-block rounded-2xl bg-blue-500 px-5 py-3 font-bold hover:bg-blue-600">
                                     رفتن به پنل مدیریت
                                 </a>
-
                             </div>
-
                         {% endif %}
-
                     </div>
-
                 </div>
 
                 <!-- Today -->
                 <aside class="rounded-[2rem] border border-white/10 bg-white/5 p-6">
-
-                    <h2 class="text-xl font-black">
-                        مسیر امروز
-                    </h2>
+                    <h2 class="text-xl font-black">مسیر امروز</h2>
 
                     <div class="mt-5 space-y-4">
-
                         {% if next_video %}
-
-                            <a
-                                href="/videos/{{ next_video.id }}/"
-                                class="block rounded-2xl border border-blue-400/30 bg-blue-500/10 p-4 transition hover:bg-blue-500/20"
-                            >
-
-                                <p class="text-sm text-blue-300">
-                                    ادامه یادگیری
-                                </p>
-
-                                <p class="mt-2 font-bold">
-                                    {{ next_video.title }}
-                                </p>
-
+                            <a href="/videos/{{ next_video.id }}/" class="block rounded-2xl border border-blue-400/30 bg-blue-500/10 p-4 transition hover:bg-blue-500/20">
+                                <p class="text-sm text-blue-300">ادامه یادگیری</p>
+                                <p class="mt-2 font-bold">{{ next_video.title }}</p>
                             </a>
-
                         {% else %}
-
-                            <div
-                                class="rounded-2xl border border-green-400/30 bg-green-500/10 p-4"
-                            >
-
+                            <div class="rounded-2xl border border-green-400/30 bg-green-500/10 p-4">
                                 <p class="font-bold text-green-300">
                                     همه ویدیوها دیده شده‌اند ✅
                                 </p>
-
                             </div>
-
                         {% endif %}
-
                     </div>
-
                 </aside>
-
             </section>
 
         </div>
-
     </div>
-
 </main>
 {% endblock %}

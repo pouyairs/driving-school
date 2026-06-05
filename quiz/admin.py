@@ -1,5 +1,5 @@
 from django.contrib import admin
-
+from .models import FavoriteQuestion
 from .models import ExamAnswer, ExamSession, Question, QuizCategory
 
 
@@ -141,3 +141,15 @@ class ExamAnswerAdmin(admin.ModelAdmin):
     )
 
     readonly_fields = ("answered_at",)
+@admin.register(FavoriteQuestion)
+class FavoriteQuestionAdmin(admin.ModelAdmin):
+    list_display = (
+        "user",
+        "question",
+        "created_at",
+    )
+
+    search_fields = (
+        "user__username",
+        "question__title",
+    )

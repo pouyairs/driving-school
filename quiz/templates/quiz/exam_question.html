@@ -126,8 +126,32 @@
 
             <h1 class="text-3xl font-black leading-relaxed">
                 {{ question.title }}
+                <button
+    type="button"
+    onclick="speakQuestion()"
+    class="inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-500/10 px-3 py-1.5 text-sm font-medium text-blue-300 hover:bg-blue-500/20"
+>
+    🔊 Read
+</button>
+
                 
             </h1>
+            <a
+    href="/quiz/favorite/{{ question.id }}/"
+    class="mt-4 inline-block rounded-xl px-4 py-2 font-bold
+    {% if is_favorite %}
+        bg-yellow-400 text-slate-950 hover:bg-yellow-300
+    {% else %}
+        bg-white/10 text-yellow-300 hover:bg-white/20
+    {% endif %}"
+>
+    {% if is_favorite %}
+        ⭐ ذخیره شده
+    {% else %}
+        ☆ ذخیره سوال
+    {% endif %}
+</a>
+ 
             <button
     type="button"
     onclick="toggleTranslation()"
@@ -373,5 +397,39 @@ function toggleTranslation() {
         option.classList.toggle("hidden");
     });
 }
+</script>
+<script>
+function speakQuestion() {
+    const text = `{{ question.title|escapejs }}`;
+
+    if (!("speechSynthesis" in window)) {
+        alert("Your browser does not support speech.");
+        return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = "en-US";
+    speech.rate = 0.9;
+    speech.pitch = 1;
+    speech.volume = 1;
+
+    const voices = window.speechSynthesis.getVoices();
+
+    const englishVoice = voices.find(function(voice) {
+        return voice.lang.startsWith("en");
+    });
+
+    if (englishVoice) {
+        speech.voice = englishVoice;
+    }
+
+    window.speechSynthesis.speak(speech);
+}
+
+window.speechSynthesis.onvoiceschanged = function() {
+    window.speechSynthesis.getVoices();
+};
 </script>
 {% endblock %}

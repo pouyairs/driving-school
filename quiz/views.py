@@ -1,5 +1,5 @@
 from datetime import timedelta
-
+from .models import ExamAnswer, ExamSession, FavoriteQuestion, Question, WrongQuestion
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -233,6 +233,10 @@ def exam_question(request, exam_id, question_id):
 
     if not correct_answers_list:
         correct_answers_list = [question.correct_answer]
+    is_favorite = FavoriteQuestion.objects.filter(
+    user=request.user,
+    question=question,
+    ).exists()
 
     return render(
         request,
@@ -250,6 +254,7 @@ def exam_question(request, exam_id, question_id):
             "next_question": next_question,
             "remaining_seconds": remaining_seconds,
             "nav_items": nav_items,
+            "is_favorite": is_favorite,
         },
     )
 
@@ -387,4 +392,78 @@ def practice_mistakes(request):
     return redirect(
         "question_detail",
         pk=first_mistake.question.id,
+    )
+@login_required
+def toggle_favorite(request, question_id):
+    question = get_object_or_404(Question, id=question_id)
+
+    favorite, created = FavoriteQuestion.objects.get_or_create(
+        user=request.user,
+        question=question,
+    )
+
+    if not created:
+        favorite.delete()
+
+    return redirect(request.META.get("HTTP_REFERER", "/dashboard/"))
+@login_required
+def favorites(request):
+    favorites = (
+        FavoriteQuestion.objects.filter(user=request.user)
+        .select_related("question")
+        .order_by("-created_at")
+    )
+
+    return render(
+        request,
+        "quiz/favorites.html",
+        {
+            "favorites": favorites,
+        },
+    )
+@login_required
+def practice_favorites(request):
+    first_favorite = (
+        FavoriteQuestion.objects.filter(user=request.user)
+        .select_related("question")
+        .order_by("created_at")
+        .first()
+    )
+
+    if not first_favorite:
+        return redirect("favorites")
+
+    return redirect(
+        "question_detail",
+        pk=first_favorite.question.id,
+    )
+@login_required
+def exam_history(request):
+    exams = (
+        ExamSession.objects.filter(user=request.user)
+        .order_by("-started_at")
+    )
+
+    history_items = []
+
+    for exam in exams:
+        error_points = exam.total_error_points()
+        is_passed = error_points <= 10
+
+        history_items.append(
+            {
+                "exam": exam,
+                "error_points": error_points,
+                "is_passed": is_passed,
+                "answered_count": exam.answers.count(),
+                "total_questions": exam.questions.count(),
+            }
+        )
+
+    return render(
+        request,
+        "quiz/exam_history.html",
+        {
+            "history_items": history_items,
+        },
     )
