@@ -6,39 +6,50 @@
 
 {% block content %}
 <main class="min-h-screen bg-slate-950 px-6 py-10 text-white">
+
     <div class="mx-auto max-w-5xl">
 
-        <div class="mb-8 flex items-center justify-between">
+        <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+
             <div>
                 <h1 class="text-4xl font-black">
-                    سوال‌های اشتباه من
+                    ❌ سوال‌های اشتباه من
                 </h1>
 
                 <p class="mt-2 text-slate-400">
-                    اینجا سوال‌هایی را می‌بینی که قبلاً اشتباه جواب داده‌ای.
+                    سوال‌هایی که قبلاً اشتباه پاسخ داده‌ای و نیاز به مرور دارند.
                 </p>
             </div>
 
-            <a
-                href="/dashboard/"
-                class="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 font-bold hover:bg-white/10"
-            >
-                برگشت به داشبورد
-            </a>
-            <a
-    href="/quiz/practice-mistakes/"
-    class="rounded-2xl bg-yellow-400 px-5 py-3 font-bold text-slate-950 hover:bg-yellow-300"
->
-    تمرین سوال‌های اشتباه
-</a>
+            <div class="flex flex-wrap gap-3">
+
+                <a
+                    href="/quiz/practice-mistakes/"
+                    class="rounded-2xl border border-red-400/30 bg-red-500/10 px-5 py-3 font-bold text-red-300 hover:bg-red-500/20"
+                >
+                    🎯 تمرین سوال‌های اشتباه
+                </a>
+
+                <a
+                    href="/dashboard/"
+                    class="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 font-bold hover:bg-white/10"
+                >
+                    برگشت به داشبورد
+                </a>
+
+            </div>
+
         </div>
 
         <div class="space-y-5">
-            {% for mistake in mistakes %}
-                <section class="rounded-[2rem] border border-yellow-400/20 bg-yellow-400/10 p-6">
 
-                    <p class="text-sm font-bold text-yellow-300">
-                        {{ mistake.question.category.name }} / {{ mistake.question.get_section_display }}
+            {% for mistake in mistakes %}
+
+                <section class="rounded-[2rem] border border-red-400/20 bg-red-500/5 p-6">
+
+                    <p class="text-sm font-bold text-red-300">
+                        {{ mistake.question.category.name }} /
+                        {{ mistake.question.get_section_display }}
                     </p>
 
                     <h2 class="mt-3 text-2xl font-black leading-9">
@@ -46,12 +57,13 @@
                     </h2>
 
                     {% if mistake.question.title_translation %}
-                        <div class="mt-4 rounded-2xl bg-slate-950 p-4 text-right text-slate-300">
+                        <div class="mt-4 rounded-2xl bg-slate-950 p-4 leading-8 text-slate-300">
                             {{ mistake.question.title_translation }}
                         </div>
                     {% endif %}
 
                     <div class="mt-5 grid gap-3 md:grid-cols-2">
+
                         <div class="rounded-2xl bg-slate-900 p-4">
                             1. {{ mistake.question.option_1 }}
                         </div>
@@ -69,18 +81,30 @@
                                 4. {{ mistake.question.option_4 }}
                             </div>
                         {% endif %}
+
                     </div>
 
                 </section>
+
             {% empty %}
+
                 <div class="rounded-2xl border border-green-400/20 bg-green-500/10 p-8 text-center">
+
                     <h2 class="text-2xl font-black text-green-300">
-                        هنوز سوال اشتباهی نداری 🎉
+                        🎉 هنوز هیچ سوال اشتباهی نداری
                     </h2>
+
+                    <p class="mt-3 text-slate-400">
+                        عالیه! هنوز سوالی برای مرور در این بخش ثبت نشده است.
+                    </p>
+
                 </div>
+
             {% endfor %}
+
         </div>
 
     </div>
+
 </main>
 {% endblock %}

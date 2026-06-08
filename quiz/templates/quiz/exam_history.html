@@ -8,13 +8,14 @@
 <main class="min-h-screen bg-slate-950 px-6 py-10 text-white">
     <div class="mx-auto max-w-5xl">
 
-        <div class="mb-8 flex items-center justify-between">
+        <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
                 <h1 class="text-4xl font-black">
-                    تاریخچه آزمون‌ها
+                    📜 تاریخچه آزمون‌ها
                 </h1>
+
                 <p class="mt-2 text-slate-400">
-                    نتیجه آزمون‌هایی که قبلاً داده‌ای.
+                    نتیجه آزمون‌هایی که قبلاً انجام داده‌ای.
                 </p>
             </div>
 
@@ -29,7 +30,7 @@
         <div class="space-y-4">
             {% for item in history_items %}
                 <section class="rounded-2xl border border-white/10 bg-white/5 p-5">
-                    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
 
                         <div>
                             <h2 class="text-xl font-black">
@@ -37,59 +38,68 @@
                             </h2>
 
                             <p class="mt-2 text-sm text-slate-400">
-                                {{ item.exam.started_at }}
+                                تاریخ شروع: {{ item.exam.started_at }}
                             </p>
                         </div>
 
                         <div class="grid gap-3 text-center sm:grid-cols-3">
                             <div class="rounded-xl bg-slate-900 px-5 py-3">
-                                <p class="text-xs text-slate-400">پاسخ‌ها</p>
+                                <p class="text-xs text-slate-400">پاسخ داده‌شده</p>
                                 <p class="font-black">
                                     {{ item.answered_count }} / {{ item.total_questions }}
                                 </p>
                             </div>
 
                             <div class="rounded-xl bg-slate-900 px-5 py-3">
-                                <p class="text-xs text-slate-400">Fehlerpunkte</p>
+                                <p class="text-xs text-slate-400">امتیاز خطا</p>
                                 <p class="font-black">
                                     {{ item.error_points }}
                                 </p>
                             </div>
 
                             {% if item.is_passed %}
-                                <div class="rounded-xl bg-green-500/10 px-5 py-3 text-green-300">
-                                    <p class="text-xs">Result</p>
-                                    <p class="font-black">Passed ✅</p>
+                                <div class="rounded-xl border border-green-400/20 bg-green-500/10 px-5 py-3 text-green-300">
+                                    <p class="text-xs">وضعیت</p>
+                                    <p class="font-black">قبول ✅</p>
                                 </div>
                             {% else %}
-                                <div class="rounded-xl bg-red-500/10 px-5 py-3 text-red-300">
-                                    <p class="text-xs">Result</p>
-                                    <p class="font-black">Failed ❌</p>
+                                <div class="rounded-xl border border-red-400/20 bg-red-500/10 px-5 py-3 text-red-300">
+                                    <p class="text-xs">وضعیت</p>
+                                    <p class="font-black">رد ❌</p>
                                 </div>
                             {% endif %}
                         </div>
 
-                        <div class="flex gap-2">
+                        <div class="flex flex-wrap gap-2">
                             <a
                                 href="/quiz/exam/{{ item.exam.id }}/result/"
-                                class="rounded-xl bg-blue-500 px-4 py-2 font-bold hover:bg-blue-600"
+                                class="rounded-xl border border-blue-400/30 bg-blue-500/10 px-4 py-2 font-bold text-blue-300 hover:bg-blue-500/20"
                             >
-                                نتیجه
+                                مشاهده نتیجه
                             </a>
 
                             <a
                                 href="/quiz/exam/{{ item.exam.id }}/review/"
-                                class="rounded-xl bg-yellow-400 px-4 py-2 font-bold text-slate-950 hover:bg-yellow-300"
+                                class="rounded-xl border border-yellow-400/30 bg-yellow-500/10 px-4 py-2 font-bold text-yellow-300 hover:bg-yellow-500/20"
                             >
-                                مرور
+                                مرور پاسخ‌ها
                             </a>
                         </div>
 
                     </div>
                 </section>
             {% empty %}
-                <div class="rounded-2xl border border-white/10 bg-white/5 p-8 text-center text-slate-400">
-                    هنوز آزمونی ندادی.
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-8 text-center">
+                    <h2 class="text-2xl font-black text-slate-300">
+                        هنوز آزمونی انجام نداده‌ای.
+                    </h2>
+
+                    <a
+                        href="/quiz/exam/start/"
+                        class="mt-5 inline-block rounded-2xl bg-blue-500 px-5 py-3 font-bold hover:bg-blue-600"
+                    >
+                        شروع اولین آزمون
+                    </a>
                 </div>
             {% endfor %}
         </div>

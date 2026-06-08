@@ -1,0 +1,122 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+{{ parent_category.name }}
+{% endblock %}
+
+{% block content %}
+<main class="min-h-screen bg-slate-950 px-6 py-10 text-white">
+
+    <div class="mx-auto max-w-6xl">
+
+        <div class="mb-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+
+            <div>
+                <h1 class="text-4xl font-black">
+                    {{ parent_category.name }}
+                </h1>
+
+                <p class="mt-3 text-slate-400">
+                    یکی از زیرمجموعه‌ها را انتخاب کن.
+                </p>
+            </div>
+
+            <div class="flex flex-wrap gap-3">
+                <a
+                    href="/quiz/categories/"
+                    class="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-center font-bold hover:bg-white/10"
+                >
+                    برگشت به دسته‌بندی‌ها
+                </a>
+
+                <a
+                    href="/dashboard/"
+                    class="rounded-2xl border border-blue-400/30 bg-blue-500/10 px-5 py-3 text-center font-bold text-blue-300 hover:bg-blue-500/20"
+                >
+                    داشبورد
+                </a>
+            </div>
+
+        </div>
+
+        <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+
+            {% for category in child_categories %}
+
+                <div class="rounded-[2rem] border border-white/10 bg-white/5 p-6 transition hover:border-blue-400/30 hover:bg-white/10">
+
+                    <h2 class="text-2xl font-black">
+                        {{ category.name }}
+                    </h2>
+
+                    <div class="mt-4 inline-flex rounded-full bg-blue-500/10 px-4 py-2 text-sm font-bold text-blue-300">
+                        {{ category.total_questions_count }} سوال
+                    </div>
+
+                    <div class="mt-5 flex flex-wrap gap-3">
+
+                        {% if category.children.all %}
+
+                            <a
+                                href="/quiz/categories/{{ category.id }}/"
+                                class="rounded-xl border border-purple-400/30 bg-purple-500/10 px-4 py-2 text-sm font-bold text-purple-300 hover:bg-purple-500/20"
+                            >
+                                مشاهده زیرمجموعه‌ها
+                            </a>
+
+                        {% elif parent_category.slug == "hftd-zmon-sl" %}
+
+                            <a
+                                href="/quiz/exam/start/?mode=practice&category_id={{ category.id }}"
+                                class="rounded-xl border border-blue-400/30 bg-blue-500/10 px-4 py-2 text-sm font-bold text-blue-300 hover:bg-blue-500/20"
+                            >
+                                📚 تمرین
+                            </a>
+
+                            <a
+                                href="/quiz/exam/start/?mode=read&category_id={{ category.id }}"
+                                class="rounded-xl border border-yellow-400/30 bg-yellow-500/10 px-4 py-2 text-sm font-bold text-yellow-300 hover:bg-yellow-500/20"
+                            >
+                                📖 مطالعه
+                            </a>
+
+                            <a
+                                href="/quiz/exam/start/?mode=test&category_id={{ category.id }}"
+                                class="rounded-xl border border-green-400/30 bg-green-500/10 px-4 py-2 text-sm font-bold text-green-300 hover:bg-green-500/20"
+                            >
+                                📝 آزمون واقعی
+                            </a>
+
+                        {% else %}
+
+                            <a
+                                href="/quiz/category/{{ category.id }}/practice/"
+                                class="rounded-xl border border-blue-700/30 bg-blue-500/10 px-4 py-2 text-sm font-bold text-blue-300 hover:bg-blue-500/20"
+                            >
+                                📚 تمرین
+                            </a>
+
+                            
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            {% empty %}
+
+                <div class="col-span-full rounded-[2rem] border border-white/10 bg-white/5 p-10 text-center">
+                    <h2 class="text-2xl font-black">
+                        زیرمجموعه‌ای وجود ندارد
+                    </h2>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</main>
+{% endblock %}

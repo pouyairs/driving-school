@@ -33,23 +33,19 @@
             </p>
 
             <div class="mt-8 grid gap-4 md:grid-cols-4">
-                <div class="rounded-2xl bg-slate-900 p-5">
-                    <p class="text-sm text-slate-400">کل سوال‌ها</p>
+<div class="rounded-2xl border border-white/10 bg-slate-900 p-5">                    <p class="text-sm text-slate-400">کل سوال‌ها</p>
                     <p class="mt-2 text-3xl font-black">{{ total_questions }}</p>
                 </div>
 
-                <div class="rounded-2xl bg-slate-900 p-5">
-                    <p class="text-sm text-slate-400">پاسخ داده‌شده</p>
+<div class="rounded-2xl border border-white/10 bg-slate-900 p-5">                    <p class="text-sm text-slate-400">پاسخ داده‌شده</p>
                     <p class="mt-2 text-3xl font-black">{{ answered_count }}</p>
                 </div>
 
-                <div class="rounded-2xl bg-slate-900 p-5">
-                    <p class="text-sm text-slate-400">درست</p>
+<div class="rounded-2xl border border-white/10 bg-slate-900 p-5">                    <p class="text-sm text-slate-400">درست</p>
                     <p class="mt-2 text-3xl font-black text-green-300">{{ correct_count }}</p>
                 </div>
 
-                <div class="rounded-2xl bg-slate-900 p-5">
-                    <p class="text-sm text-slate-400">غلط</p>
+<div class="rounded-2xl border border-white/10 bg-slate-900 p-5">                    <p class="text-sm text-slate-400">غلط</p>
                     <p class="mt-2 text-3xl font-black text-red-300">{{ wrong_count }}</p>
                 </div>
             </div>
@@ -156,27 +152,29 @@
             {% endif %}
 
             <div class="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-                <a
-                    href="/quiz/exam/start/"
-                    class="rounded-2xl bg-blue-500 px-6 py-3 font-bold hover:bg-blue-600"
-                >
-                    شروع آزمون جدید
-                </a>
 
-                <a
-                    href="/dashboard/"
-                    class="rounded-2xl border border-white/10 bg-white/5 px-6 py-3 font-bold hover:bg-white/10"
-                >
-                    برگشت به داشبورد
-                </a>
+    <a
+        href="/quiz/official-exams/"
+        class="rounded-2xl border border-blue-400/30 bg-blue-500/10 px-6 py-3 font-bold text-blue-300 hover:bg-blue-500/20"
+    >
+        شروع آزمون جدید
+    </a>
 
-                <a
-                    href="/quiz/exam/{{ exam.id }}/review/"
-                    class="rounded-2xl bg-yellow-400 px-6 py-3 font-bold text-slate-950 hover:bg-yellow-300"
-                >
-                    مرور پاسخ‌ها
-                </a>
-            </div>
+    <a
+        href="/quiz/exam/{{ exam.id }}/review/"
+        class="rounded-2xl border border-yellow-400/30 bg-yellow-500/10 px-6 py-3 font-bold text-yellow-300 hover:bg-yellow-500/20"
+    >
+        مرور پاسخ‌ها
+    </a>
+
+    <a
+        href="/dashboard/"
+        class="rounded-2xl border border-white/10 bg-white/5 px-6 py-3 font-bold text-slate-200 hover:bg-white/10"
+    >
+        برگشت به داشبورد
+    </a>
+
+</div>
 
         </section>
 

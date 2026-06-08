@@ -1,0 +1,120 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+نتیجه تمرین
+{% endblock %}
+
+{% block content %}
+<main class="min-h-screen bg-slate-950 px-6 py-10 text-white">
+    <div class="mx-auto max-w-5xl">
+
+        <section class="rounded-[2rem] border border-white/10 bg-white/5 p-8 text-center">
+
+            <div class="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-blue-500/20 text-5xl">
+                📚
+            </div>
+
+            <h1 class="text-4xl font-black text-blue-300">
+                نتیجه تمرین
+            </h1>
+
+            <p class="mt-4 text-slate-400">
+                این نتیجه مربوط به تمرین سوالات دسته‌بندی است، نه آزمون رسمی.
+            </p>
+
+            <div class="mt-8 grid gap-4 md:grid-cols-4">
+                <div class="rounded-2xl bg-slate-900 p-5">
+                    <p class="text-sm text-slate-400">کل سوال‌ها</p>
+                    <p class="mt-2 text-3xl font-black">{{ total_questions }}</p>
+                </div>
+
+                <div class="rounded-2xl bg-slate-900 p-5">
+                    <p class="text-sm text-slate-400">پاسخ داده‌شده</p>
+                    <p class="mt-2 text-3xl font-black">{{ answered_count }}</p>
+                </div>
+
+                <div class="rounded-2xl bg-slate-900 p-5">
+                    <p class="text-sm text-slate-400">درست</p>
+                    <p class="mt-2 text-3xl font-black text-green-300">{{ correct_count }}</p>
+                </div>
+
+                <div class="rounded-2xl bg-slate-900 p-5">
+                    <p class="text-sm text-slate-400">غلط</p>
+                    <p class="mt-2 text-3xl font-black text-red-300">{{ wrong_count }}</p>
+                </div>
+            </div>
+
+            {% if wrong_items %}
+                <div class="mt-8 text-right">
+                    <h2 class="mb-5 text-2xl font-black text-red-300">
+                        سوال‌های اشتباه برای مرور
+                    </h2>
+
+                    <div class="space-y-4">
+                        {% for item in wrong_items %}
+                            <div class="rounded-2xl border border-red-400/20 bg-red-500/10 p-5">
+                                <h3 class="text-lg font-black leading-8">
+                                    {{ item.question.title }}
+                                </h3>
+
+                                <div class="mt-4 grid gap-3 md:grid-cols-2">
+                                    <div class="rounded-xl bg-slate-950 p-4">
+                                        <p class="text-sm text-slate-400">جواب شما</p>
+                                        <p class="mt-2 font-black text-red-300">
+                                            {% for selected in item.selected_answers %}
+                                                گزینه {{ selected }}{% if not forloop.last %}، {% endif %}
+                                            {% endfor %}
+                                        </p>
+                                    </div>
+
+                                    <div class="rounded-xl bg-slate-950 p-4">
+                                        <p class="text-sm text-slate-400">جواب صحیح</p>
+                                        <p class="mt-2 font-black text-green-300">
+                                            {% for correct in item.correct_answers %}
+                                                گزینه {{ correct }}{% if not forloop.last %}، {% endif %}
+                                            {% endfor %}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {% if item.question.explanation %}
+                                    <div class="mt-4 rounded-xl bg-slate-950 p-4">
+                                        <p class="font-black text-blue-300">توضیح</p>
+                                        <p class="mt-2 leading-8 text-slate-300">
+                                            {{ item.question.explanation }}
+                                        </p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="mt-8 rounded-2xl border border-green-400/20 bg-green-500/10 p-5">
+                    <h2 class="text-2xl font-black text-green-300">
+                        هیچ سوال اشتباهی نداشتی 🎉
+                    </h2>
+                </div>
+            {% endif %}
+
+            <div class="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
+                <a
+                    href="/quiz/categories/"
+                    class="rounded-2xl bg-blue-500 px-6 py-3 font-bold hover:bg-blue-600"
+                >
+                    برگشت به دسته‌بندی‌ها
+                </a>
+
+                <a
+                    href="/dashboard/"
+                    class="rounded-2xl border border-white/10 bg-white/5 px-6 py-3 font-bold hover:bg-white/10"
+                >
+                    برگشت به داشبورد
+                </a>
+            </div>
+
+        </section>
+
+    </div>
+</main>
+{% endblock %}

@@ -8,17 +8,16 @@
 <main class="min-h-screen bg-slate-950 px-6 py-10 text-white">
     <div class="mx-auto max-w-5xl">
 
-        <div class="mb-8 flex items-center justify-between">
+        <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
                 <h1 class="text-4xl font-black">
                     مرور پاسخ‌های آزمون
                 </h1>
 
                 <p class="mt-2 text-slate-400">
-                    جواب‌های درست و اشتباه این آزمون را بررسی کن.
+                    پاسخ‌های درست و اشتباه این آزمون را بررسی کن.
                 </p>
             </div>
-            
 
             <a
                 href="/quiz/exam/{{ exam.id }}/result/"
@@ -26,14 +25,13 @@
             >
                 برگشت به نتیجه
             </a>
-            
         </div>
 
         <div class="space-y-5">
             {% for item in review_items %}
                 <section class="rounded-[2rem] border border-white/10 bg-white/5 p-6">
 
-                    <div class="mb-4 flex items-center justify-between gap-4">
+                    <div class="mb-4 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                         <div>
                             <p class="text-sm font-bold text-blue-300">
                                 سوال {{ forloop.counter }} — {{ item.question.category.name }}
@@ -45,12 +43,12 @@
                         </div>
 
                         {% if item.answer.is_correct %}
-                            <span class="rounded-full bg-green-500/20 px-4 py-2 text-sm font-black text-green-300">
+                            <span class="w-fit rounded-full border border-green-400/20 bg-green-500/10 px-4 py-2 text-sm font-black text-green-300">
                                 درست ✅
                             </span>
                         {% else %}
-                            <span class="rounded-full bg-yellow-400 px-4 py-2 text-sm font-black text-slate-950">
-                                اشتباه ⚠
+                            <span class="w-fit rounded-full border border-red-400/20 bg-red-500/10 px-4 py-2 text-sm font-black text-red-300">
+                                اشتباه ❌
                             </span>
                         {% endif %}
                     </div>
@@ -67,9 +65,12 @@
                     {% endif %}
 
                     <div class="grid gap-3 md:grid-cols-2">
+
                         <div class="rounded-2xl border
-                            {% if answer.selected_answer == 1 %}
-                                border-blue-400 bg-blue-500/10
+                            {% if 1 in item.correct_answers %}
+                                border-green-400/40 bg-green-500/10
+                            {% elif 1 in item.selected_answers %}
+                                border-red-400/40 bg-red-500/10
                             {% else %}
                                 border-white/10 bg-slate-900
                             {% endif %}
@@ -79,8 +80,10 @@
                         </div>
 
                         <div class="rounded-2xl border
-                            {% if answer.selected_answer == 2 %}
-                                border-blue-400 bg-blue-500/10
+                            {% if 2 in item.correct_answers %}
+                                border-green-400/40 bg-green-500/10
+                            {% elif 2 in item.selected_answers %}
+                                border-red-400/40 bg-red-500/10
                             {% else %}
                                 border-white/10 bg-slate-900
                             {% endif %}
@@ -90,8 +93,10 @@
                         </div>
 
                         <div class="rounded-2xl border
-                            {% if answer.selected_answer == 3 %}
-                                border-blue-400 bg-blue-500/10
+                            {% if 3 in item.correct_answers %}
+                                border-green-400/40 bg-green-500/10
+                            {% elif 3 in item.selected_answers %}
+                                border-red-400/40 bg-red-500/10
                             {% else %}
                                 border-white/10 bg-slate-900
                             {% endif %}
@@ -102,8 +107,10 @@
 
                         {% if item.question.option_4 %}
                             <div class="rounded-2xl border
-                                {% if answer.selected_answer == 4 %}
-                                    border-blue-400 bg-blue-500/10
+                                {% if 4 in item.correct_answers %}
+                                    border-green-400/40 bg-green-500/10
+                                {% elif 4 in item.selected_answers %}
+                                    border-red-400/40 bg-red-500/10
                                 {% else %}
                                     border-white/10 bg-slate-900
                                 {% endif %}
@@ -112,27 +119,31 @@
                                 <p class="font-bold">4. {{ item.question.option_4 }}</p>
                             </div>
                         {% endif %}
+
                     </div>
 
                     <div class="mt-5 grid gap-4 md:grid-cols-2">
-                        <div class="rounded-2xl bg-slate-900 p-4">
-                            <p class="text-sm text-slate-400">جواب شما</p>
-                            <p class="mt-2 font-black text-blue-300">
-                               {% for selected in item.selected_answers %}
-    گزینه {{ selected }}{% if not forloop.last %}، {% endif %}
-{% endfor %}
+                        <div class="rounded-2xl border border-red-400/20 bg-red-500/10 p-4">
+                            <p class="text-sm text-red-300">جواب شما</p>
+
+                            <p class="mt-2 font-black text-red-300">
+                                {% for selected in item.selected_answers %}
+                                    گزینه {{ selected }}{% if not forloop.last %}، {% endif %}
+                                {% empty %}
+                                    پاسخی ثبت نشده
+                                {% endfor %}
                             </p>
                         </div>
 
-                        <div class="rounded-2xl bg-slate-900 p-4">
-    <p class="text-sm text-slate-400">جواب صحیح</p>
+                        <div class="rounded-2xl border border-green-400/20 bg-green-500/10 p-4">
+                            <p class="text-sm text-green-300">جواب صحیح</p>
 
-    <p class="mt-2 font-black text-green-300">
-        {% for correct in item.correct_answers %}
-            گزینه {{ correct }}{% if not forloop.last %}، {% endif %}
-        {% endfor %}
-    </p>
-</div>
+                            <p class="mt-2 font-black text-green-300">
+                                {% for correct in item.correct_answers %}
+                                    گزینه {{ correct }}{% if not forloop.last %}، {% endif %}
+                                {% endfor %}
+                            </p>
+                        </div>
                     </div>
 
                     {% if item.question.explanation %}
@@ -149,7 +160,7 @@
 
                 </section>
             {% empty %}
-                <div class="rounded-2xl bg-white/5 p-6 text-center text-slate-400">
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-center text-slate-400">
                     هنوز پاسخی برای این آزمون ثبت نشده است.
                 </div>
             {% endfor %}

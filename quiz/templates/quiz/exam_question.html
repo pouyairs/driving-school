@@ -8,58 +8,33 @@
 <main class="min-h-screen bg-slate-950 px-6 py-8 text-white">
     <div class="mx-auto grid max-w-7xl gap-6 lg:grid-cols-4">
 
-        <!-- SIDEBAR -->
         <aside class="lg:col-span-1">
             <div class="sticky top-6 rounded-[2rem] border border-white/10 bg-white/5 p-5">
-
                 <div class="mb-5 flex items-center justify-between">
                     <p class="rounded-full bg-blue-500/10 px-4 py-2 text-sm font-bold text-blue-300">
-                        {{ current_index|add:1 }} / {{ questions|length }}
+                        سوال {{ current_index|add:1 }} از {{ questions|length }}
                     </p>
 
-                    <p
-                        id="exam-timer"
-                        class="rounded-full bg-red-500/10 px-4 py-2 text-sm font-black text-red-300"
-                        data-seconds="{{ remaining_seconds }}"
-                        data-result-url="/quiz/exam/{{ exam.id }}/result/"
-                    >
-                        30:00
-                    </p>
+                    {% if is_test_mode %}
+                        <p id="exam-timer" class="rounded-full bg-red-500/10 px-4 py-2 text-sm font-black text-red-300" data-seconds="{{ remaining_seconds }}" data-result-url="/quiz/exam/{{ exam.id }}/result/">30:00</p>
+                    {% else %}
+                        <p class="rounded-full bg-white/5 px-4 py-2 text-sm font-bold text-slate-300">
+                            {% if is_practice_mode %}تمرین{% elif is_read_mode %}مطالعه{% endif %}
+                        </p>
+                    {% endif %}
                 </div>
 
                 <div class="mb-6 h-3 overflow-hidden rounded-full bg-slate-800">
-                    <div
-                        class="h-full rounded-full bg-blue-500 transition-all"
-                        style="width: {{ progress_percent }}%;"
-                    ></div>
+                    <div class="h-full rounded-full bg-blue-500 transition-all" style="width: {{ progress_percent }}%;"></div>
                 </div>
 
-                <!-- QUESTION NAVIGATION -->
                 <div class="space-y-5">
-
-                    <!-- BASIC TAB -->
                     <div>
-                        <div class="mb-3 rounded-xl bg-blue-500 px-4 py-3 text-center text-sm font-black">
-                            Basic Knowledge
-                        </div>
-
-                        <div class="flex flex-wrap gap-2 rounded-2xl bg-slate-900 p-3">
+                        <div class="mb-3 rounded-xl bg-blue-500/20 px-4 py-3 text-center text-sm font-black text-blue-300">اطلاعات پایه</div>
+                        <div class="grid grid-cols-3 gap-2 rounded-2xl bg-slate-900 p-3">
                             {% for item in nav_items %}
                                 {% if item.section == "basic" %}
-                                    <a
-                                        href="/quiz/exam/{{ exam.id }}/{{ item.question.id }}/"
-                                        class="relative flex h-12 w-12 items-center justify-center rounded-2xl shadow-md text-sm font-black transition                                        {% if item.is_current %}
-                                            bg-blue-500 text-white
-                                        {% elif item.status == 'correct' %}
-                                            bg-green-500 text-white
-                                        {% elif item.status == 'wrong' %}
-                                            bg-yellow-400 text-slate-900
-                                        {% else %}
-                                            bg-white text-slate-900 hover:bg-blue-100
-                                        {% endif %}"
-                                    >
-                            
-
+                                    <a href="/quiz/exam/{{ exam.id }}/{{ item.question.id }}/" class="relative flex h-12 w-12 items-center justify-center justify-self-center rounded-2xl text-sm font-black shadow-md transition {% if item.is_current %}bg-blue-500 text-white{% elif item.status == 'correct' %}bg-green-500 text-white{% elif item.status == 'wrong' %}bg-yellow-400 text-slate-900{% else %}bg-white text-slate-900 hover:bg-blue-100{% endif %}">
                                         {{ item.number }}
                                     </a>
                                 {% endif %}
@@ -67,343 +42,260 @@
                         </div>
                     </div>
 
-                    <!-- CLASS B TAB -->
                     <div>
-                        <div class="mb-3 rounded-xl bg-green-500 px-4 py-3 text-center text-sm font-black">
-                            Class B
-                        </div>
-
-                        <div class="flex flex-wrap gap-2 rounded-2xl bg-slate-900 p-3">
+                        <div class="mb-3 rounded-xl bg-green-500/20 px-4 py-3 text-center text-sm font-black text-green-300">کلاس B</div>
+                        <div class="grid grid-cols-3 gap-2 rounded-2xl bg-slate-900 p-3">
                             {% for item in nav_items %}
                                 {% if item.section == "class_b" %}
-                                    <a
-                                        href="/quiz/exam/{{ exam.id }}/{{ item.question.id }}/"
-                                        class="relative flex h-12 w-12 items-center justify-center rounded-2xl shadow-md text-sm font-black transition
-                                        {% if item.is_current %}
-                                            bg-blue-500 text-white
-                                        {% elif item.status == 'correct' %}
-                                            bg-green-500 text-white
-                                        {% elif item.status == 'wrong' %}
-                                            bg-yellow-400 text-slate-900
-                                        {% else %}
-                                            bg-white text-slate-900 hover:bg-blue-100
-                                        {% endif %}"
-                                    >
-                                        
-
+                                    <a href="/quiz/exam/{{ exam.id }}/{{ item.question.id }}/" class="relative flex h-12 w-12 items-center justify-center justify-self-center rounded-2xl text-sm font-black shadow-md transition {% if item.is_current %}bg-blue-500 text-white{% elif item.status == 'correct' %}bg-green-500 text-white{% elif item.status == 'wrong' %}bg-yellow-400 text-slate-900{% else %}bg-white text-slate-900 hover:bg-blue-100{% endif %}">
                                         {{ item.number }}
                                     </a>
                                 {% endif %}
                             {% endfor %}
                         </div>
                     </div>
-
                 </div>
 
-                <div class="mt-5 space-y-2 text-xs text-slate-300">
+                <div class="mt-5 space-y-2 rounded-2xl bg-slate-900 p-4 text-xs text-slate-300">
                     <p>آبی: سوال فعلی</p>
                     <p>سبز: پاسخ درست</p>
-                    <p>علامت زرد: پاسخ اشتباه</p>
+                    <p>زرد: پاسخ اشتباه</p>
                     <p>سفید: بدون پاسخ</p>
                 </div>
 
-                <a
-                    href="/dashboard/"
-                    class="mt-5 block rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-center font-bold hover:bg-white/10"
-                >
-                    خروج از آزمون
-                </a>
-
+                <a href="/dashboard/" class="mt-5 block rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-center font-bold hover:bg-white/10">خروج از آزمون</a>
             </div>
         </aside>
 
-        <!-- QUESTION CONTENT -->
         <section class="rounded-[2rem] border border-white/10 bg-white/5 p-8 lg:col-span-3">
 
-            <p class="mb-3 text-sm font-bold text-blue-300">
-                {{ question.category.name }} / {{ question.get_section_display }}
-            </p>
+            <div class="mb-4 flex flex-wrap items-center gap-3">
+                <p class="rounded-full bg-blue-500/10 px-4 py-2 text-sm font-bold text-blue-300">
+                    {{ question.category.name }} / {{ question.get_section_display }}
+                </p>
 
-            <h1 class="text-3xl font-black leading-relaxed">
-                {{ question.title }}
-                <button
-    type="button"
-    onclick="speakQuestion()"
-    class="inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-500/10 px-3 py-1.5 text-sm font-medium text-blue-300 hover:bg-blue-500/20"
->
-    🔊 Read
-</button>
+                {% if question.video_url %}
+                    <span class="rounded-full border border-red-400/30 bg-red-500/10 px-4 py-2 text-sm font-bold text-red-300">
+                        🎥 سوال ویدیویی
+                    </span>
+                {% endif %}
+            </div>
 
-                
-            </h1>
-            <a
-    href="/quiz/favorite/{{ question.id }}/"
-    class="mt-4 inline-block rounded-xl px-4 py-2 font-bold
-    {% if is_favorite %}
-        bg-yellow-400 text-slate-950 hover:bg-yellow-300
-    {% else %}
-        bg-white/10 text-yellow-300 hover:bg-white/20
-    {% endif %}"
->
-    {% if is_favorite %}
-        ⭐ ذخیره شده
-    {% else %}
-        ☆ ذخیره سوال
-    {% endif %}
-</a>
- 
-            <button
-    type="button"
-    onclick="toggleTranslation()"
-    class="mt-4 rounded-xl bg-yellow-400 px-4 py-2 font-bold text-slate-900"
->
-            
-    🇮🇷 نمایش ترجمه فارسی
-</button>
 
-<div
-    id="translation-box"
-    class="mt-4 hidden rounded-2xl bg-blue-500/10 p-4 text-right"
->
-    <p>{{ question.title_translation }}</p>
-</div>
+            <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                <h1 class="text-3xl font-black leading-relaxed">{{ question.title }}</h1>
+                <button type="button" onclick="speakQuestion()" class="w-fit rounded-full border border-blue-400/20 bg-blue-500/10 px-3 py-1.5 text-sm font-medium text-blue-300 hover:bg-blue-500/20">🔊 صوتی</button>
+            </div>
+
+            <div class="mt-4 flex flex-wrap gap-3">
+                <a href="/quiz/favorite/{{ question.id }}/" class="rounded-xl px-4 py-2 font-bold {% if is_favorite %}bg-yellow-400 text-slate-950 hover:bg-yellow-300{% else %}bg-white/10 text-yellow-300 hover:bg-white/20{% endif %}">
+                    {% if is_favorite %}⭐ ذخیره شده{% else %}☆ ذخیره سوال{% endif %}
+                </a>
+
+                {% if question.title_translation or question.scenario_translation %}
+                    <button type="button" onclick="toggleTranslation()" class="rounded-xl border border-yellow-400/30 bg-yellow-500/10 px-4 py-2 font-bold text-yellow-300 hover:bg-yellow-500/20">🇮🇷 نمایش ترجمه فارسی</button>
+                {% endif %}
+            </div>
+
+            {% if question.title_translation or question.scenario_translation %}
+                <div
+                    id="translation-box"
+                    class="mt-4 hidden rounded-2xl border border-yellow-400/20 bg-yellow-500/10 p-4 leading-8 text-slate-200"
+                >
+                    {% if question.scenario_translation %}
+                        <p class="mb-3">{{ question.scenario_translation }}</p>
+                    {% endif %}
+
+                    {% if question.title_translation %}
+                        <p>{{ question.title_translation }}</p>
+                    {% endif %}
+                </div>
+            {% endif %}
 
             {% if question.image %}
                 <div class="mt-6 overflow-hidden rounded-2xl bg-slate-900">
-                    <img
-                        src="{{ question.image.url }}"
-                        alt="{{ question.title }}"
-                        class="w-full object-cover"
-                        style="height: 560px;"
-                    >
+                    <img src="{{ question.image.url }}" alt="{{ question.title }}" class="w-full object-cover" style="max-height: 560px;">
                 </div>
             {% endif %}
 
             {% if question.video_url %}
                 <div class="mt-6 overflow-hidden rounded-2xl bg-slate-900">
-                    <iframe
-                        src="{{ question.video_url }}"
-                        class="w-full"
-                        style="height: 560px;"
-                        allowfullscreen
-                    ></iframe>
+                    <iframe src="{{ question.video_url }}" class="w-full" style="height: 560px;" allowfullscreen></iframe>
                 </div>
             {% endif %}
 
-            <form method="post" class="mt-8 space-y-4">
-    {% csrf_token %}
+            {% if is_read_mode %}
+                <div class="mt-8 space-y-4">
+                    <div class="grid gap-3 md:grid-cols-2">
+                        <div class="rounded-2xl border p-5 {% if 1 in correct_answers_list %}border-green-400/40 bg-green-500/10{% else %}border-white/10 bg-slate-900{% endif %}"><p class="font-bold">1. {{ question.option_1 }}</p></div>
+                        <div class="rounded-2xl border p-5 {% if 2 in correct_answers_list %}border-green-400/40 bg-green-500/10{% else %}border-white/10 bg-slate-900{% endif %}"><p class="font-bold">2. {{ question.option_2 }}</p></div>
+                        <div class="rounded-2xl border p-5 {% if 3 in correct_answers_list %}border-green-400/40 bg-green-500/10{% else %}border-white/10 bg-slate-900{% endif %}"><p class="font-bold">3. {{ question.option_3 }}</p></div>
+                        {% if question.option_4 %}
+                            <div class="rounded-2xl border p-5 {% if 4 in correct_answers_list %}border-green-400/40 bg-green-500/10{% else %}border-white/10 bg-slate-900{% endif %}"><p class="font-bold">4. {{ question.option_4 }}</p></div>
+                        {% endif %}
+                    </div>
 
-    <label class="block cursor-pointer rounded-2xl border p-5 text-right text-lg transition
-        {% if selected_answer == 1 and is_correct %}
-            border-green-400 bg-green-500 text-white
-        {% elif 1 in selected_answers_list and not is_correct %}
-            border-red-400 bg-red-500 text-white
-        {% elif selected_answer and 1 in correct_answers_list %}
-            border-green-400 bg-green-500/20 text-green-300
-        {% else %}
-            border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-600
-        {% endif %}"
-    >
-        <input
-            type="checkbox"
-            name="answer"
-            value="1"
-            class="ml-3"
-            {% if 1 in selected_answers_list %}checked{% endif %}
-        >
-        {{ question.option_1 }}
-    </label>
-     <div class="translation-option mt-2 hidden text-sm text-yellow-200">
-    {{ question.option_1_translation }}
-</div>
+                    <div class="rounded-2xl border border-green-400/20 bg-green-500/10 p-5">
+                        <h3 class="font-black text-green-300">جواب صحیح</h3>
+                        <p class="mt-3 text-slate-200">
+                            {% for item in correct_answers_list %}
+                                گزینه {{ item }}{% if not forloop.last %}، {% endif %}
+                            {% endfor %}
+                        </p>
+                    </div>
 
-    <label class="block cursor-pointer rounded-2xl border p-5 text-right text-lg transition
-        {% if selected_answer == 2 and is_correct %}
-            border-green-400 bg-green-500 text-white
-        {% elif 2 in selected_answers_list and not is_correct %}
-            border-red-400 bg-red-500 text-white
-        {% elif selected_answer and 2 in correct_answers_list %}
-            border-green-400 bg-green-500/20 text-green-300
-        {% else %}
-            border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-600
-        {% endif %}"
-    >
-        <input
-            type="checkbox"
-            name="answer"
-            value="2"
-            class="ml-3"
-            {% if 2 in selected_answers_list %}checked{% endif %}
-        >
-        {{ question.option_2 }}
-        
-    </label>
-    <div class="translation-option mt-2 hidden text-sm text-yellow-200">
-    {{ question.option_2_translation }}
-</div>
-
-    <label class="block cursor-pointer rounded-2xl border p-5 text-right text-lg transition
-        {% if selected_answer == 3 and is_correct %}
-            border-green-400 bg-green-500 text-white
-        {% elif 3 in selected_answers_list and not is_correct %}
-            border-red-400 bg-red-500 text-white
-        {% elif selected_answer and 3 in correct_answers_list %}
-            border-green-400 bg-green-500/20 text-green-300
-        {% else %}
-            border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-600
-        {% endif %}"
-    >
-        <input
-            type="checkbox"
-            name="answer"
-            value="3"
-            class="ml-3"
-            {% if 3 in selected_answers_list %}checked{% endif %}
-        >
-        {{ question.option_3 }}
-        
-    </label>
-    <div class="translation-option mt-2 hidden text-sm text-yellow-200">
-    {{ question.option_3_translation }}
-</div>
-
-    {% if question.option_4 %}
-        <label class="block cursor-pointer rounded-2xl border p-5 text-right text-lg transition
-            {% if selected_answer == 4 and is_correct %}
-                border-green-400 bg-green-500 text-white
-            {% elif 4 in selected_answers_list and not is_correct %}
-                border-red-400 bg-red-500 text-white
-            {% elif selected_answer and 4 in correct_answers_list %}
-                border-green-400 bg-green-500/20 text-green-300
-            {% else %}
-                border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-600
-            {% endif %}"
-        >
-            <input
-                type="checkbox"
-                name="answer"
-                value="4"
-                class="ml-3"
-                {% if 4 in selected_answers_list %}checked{% endif %}
-            >
-            {{ question.option_4 }}
-           
-        </label>
-         <div class="translation-option mt-2 hidden text-sm text-yellow-200">
-    {{ question.option_4_translation }}
-</div>
-    {% endif %}
-
-    {% if not selected_answer %}
-        <button
-            type="submit"
-            class="mt-4 rounded-2xl bg-blue-500 px-6 py-3 font-bold hover:bg-blue-600"
-        >
-            ثبت پاسخ
-        </button>
-    {% endif %}
-</form>
-
-            {% if selected_answer %}
-                <div class="mt-8">
-                    {% if is_correct %}
-                        <div class="rounded-2xl border border-green-400/30 bg-green-500/10 p-5">
-                            <h2 class="text-2xl font-black text-green-300">
-                                جواب صحیح بود ✅
-                            </h2>
-                        </div>
-                    {% else %}
-                        <div class="rounded-2xl border border-red-400/30 bg-red-500/10 p-5">
-                            <h2 class="text-2xl font-black text-red-300">
-                                جواب اشتباه بود ❌
-                            </h2>
-
-                            <p class="mt-3 text-slate-300">
-                                جواب صحیح:
-{% for item in correct_answers_list %}
-    گزینه {{ item }}{% if not forloop.last %}، {% endif %}
-{% endfor %}
-                            </p>
+                    {% if question.explanation %}
+                        <div class="rounded-2xl border border-blue-400/20 bg-blue-500/10 p-5">
+                            <h3 class="font-black text-blue-300">توضیح</h3>
+                            <p class="mt-3 leading-8 text-slate-300">{{ question.explanation }}</p>
                         </div>
                     {% endif %}
 
                     <div class="mt-6 flex flex-col gap-3 sm:flex-row">
                         {% if next_question %}
-                            <a
-                                href="/quiz/exam/{{ exam.id }}/{{ next_question.id }}/"
-                                class="inline-block rounded-2xl bg-blue-500 px-5 py-3 text-center font-bold hover:bg-blue-600"
-                            >
-                                سوال بعدی
-                            </a>
+                            <a href="/quiz/exam/{{ exam.id }}/{{ next_question.id }}/" class="inline-block rounded-2xl border border-blue-400/30 bg-blue-500/10 px-5 py-3 text-center font-bold text-blue-300 hover:bg-blue-500/20">ادامه</a>
                         {% else %}
-                            <a
-                                href="/quiz/exam/{{ exam.id }}/result/"
-                                class="inline-block rounded-2xl bg-green-500 px-5 py-3 text-center font-bold hover:bg-green-600"
-                            >
-                                مشاهده نتیجه آزمون
-                            </a>
+                            {% if question.category.parent.slug == "hftd-zmon-sl" %}
+                                <a href="/quiz/official-exams/" class="inline-block rounded-2xl border border-green-400/30 bg-green-500/10 px-5 py-3 text-center font-bold text-green-300 hover:bg-green-500/20">پایان مطالعه</a>
+                            {% else %}
+                                <a href="/quiz/categories/" class="inline-block rounded-2xl border border-green-400/30 bg-green-500/10 px-5 py-3 text-center font-bold text-green-300 hover:bg-green-500/20">پایان مطالعه</a>
+                            {% endif %}
                         {% endif %}
+                        <a href="/dashboard/" class="inline-block rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-center font-bold hover:bg-white/10">لغو</a>
                     </div>
                 </div>
+            {% else %}
+                <form method="post" class="mt-8 space-y-4">
+                    {% csrf_token %}
+
+                    <label class="block cursor-pointer rounded-2xl border p-5 text-right text-lg transition {% if is_practice_mode and selected_answer == 1 and is_correct %}border-green-400 bg-green-500/20 text-green-300{% elif is_practice_mode and 1 in selected_answers_list and not is_correct %}border-red-400 bg-red-500/20 text-red-300{% elif is_practice_mode and selected_answer and 1 in correct_answers_list %}border-green-400 bg-green-500/20 text-green-300{% elif is_test_mode and 1 in selected_answers_list %}border-blue-400 bg-blue-500/10 text-blue-300{% else %}border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-500/10{% endif %}">
+                        <input type="checkbox" name="answer" value="1" class="ml-3" {% if 1 in selected_answers_list %}checked{% endif %}>
+                        1. {{ question.option_1 }}
+                    </label>
+
+                    <label class="block cursor-pointer rounded-2xl border p-5 text-right text-lg transition {% if is_practice_mode and selected_answer == 2 and is_correct %}border-green-400 bg-green-500/20 text-green-300{% elif is_practice_mode and 2 in selected_answers_list and not is_correct %}border-red-400 bg-red-500/20 text-red-300{% elif is_practice_mode and selected_answer and 2 in correct_answers_list %}border-green-400 bg-green-500/20 text-green-300{% elif is_test_mode and 2 in selected_answers_list %}border-blue-400 bg-blue-500/10 text-blue-300{% else %}border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-500/10{% endif %}">
+                        <input type="checkbox" name="answer" value="2" class="ml-3" {% if 2 in selected_answers_list %}checked{% endif %}>
+                        2. {{ question.option_2 }}
+                    </label>
+
+                    <label class="block cursor-pointer rounded-2xl border p-5 text-right text-lg transition {% if is_practice_mode and selected_answer == 3 and is_correct %}border-green-400 bg-green-500/20 text-green-300{% elif is_practice_mode and 3 in selected_answers_list and not is_correct %}border-red-400 bg-red-500/20 text-red-300{% elif is_practice_mode and selected_answer and 3 in correct_answers_list %}border-green-400 bg-green-500/20 text-green-300{% elif is_test_mode and 3 in selected_answers_list %}border-blue-400 bg-blue-500/10 text-blue-300{% else %}border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-500/10{% endif %}">
+                        <input type="checkbox" name="answer" value="3" class="ml-3" {% if 3 in selected_answers_list %}checked{% endif %}>
+                        3. {{ question.option_3 }}
+                    </label>
+
+                    {% if question.option_4 %}
+                        <label class="block cursor-pointer rounded-2xl border p-5 text-right text-lg transition {% if is_practice_mode and selected_answer == 4 and is_correct %}border-green-400 bg-green-500/20 text-green-300{% elif is_practice_mode and 4 in selected_answers_list and not is_correct %}border-red-400 bg-red-500/20 text-red-300{% elif is_practice_mode and selected_answer and 4 in correct_answers_list %}border-green-400 bg-green-500/20 text-green-300{% elif is_test_mode and 4 in selected_answers_list %}border-blue-400 bg-blue-500/10 text-blue-300{% else %}border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-500/10{% endif %}">
+                            <input type="checkbox" name="answer" value="4" class="ml-3" {% if 4 in selected_answers_list %}checked{% endif %}>
+                            4. {{ question.option_4 }}
+                        </label>
+                    {% endif %}
+
+                    {% if not selected_answer %}
+                        <button type="submit" class="mt-4 rounded-2xl border border-blue-400/30 bg-blue-500/10 px-6 py-3 font-bold text-blue-300 hover:bg-blue-500/20">
+                            {% if is_test_mode %}ثبت و ادامه{% else %}ثبت پاسخ{% endif %}
+                        </button>
+                    {% endif %}
+                </form>
+
+                {% if selected_answer and is_practice_mode %}
+                    <div class="mt-8">
+                        {% if is_correct %}
+                            <div class="rounded-2xl border border-green-400/30 bg-green-500/10 p-5">
+                                <h2 class="text-2xl font-black text-green-300">جواب صحیح بود ✅</h2>
+                            </div>
+                        {% else %}
+                            <div class="rounded-2xl border border-red-400/30 bg-red-500/10 p-5">
+                                <h2 class="text-2xl font-black text-red-300">جواب اشتباه بود ❌</h2>
+                                <p class="mt-3 text-slate-300">
+                                    جواب صحیح:
+                                    <span class="font-black text-green-300">
+                                        {% for item in correct_answers_list %}
+                                            گزینه {{ item }}{% if not forloop.last %}، {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </p>
+                            </div>
+                        {% endif %}
+
+                        {% if question.explanation %}
+                            <div class="mt-5 rounded-2xl border border-blue-400/20 bg-blue-500/10 p-5">
+                                <h3 class="font-black text-blue-300">توضیح</h3>
+                                <p class="mt-3 leading-8 text-slate-300">{{ question.explanation }}</p>
+                            </div>
+                        {% endif %}
+
+                        <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+                            {% if next_question %}
+                                <a href="/quiz/exam/{{ exam.id }}/{{ next_question.id }}/" class="inline-block rounded-2xl border border-blue-400/30 bg-blue-500/10 px-5 py-3 text-center font-bold text-blue-300 hover:bg-blue-500/20">ادامه</a>
+                            {% else %}
+                                {% if is_practice_mode %}
+                                    {% if question.category.parent.slug == "hftd-zmon-sl" %}
+                                        <a href="/quiz/official-exams/"
+                                           class="inline-block rounded-2xl border border-green-400/30 bg-green-500/10 px-5 py-3 text-center font-bold text-green-300 hover:bg-green-500/20">
+                                            پایان تمرین
+                                        </a>
+                                    {% else %}
+                                        <a href="/quiz/category-practice/{{ exam.id }}/result/"
+                                           class="inline-block rounded-2xl border border-green-400/30 bg-green-500/10 px-5 py-3 text-center font-bold text-green-300 hover:bg-green-500/20">
+                                            پایان تمرین
+                                        </a>
+                                    {% endif %}
+                                {% else %}
+                                    <a href="/quiz/exam/{{ exam.id }}/result/"
+                                       class="inline-block rounded-2xl border border-green-400/30 bg-green-500/10 px-5 py-3 text-center font-bold text-green-300 hover:bg-green-500/20">
+                                        مشاهده نتیجه آزمون
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
             {% endif %}
-
         </section>
-
     </div>
 </main>
 
 <script>
-    const timerElement = document.getElementById("exam-timer");
+const timerElement = document.getElementById("exam-timer");
 
-    if (timerElement) {
-        let remainingSeconds = parseInt(timerElement.dataset.seconds);
-        const resultUrl = timerElement.dataset.resultUrl;
+if (timerElement) {
+    let remainingSeconds = parseInt(timerElement.dataset.seconds);
+    const resultUrl = timerElement.dataset.resultUrl;
 
-        function updateTimer() {
-            if (remainingSeconds <= 0) {
-                window.location.href = resultUrl;
-                return;
-            }
-
-            const minutes = Math.floor(remainingSeconds / 60);
-            const seconds = remainingSeconds % 60;
-
-            timerElement.textContent =
-                String(minutes).padStart(2, "0") +
-                ":" +
-                String(seconds).padStart(2, "0");
-
-            remainingSeconds -= 1;
+    function updateTimer() {
+        if (remainingSeconds <= 0) {
+            window.location.href = resultUrl;
+            return;
         }
 
-        updateTimer();
-        setInterval(updateTimer, 1000);
+        const minutes = Math.floor(remainingSeconds / 60);
+        const seconds = remainingSeconds % 60;
+
+        timerElement.textContent =
+            String(minutes).padStart(2, "0") +
+            ":" +
+            String(seconds).padStart(2, "0");
+
+        remainingSeconds -= 1;
     }
-</script>
-<script>
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+}
+
 function toggleTranslation() {
     const box = document.getElementById("translation-box");
-    box.classList.toggle("hidden");
-}
-</script>
-<script>
-function toggleTranslation() {
-    const box = document.getElementById("translation-box");
-    const options = document.querySelectorAll(".translation-option");
 
-    box.classList.toggle("hidden");
-
-    options.forEach(function(option) {
-        option.classList.toggle("hidden");
-    });
+    if (box) {
+        box.classList.toggle("hidden");
+    }
 }
-</script>
-<script>
+
 function speakQuestion() {
     const text = `{{ question.title|escapejs }}`;
 
     if (!("speechSynthesis" in window)) {
-        alert("Your browser does not support speech.");
+        alert("مرورگر شما از خواندن متن پشتیبانی نمی‌کند.");
         return;
     }
 

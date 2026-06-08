@@ -46,4 +46,39 @@ urlpatterns = [
     name="practice_favorites",
 ),
     path("history/", views.exam_history, name="exam_history"),
+    path(
+    "categories/",
+    views.category_list,
+    name="category_list",
+),
+        path(
+    "categories/<int:category_id>/",
+    views.category_detail,
+    name="category_detail",
+),
+        path(
+    "category/<int:category_id>/read/",
+    views.category_read,
+    name="category_read",
+),
+    path(
+    "category/<int:category_id>/practice/",
+    views.practice_category,
+    name="practice_category",
+),
+    path(
+    "category/<int:category_id>/exam/",
+    views.start_category_exam,
+    name="start_category_exam",
+),
+    path(
+    "official-exams/",
+    views.official_exams,
+    name="official_exams",
+),
+path(
+    "category-practice/<int:exam_id>/result/",
+    views.category_practice_result,
+    name="category_practice_result",
+),
 ]

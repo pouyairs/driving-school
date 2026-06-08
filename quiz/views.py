@@ -1,10 +1,17 @@
 from datetime import timedelta
-from .models import ExamAnswer, ExamSession, FavoriteQuestion, Question, WrongQuestion
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
-from .models import ExamAnswer, ExamSession, Question, WrongQuestion
+from .models import (
+    ExamAnswer,
+    ExamSession,
+    FavoriteQuestion,
+    Question,
+    QuizCategory,
+    WrongQuestion,
+)
 
 
 EXAM_DURATION_MINUTES = 30
@@ -21,8 +28,19 @@ def parse_answer_list(value):
     ])
 
 
+def get_question_correct_answers(question):
+    correct_answers = parse_answer_list(question.correct_answers)
+
+    if not correct_answers:
+        correct_answers = [question.correct_answer]
+
+    return correct_answers
+
+
 def random_question(request):
-    question = Question.objects.filter(is_published=True).order_by("?").first()
+    question = Question.objects.filter(
+        is_published=True
+    ).order_by("?").first()
 
     if not question:
         return redirect("/dashboard/")
@@ -31,14 +49,28 @@ def random_question(request):
 
 
 def question_detail(request, pk):
-    question = get_object_or_404(Question, pk=pk, is_published=True)
+    question = get_object_or_404(
+        Question,
+        pk=pk,
+        is_published=True,
+    )
 
     selected_answer = None
     is_correct = None
+    correct_answers_list = get_question_correct_answers(question)
 
     if request.method == "POST":
-        selected_answer = int(request.POST.get("answer"))
-        is_correct = selected_answer == question.correct_answer
+        raw_selected_answers = request.POST.getlist("answer")
+
+        selected_answers_list = sorted([
+            int(item)
+            for item in raw_selected_answers
+            if item.isdigit()
+        ])
+
+        if selected_answers_list:
+            selected_answer = selected_answers_list[0]
+            is_correct = selected_answers_list == correct_answers_list
 
     return render(
         request,
@@ -47,6 +79,7 @@ def question_detail(request, pk):
             "question": question,
             "selected_answer": selected_answer,
             "is_correct": is_correct,
+            "correct_answers_list": correct_answers_list,
         },
     )
 
@@ -77,26 +110,43 @@ def exam_player(request):
 
 @login_required
 def start_exam(request):
-    exam = ExamSession.objects.create(user=request.user)
+    mode = request.GET.get("mode")
+    category_id = request.GET.get("category_id")
 
-    basic_questions = list(
+    if request.method == "POST":
+        mode = request.POST.get("mode", "test")
+        category_id = request.POST.get("category_id")
+
+    if not category_id:
+        official_parent = QuizCategory.objects.filter(
+            slug="hftd-zmon-sl"
+        ).first()
+
+        if official_parent:
+            return redirect(
+                "category_detail",
+                category_id=official_parent.id,
+            )
+
+        return redirect("/quiz/categories/")
+
+    if mode not in ["practice", "read", "test"]:
+        mode = "test"
+
+    questions = list(
         Question.objects.filter(
             is_published=True,
-            section=Question.SECTION_BASIC,
-        ).order_by("id")[:20]
+            category_id=category_id,
+        ).order_by("id")
     )
-
-    class_b_questions = list(
-        Question.objects.filter(
-            is_published=True,
-            section=Question.SECTION_CLASS_B,
-        ).order_by("id")[:10]
-    )
-
-    questions = basic_questions + class_b_questions
 
     if not questions:
-        return redirect("/dashboard/")
+        return redirect("/quiz/categories/")
+
+    exam = ExamSession.objects.create(
+        user=request.user,
+        mode=mode,
+    )
 
     exam.questions.set(questions)
 
@@ -115,10 +165,14 @@ def exam_question(request, exam_id, question_id):
         user=request.user,
     )
 
+    is_test_mode = exam.mode == "test"
+    is_practice_mode = exam.mode == "practice"
+    is_read_mode = exam.mode == "read"
+
     exam_end_time = exam.started_at + timedelta(minutes=EXAM_DURATION_MINUTES)
     remaining_seconds = int((exam_end_time - timezone.now()).total_seconds())
 
-    if remaining_seconds <= 0:
+    if is_test_mode and remaining_seconds <= 0:
         return redirect("exam_result", exam_id=exam.id)
 
     question = get_object_or_404(
@@ -127,12 +181,22 @@ def exam_question(request, exam_id, question_id):
     )
 
     questions = list(exam.questions.all())
+
+    if question not in questions:
+        return redirect(
+            "exam_question",
+            exam_id=exam.id,
+            question_id=questions[0].id,
+        )
+
     current_index = questions.index(question)
     progress_percent = int(((current_index + 1) / len(questions)) * 100)
 
     selected_answer = None
     selected_answers_list = []
     is_correct = None
+
+    correct_answers_list = get_question_correct_answers(question)
 
     existing_answer = ExamAnswer.objects.filter(
         exam=exam,
@@ -148,7 +212,7 @@ def exam_question(request, exam_id, question_id):
 
         is_correct = existing_answer.is_correct
 
-    if request.method == "POST":
+    if request.method == "POST" and not is_read_mode:
         raw_selected_answers = request.POST.getlist("answer")
 
         selected_answers_list = sorted([
@@ -157,23 +221,7 @@ def exam_question(request, exam_id, question_id):
             if item.isdigit()
         ])
 
-        correct_answers = parse_answer_list(question.correct_answers)
-
-        if not correct_answers:
-            correct_answers = [question.correct_answer]
-
-        is_correct = selected_answers_list == correct_answers
-
-        if not is_correct:
-            WrongQuestion.objects.get_or_create(
-                user=request.user,
-                question=question,
-            )
-        else:
-            WrongQuestion.objects.filter(
-                user=request.user,
-                question=question,
-            ).delete()
+        is_correct = selected_answers_list == correct_answers_list
 
         selected_answer = (
             selected_answers_list[0]
@@ -196,6 +244,33 @@ def exam_question(request, exam_id, question_id):
             },
         )
 
+        if not is_correct:
+            WrongQuestion.objects.get_or_create(
+                user=request.user,
+                question=question,
+            )
+        else:
+            WrongQuestion.objects.filter(
+                user=request.user,
+                question=question,
+            ).delete()
+
+        if is_test_mode:
+            if current_index + 1 < len(questions):
+                next_question = questions[current_index + 1]
+
+                return redirect(
+                    "exam_question",
+                    exam_id=exam.id,
+                    question_id=next_question.id,
+                )
+
+            exam.is_finished = True
+            exam.finished_at = timezone.now()
+            exam.save(update_fields=["is_finished", "finished_at"])
+
+            return redirect("exam_result", exam_id=exam.id)
+
     next_question = None
 
     if current_index + 1 < len(questions):
@@ -214,10 +289,7 @@ def exam_question(request, exam_id, question_id):
         status = "empty"
 
         if answer:
-            if answer.is_correct:
-                status = "correct"
-            else:
-                status = "wrong"
+            status = "correct" if answer.is_correct else "wrong"
 
         nav_items.append(
             {
@@ -225,17 +297,13 @@ def exam_question(request, exam_id, question_id):
                 "number": index + 1,
                 "status": status,
                 "is_current": item.id == question.id,
-                "section": "basic" if index < 20 else "class_b",
+                "section": item.section,
             }
         )
 
-    correct_answers_list = parse_answer_list(question.correct_answers)
-
-    if not correct_answers_list:
-        correct_answers_list = [question.correct_answer]
     is_favorite = FavoriteQuestion.objects.filter(
-    user=request.user,
-    question=question,
+        user=request.user,
+        question=question,
     ).exists()
 
     return render(
@@ -255,6 +323,9 @@ def exam_question(request, exam_id, question_id):
             "remaining_seconds": remaining_seconds,
             "nav_items": nav_items,
             "is_favorite": is_favorite,
+            "is_test_mode": is_test_mode,
+            "is_practice_mode": is_practice_mode,
+            "is_read_mode": is_read_mode,
         },
     )
 
@@ -266,6 +337,11 @@ def exam_result(request, exam_id):
         id=exam_id,
         user=request.user,
     )
+
+    if not exam.is_finished:
+        exam.is_finished = True
+        exam.finished_at = timezone.now()
+        exam.save(update_fields=["is_finished", "finished_at"])
 
     total_questions = exam.questions.count()
     answered_count = exam.answers.count()
@@ -282,11 +358,7 @@ def exam_result(request, exam_id):
     wrong_answer_items = []
 
     for answer in wrong_answers:
-        correct_answers = parse_answer_list(answer.question.correct_answers)
-
-        if not correct_answers:
-            correct_answers = [answer.question.correct_answer]
-
+        correct_answers = get_question_correct_answers(answer.question)
         selected_answers = parse_answer_list(answer.selected_answers)
 
         if not selected_answers and answer.selected_answer:
@@ -335,11 +407,7 @@ def exam_review(request, exam_id):
     review_items = []
 
     for answer in answers:
-        correct_answers = parse_answer_list(answer.question.correct_answers)
-
-        if not correct_answers:
-            correct_answers = [answer.question.correct_answer]
-
+        correct_answers = get_question_correct_answers(answer.question)
         selected_answers = parse_answer_list(answer.selected_answers)
 
         if not selected_answers and answer.selected_answer:
@@ -362,6 +430,8 @@ def exam_review(request, exam_id):
             "review_items": review_items,
         },
     )
+
+
 @login_required
 def my_mistakes(request):
     mistakes = (
@@ -377,6 +447,8 @@ def my_mistakes(request):
             "mistakes": mistakes,
         },
     )
+
+
 @login_required
 def practice_mistakes(request):
     first_mistake = (
@@ -393,6 +465,8 @@ def practice_mistakes(request):
         "question_detail",
         pk=first_mistake.question.id,
     )
+
+
 @login_required
 def toggle_favorite(request, question_id):
     question = get_object_or_404(Question, id=question_id)
@@ -406,6 +480,8 @@ def toggle_favorite(request, question_id):
         favorite.delete()
 
     return redirect(request.META.get("HTTP_REFERER", "/dashboard/"))
+
+
 @login_required
 def favorites(request):
     favorites = (
@@ -421,6 +497,8 @@ def favorites(request):
             "favorites": favorites,
         },
     )
+
+
 @login_required
 def practice_favorites(request):
     first_favorite = (
@@ -437,6 +515,8 @@ def practice_favorites(request):
         "question_detail",
         pk=first_favorite.question.id,
     )
+
+
 @login_required
 def exam_history(request):
     exams = (
@@ -465,5 +545,280 @@ def exam_history(request):
         "quiz/exam_history.html",
         {
             "history_items": history_items,
+        },
+    )
+
+
+@login_required
+def category_list(request):
+    categories = (
+        QuizCategory.objects.filter(
+            parent__isnull=True
+        )
+        .exclude(slug="hftd-zmon-sl")
+        .order_by("id")
+    )
+
+    for category in categories:
+        direct_count = Question.objects.filter(
+            category=category,
+            is_published=True,
+        ).count()
+
+        children_count = Question.objects.filter(
+            category__parent=category,
+            is_published=True,
+        ).count()
+
+        category.total_questions_count = direct_count + children_count
+
+    return render(
+        request,
+        "quiz/category_list.html",
+        {
+            "categories": categories,
+        },
+    )
+    categories = (
+        QuizCategory.objects.filter(
+            parent__isnull=True
+        )
+        .exclude(slug="hftd-zmon-sl")
+        .order_by("id")
+    )
+
+    return render(
+        request,
+        "quiz/category_list.html",
+        {
+            "categories": categories,
+        },
+    )
+
+
+@login_required
+def category_detail(request, category_id):
+    parent_category = get_object_or_404(
+        QuizCategory,
+        id=category_id,
+    )
+
+    child_categories = QuizCategory.objects.filter(
+        parent=parent_category
+    ).order_by("id")
+
+    for category in child_categories:
+        direct_count = Question.objects.filter(
+            category=category,
+            is_published=True,
+        ).count()
+
+        children_count = Question.objects.filter(
+            category__parent=category,
+            is_published=True,
+        ).count()
+
+        category.total_questions_count = direct_count + children_count
+
+    if not child_categories.exists():
+        return redirect(
+            "category_practice",
+            category_id=parent_category.id,
+        )
+
+    return render(
+        request,
+        "quiz/category_detail.html",
+        {
+            "parent_category": parent_category,
+            "child_categories": child_categories,
+        },
+    )
+    parent_category = get_object_or_404(
+        QuizCategory,
+        id=category_id,
+    )
+
+    child_categories = QuizCategory.objects.filter(
+        parent=parent_category
+    ).order_by("id")
+
+    if not child_categories.exists():
+        return redirect(
+            "category_practice",
+            category_id=parent_category.id,
+        )
+
+    return render(
+        request,
+        "quiz/category_detail.html",
+        {
+            "parent_category": parent_category,
+            "child_categories": child_categories,
+        },
+    )
+
+
+@login_required
+def practice_category(request, category_id):
+    category = get_object_or_404(
+        QuizCategory,
+        id=category_id,
+    )
+
+    questions = list(
+        Question.objects.filter(
+            category=category,
+            is_published=True,
+        ).order_by("id")
+    )
+
+    if not questions:
+        return redirect("category_list")
+
+    exam = ExamSession.objects.create(
+        user=request.user,
+        mode="practice",
+    )
+
+    exam.questions.set(questions)
+
+    return redirect(
+        "exam_question",
+        exam_id=exam.id,
+        question_id=questions[0].id,
+    )
+
+
+category_practice = practice_category
+
+
+@login_required
+def start_category_exam(request, category_id):
+    category = get_object_or_404(
+        QuizCategory,
+        id=category_id,
+    )
+
+    questions = list(
+        Question.objects.filter(
+            category=category,
+            is_published=True,
+        ).order_by("id")
+    )
+
+    if not questions:
+        return redirect("category_list")
+
+    exam = ExamSession.objects.create(
+        user=request.user,
+        mode="test",
+    )
+
+    exam.questions.set(questions)
+
+    return redirect(
+        "exam_question",
+        exam_id=exam.id,
+        question_id=questions[0].id,
+    )
+
+
+@login_required
+def category_read(request, category_id):
+    category = get_object_or_404(
+        QuizCategory,
+        id=category_id,
+    )
+
+    questions = list(
+        Question.objects.filter(
+            category=category,
+            is_published=True,
+        ).order_by("id")
+    )
+
+    if not questions:
+        return redirect("/quiz/categories/")
+
+    exam = ExamSession.objects.create(
+        user=request.user,
+        mode="read",
+    )
+
+    exam.questions.set(questions)
+
+    return redirect(
+        "exam_question",
+        exam_id=exam.id,
+        question_id=questions[0].id,
+    )
+
+
+@login_required
+def official_exams(request):
+    parent = get_object_or_404(
+        QuizCategory,
+        slug="hftd-zmon-sl",
+    )
+
+    exams = QuizCategory.objects.filter(
+        parent=parent
+    ).order_by("id")
+
+    return render(
+        request,
+        "quiz/official_exams.html",
+        {
+            "exams": exams,
+        },
+    )
+@login_required
+def category_practice_result(request, exam_id):
+    exam = get_object_or_404(
+        ExamSession,
+        id=exam_id,
+        user=request.user,
+    )
+
+    total_questions = exam.questions.count()
+    answered_count = exam.answers.count()
+    correct_count = exam.answers.filter(is_correct=True).count()
+    wrong_count = exam.answers.filter(is_correct=False).count()
+
+    wrong_answers = (
+        exam.answers.filter(is_correct=False)
+        .select_related("question", "question__category")
+        .order_by("answered_at")
+    )
+
+    wrong_items = []
+
+    for answer in wrong_answers:
+        correct_answers = get_question_correct_answers(answer.question)
+        selected_answers = parse_answer_list(answer.selected_answers)
+
+        if not selected_answers and answer.selected_answer:
+            selected_answers = [answer.selected_answer]
+
+        wrong_items.append(
+            {
+                "answer": answer,
+                "question": answer.question,
+                "correct_answers": correct_answers,
+                "selected_answers": selected_answers,
+            }
+        )
+
+    return render(
+        request,
+        "quiz/category_practice_result.html",
+        {
+            "exam": exam,
+            "total_questions": total_questions,
+            "answered_count": answered_count,
+            "correct_count": correct_count,
+            "wrong_count": wrong_count,
+            "wrong_items": wrong_items,
         },
     )

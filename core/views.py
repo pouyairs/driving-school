@@ -1,13 +1,10 @@
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from videos.models import Category, Video, WatchedVideo
-from django.contrib.admin.views.decorators import staff_member_required
-from quiz.models import ExamSession, WrongQuestion
 from django.db.models import Count
-from quiz.models import ExamAnswer, ExamSession, Question
-from videos.models import Video, WatchedVideo
-from quiz.models import ExamAnswer, ExamSession
+from django.shortcuts import render
+
+from quiz.models import ExamAnswer, ExamSession, Question, QuizCategory, WrongQuestion
 from videos.models import Category, Video, WatchedVideo
 
 
@@ -33,7 +30,9 @@ def dashboard(request):
     total_videos = Video.objects.filter(is_published=True).count()
 
     watched_video_ids = list(
-        WatchedVideo.objects.filter(user=request.user).values_list("video_id", flat=True)
+        WatchedVideo.objects.filter(
+            user=request.user
+        ).values_list("video_id", flat=True)
     )
 
     watched_count = len(watched_video_ids)
@@ -65,6 +64,45 @@ def dashboard(request):
     if total_exams > 0:
         pass_rate = round((passed_exams / total_exams) * 100)
 
+    category_stats = []
+
+    learning_categories = (
+        QuizCategory.objects
+        .filter(parent__isnull=False)
+        .exclude(parent__slug="hftd-zmon-sl")
+        .order_by("id")
+        )
+
+    for category in learning_categories:
+        question_ids = Question.objects.filter(
+            category=category
+        ).values_list("id", flat=True)
+
+        total_answers = ExamAnswer.objects.filter(
+            exam__user=request.user,
+            question_id__in=question_ids,
+        ).count()
+
+        correct_answers = ExamAnswer.objects.filter(
+            exam__user=request.user,
+            question_id__in=question_ids,
+            is_correct=True,
+        ).count()
+
+        success_rate = 0
+
+        if total_answers > 0:
+            success_rate = round((correct_answers / total_answers) * 100)
+
+        if total_answers > 0:
+            category_stats.append(
+                {
+                    "category": category,
+                    "success_rate": success_rate,
+                    "total_answers": total_answers,
+                }
+            )
+
     return render(
         request,
         "core/dashboard.html",
@@ -80,42 +118,11 @@ def dashboard(request):
             "failed_exams": failed_exams,
             "mistakes_count": mistakes_count,
             "pass_rate": pass_rate,
+            "category_stats": category_stats,
         },
     )
-    categories = Category.objects.prefetch_related("videos").all()
 
-    total_videos = Video.objects.filter(is_published=True).count()
 
-    watched_video_ids = list(
-        WatchedVideo.objects.filter(user=request.user).values_list("video_id", flat=True)
-    )
-
-    watched_count = len(watched_video_ids)
-
-    progress_percent = 0
-    if total_videos > 0:
-        progress_percent = int((watched_count / total_videos) * 100)
-
-    next_video = (
-        Video.objects.filter(is_published=True)
-        .exclude(id__in=watched_video_ids)
-        .order_by("order", "-created_at")
-        .first()
-    )
-
-    return render(
-        request,
-        "core/dashboard.html",
-        {
-        
-            "categories": categories,
-            "total_videos": total_videos,
-            "watched_count": watched_count,
-            "progress_percent": progress_percent,
-            "watched_video_ids": watched_video_ids,
-            "next_video": next_video,
-        },
-    )
 @staff_member_required
 def admin_reports(request):
     User = get_user_model()
@@ -163,6 +170,8 @@ def admin_reports(request):
 
     hardest_categories = (
         ExamAnswer.objects.filter(is_correct=False)
+        .exclude(question__category__slug="hftd-zmon-sl")
+        .exclude(question__category__parent__slug="hftd-zmon-sl")
         .values(
             "question__category__name",
         )
@@ -209,53 +218,5 @@ def admin_reports(request):
             "total_revenue": 0,
         },
     )
-    User = get_user_model()
-
-    total_users = User.objects.count()
-    total_videos = Video.objects.filter(is_published=True).count()
-    total_watched_videos = WatchedVideo.objects.count()
-
-    total_exams = ExamSession.objects.count()
-
-    passed_exams = 0
-    failed_exams = 0
-
-    for exam in ExamSession.objects.all():
-        if exam.total_error_points() <= 10:
-            passed_exams += 1
-        else:
-            failed_exams += 1
-
-    most_wrong_questions = (
-        ExamAnswer.objects.filter(is_correct=False)
-        .values(
-            "question__id",
-            "question__title",
-            "question__category__name",
-        )
-        .annotate(wrong_count=Count("id"))
-        .order_by("-wrong_count")[:10]
-    )
-
-    most_active_users = (
-        ExamSession.objects.values("user__username", "user__email")
-        .annotate(exam_count=Count("id"))
-        .order_by("-exam_count")[:10]
-    )
-
-    return render(
-        request,
-        "core/admin_reports.html",
-        {
-            "total_users": total_users,
-            "total_videos": total_videos,
-            "total_watched_videos": total_watched_videos,
-            "total_exams": total_exams,
-            "passed_exams": passed_exams,
-            "failed_exams": failed_exams,
-            "most_wrong_questions": most_wrong_questions,
-            "most_active_users": most_active_users,
-            "total_payments": 0,
-            "total_revenue": 0,
-        },
-    )
+def coming_soon(request):
+    return render(request, "core/coming_soon.html")
