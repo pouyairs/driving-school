@@ -1,256 +1,1081 @@
 {% extends "base/base.html" %}
+{% load i18n %}
+
+{% get_current_language_bidi as LANGUAGE_BIDI %}
 
 {% block title %}
-آزمون واقعی
+{% trans "آزمون واقعی" %}
 {% endblock %}
 
 {% block content %}
-<main class="min-h-screen bg-slate-950 px-6 py-8 text-white">
-    <div class="mx-auto grid max-w-7xl gap-6 lg:grid-cols-4">
+<style>
 
-        <aside class="lg:col-span-1">
-            <div class="sticky top-6 rounded-[2rem] border border-white/10 bg-white/5 p-5">
-                <div class="mb-5 flex items-center justify-between">
-                    <p class="rounded-full bg-blue-500/10 px-4 py-2 text-sm font-bold text-blue-300">
-                        سوال {{ current_index|add:1 }} از {{ questions|length }}
+    .dt-exam-page[dir="rtl"] {
+        direction: rtl;
+    }
+
+    .dt-exam-page[dir="ltr"] {
+        direction: ltr;
+    }
+
+    .dt-exam-page[dir="ltr"] .dt-option {
+        text-align: left;
+    }
+
+    .dt-exam-page[dir="ltr"] .dt-hero-road {
+        left: auto;
+        right: 0;
+        transform: scaleX(-1);
+    }
+
+    .dt-exam-page[dir="ltr"] .dt-hero::before {
+        background:
+            linear-gradient(180deg, rgba(2,6,23,0.08), rgba(2,6,23,0.84)),
+            linear-gradient(270deg, rgba(7,17,31,0.92) 0%, rgba(7,17,31,0.45) 42%, transparent 70%);
+    }
+    .dt-exam-page {
+        min-height: 100vh;
+        color: #ffffff;
+        background:
+            radial-gradient(circle at 50% -20%, rgba(30, 64, 175, 0.12), transparent 35%),
+            radial-gradient(circle at 16% 8%, rgba(127, 29, 29, 0.18), transparent 30%),
+            #020617;
+        padding: 24px 18px 42px;
+        font-family: inherit;
+    }
+
+    .dt-exam-wrap {
+        max-width: 1360px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 330px minmax(0, 1fr);
+        gap: 24px;
+        align-items: start;
+    }
+
+    .dt-panel {
+        border-radius: 28px;
+        border: 1px solid rgba(100, 116, 139, 0.55);
+        background:
+            radial-gradient(circle at 12% 8%, rgba(37, 99, 235, 0.13), transparent 34%),
+            linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.985));
+        box-shadow: 0 18px 44px rgba(0,0,0,0.26);
+    }
+
+    .dt-sidebar {
+        position: sticky;
+        top: 24px;
+        padding: 22px;
+    }
+
+    .dt-side-top {
+        display: grid;
+        gap: 14px;
+        margin-bottom: 18px;
+    }
+
+    .dt-side-card {
+        border-radius: 20px;
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        background: rgba(255, 255, 255, 0.045);
+        padding: 16px;
+    }
+
+    .dt-side-label {
+        margin: 0 0 8px;
+        color: #94a3b8;
+        font-size: 13px;
+        font-weight: 850;
+    }
+
+    .dt-side-value {
+        margin: 0;
+        color: #ffffff;
+        font-size: 24px;
+        font-weight: 1000;
+    }
+
+    .dt-timer {
+        color: #fb7185;
+        font-size: 26px;
+        letter-spacing: 0.04em;
+        direction: ltr;
+    }
+
+    .dt-mode-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 42px;
+        border-radius: 999px;
+        padding: 0 16px;
+        font-size: 14px;
+        font-weight: 1000;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        background: rgba(255,255,255,0.05);
+        color: #cbd5e1;
+    }
+
+    .dt-mode-test {
+        color: #fb7185;
+        border-color: rgba(251, 113, 133, 0.40);
+        background: rgba(244, 63, 94, 0.12);
+    }
+
+    .dt-mode-practice {
+        color: #60a5fa;
+        border-color: rgba(96, 165, 250, 0.42);
+        background: rgba(59, 130, 246, 0.12);
+    }
+
+    .dt-mode-read {
+        color: #facc15;
+        border-color: rgba(250, 204, 21, 0.45);
+        background: rgba(234, 179, 8, 0.12);
+    }
+
+    .dt-progress-track {
+        height: 10px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(30, 41, 59, 0.94);
+        margin: 16px 0 8px;
+    }
+
+    .dt-progress-fill {
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #dc0d19, #ff3545);
+        box-shadow: 0 0 18px rgba(255, 53, 69, 0.48);
+    }
+
+    .dt-progress-text {
+        margin: 0;
+        color: #cbd5e1;
+        font-size: 13px;
+        font-weight: 850;
+    }
+
+    .dt-nav-section {
+        margin-top: 20px;
+    }
+
+    .dt-nav-title {
+        margin: 0 0 12px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+        font-size: 14px;
+        font-weight: 1000;
+    }
+
+    .dt-nav-title-blue {
+        color: #93c5fd;
+        background: rgba(59, 130, 246, 0.13);
+        border: 1px solid rgba(96, 165, 250, 0.24);
+    }
+
+    .dt-nav-title-green {
+        color: #86efac;
+        background: rgba(34, 197, 94, 0.12);
+        border: 1px solid rgba(74, 222, 128, 0.24);
+    }
+
+    .dt-number-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 9px;
+        padding: 13px;
+        border-radius: 18px;
+        background: rgba(2, 6, 23, 0.70);
+        border: 1px solid rgba(100, 116, 139, 0.25);
+    }
+
+    .dt-qnum {
+        height: 42px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 1000;
+        transition: 0.2s ease;
+    }
+
+    .dt-qnum:hover {
+        transform: translateY(-1px);
+    }
+
+    .dt-q-current {
+        color: #ffffff;
+        background: #2563eb;
+        box-shadow: 0 0 18px rgba(37, 99, 235, 0.35);
+    }
+
+    .dt-q-correct {
+        color: #052e16;
+        background: #4ade80;
+    }
+
+    .dt-q-wrong {
+        color: #422006;
+        background: #facc15;
+    }
+
+    .dt-q-empty {
+        color: #e2e8f0;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .dt-legend {
+        margin-top: 18px;
+        border-radius: 18px;
+        border: 1px solid rgba(100, 116, 139, 0.28);
+        background: rgba(2, 6, 23, 0.66);
+        padding: 14px;
+        display: grid;
+        gap: 10px;
+        color: #cbd5e1;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .dt-legend-row {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+    }
+
+    .dt-legend-dot {
+        width: 13px;
+        height: 13px;
+        border-radius: 999px;
+    }
+
+    .dt-exit {
+        margin-top: 18px;
+        height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 17px;
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 950;
+        border: 1px solid rgba(255,255,255,0.16);
+        background: rgba(255,255,255,0.055);
+        transition: 0.2s ease;
+    }
+
+    .dt-exit:hover {
+        background: rgba(255,255,255,0.095);
+        transform: translateY(-1px);
+    }
+
+    .dt-main {
+        overflow: hidden;
+    }
+
+    .dt-hero {
+        position: relative;
+        overflow: hidden;
+        min-height: 255px;
+        border-radius: 28px 28px 0 0;
+        background:
+            radial-gradient(circle at 68% 0%, rgba(127, 29, 29, 0.68), transparent 34%),
+            linear-gradient(135deg, #07111f 0%, #020617 44%, #3f030a 100%);
+        border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    .dt-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(180deg, rgba(2,6,23,0.08), rgba(2,6,23,0.84)),
+            linear-gradient(90deg, rgba(7,17,31,0.92) 0%, rgba(7,17,31,0.45) 42%, transparent 70%);
+        pointer-events: none;
+    }
+
+    .dt-hero-road {
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        width: 58%;
+        height: 100%;
+        opacity: 0.22;
+        pointer-events: none;
+    }
+
+    .dt-hero-content {
+        position: relative;
+        z-index: 2;
+        min-height: 255px;
+        padding: 34px 42px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .dt-badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+
+    .dt-badge {
+        min-height: 42px;
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        border-radius: 999px;
+        padding: 0 16px;
+        font-size: 13px;
+        font-weight: 950;
+        border: 1px solid rgba(255,255,255,0.16);
+        background: rgba(255,255,255,0.055);
+        color: #e2e8f0;
+    }
+
+    .dt-badge-red {
+        border-color: rgba(248, 113, 113, 0.36);
+        background: rgba(239, 68, 68, 0.13);
+        color: #fecaca;
+    }
+
+    .dt-badge-blue {
+        border-color: rgba(96, 165, 250, 0.38);
+        background: rgba(59, 130, 246, 0.12);
+        color: #bfdbfe;
+    }
+
+    .dt-question-title {
+        margin: 0;
+        max-width: 840px;
+        font-size: clamp(28px, 3.3vw, 44px);
+        line-height: 1.55;
+        font-weight: 1000;
+        letter-spacing: -0.025em;
+        text-shadow: 0 4px 18px rgba(0,0,0,0.40);
+    }
+
+    .dt-content {
+        padding: 28px;
+    }
+
+    .dt-tool-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 22px;
+    }
+
+    .dt-tool {
+        height: 48px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        border-radius: 14px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        background: rgba(255,255,255,0.045);
+        color: #e2e8f0;
+        text-decoration: none;
+        cursor: pointer;
+        padding: 0 16px;
+        font-size: 14px;
+        font-weight: 950;
+        transition: 0.2s ease;
+    }
+
+    .dt-tool:hover {
+        background: rgba(255,255,255,0.085);
+        transform: translateY(-1px);
+    }
+
+    .dt-tool svg {
+        width: 19px;
+        height: 19px;
+    }
+
+    .dt-tool-yellow {
+        color: #facc15;
+        border-color: rgba(250, 204, 21, 0.44);
+        background: rgba(234, 179, 8, 0.10);
+    }
+
+    .dt-tool-blue {
+        color: #60a5fa;
+        border-color: rgba(96, 165, 250, 0.42);
+        background: rgba(59, 130, 246, 0.10);
+    }
+
+    .dt-tool-fav-active {
+        color: #111827;
+        background: #facc15;
+        border-color: rgba(250, 204, 21, 0.78);
+    }
+
+    .dt-translation {
+        margin-bottom: 22px;
+        border-radius: 18px;
+        border: 1px solid rgba(250, 204, 21, 0.32);
+        background: rgba(234, 179, 8, 0.10);
+        color: #fde68a;
+        padding: 18px;
+        line-height: 2;
+        font-weight: 700;
+    }
+
+    .dt-hidden {
+        display: none;
+    }
+
+    .dt-media {
+        overflow: hidden;
+        border-radius: 24px;
+        border: 1px solid rgba(148,163,184,0.25);
+        background: #020617;
+        margin-bottom: 24px;
+    }
+
+    .dt-media img,
+    .dt-media iframe {
+        display: block;
+        width: 100%;
+        border: 0;
+    }
+
+    .dt-media img {
+        max-height: 560px;
+        object-fit: cover;
+    }
+
+    .dt-media iframe {
+        height: 560px;
+    }
+
+    .dt-options {
+        display: grid;
+        gap: 13px;
+        margin-top: 24px;
+    }
+
+    .dt-option {
+        position: relative;
+        width: 100%;
+        border: 1px solid rgba(100,116,139,0.55);
+        background:
+            radial-gradient(circle at 8% 50%, rgba(99,102,241,0.14), transparent 22%),
+            rgba(15,23,42,0.82);
+        color: #e5e7eb;
+        border-radius: 17px;
+        min-height: 76px;
+        display: grid;
+        grid-template-columns: 48px 1fr 46px;
+        align-items: center;
+        gap: 16px;
+        padding: 14px 18px;
+        text-align: right;
+        font-size: 18px;
+        line-height: 1.75;
+        font-weight: 850;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .dt-option:hover {
+        transform: translateY(-1px);
+        border-color: rgba(96, 165, 250, 0.55);
+        background:
+            radial-gradient(circle at 8% 50%, rgba(59,130,246,0.20), transparent 25%),
+            rgba(15,23,42,0.95);
+    }
+
+    .dt-option input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .dt-check {
+        width: 38px;
+        height: 38px;
+        border-radius: 999px;
+        border: 1px solid rgba(129,140,248,0.44);
+        background: rgba(99,102,241,0.16);
+        display: grid;
+        place-items: center;
+        color: #a5b4fc;
+    }
+
+    .dt-check svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .dt-option-number {
+        width: 40px;
+        height: 40px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        border: 1px solid rgba(129,140,248,0.45);
+        color: #c7d2fe;
+        font-weight: 1000;
+    }
+
+    .dt-option-selected {
+        border-color: rgba(96,165,250,0.72);
+        background:
+            radial-gradient(circle at 8% 50%, rgba(59,130,246,0.26), transparent 28%),
+            rgba(15,23,42,0.95);
+        color: #bfdbfe;
+    }
+
+    .dt-option-correct {
+        border-color: rgba(34,197,94,0.90);
+        background:
+            radial-gradient(circle at 8% 50%, rgba(34,197,94,0.28), transparent 28%),
+            linear-gradient(90deg, rgba(22,101,52,0.55), rgba(15,23,42,0.90));
+        color: #dcfce7;
+        box-shadow: 0 0 24px rgba(34,197,94,0.16);
+    }
+
+    .dt-option-correct .dt-check,
+    .dt-option-correct .dt-option-number {
+        color: #86efac;
+        border-color: rgba(34,197,94,0.75);
+        background: rgba(22,163,74,0.24);
+    }
+
+    .dt-option-wrong {
+        border-color: rgba(248,113,113,0.95);
+        background:
+            radial-gradient(circle at 8% 50%, rgba(239,68,68,0.30), transparent 28%),
+            linear-gradient(90deg, rgba(127,29,29,0.62), rgba(15,23,42,0.90));
+        color: #fecdd3;
+        box-shadow: 0 0 24px rgba(239,68,68,0.16);
+    }
+
+    .dt-option-wrong .dt-check,
+    .dt-option-wrong .dt-option-number {
+        color: #fca5a5;
+        border-color: rgba(248,113,113,0.75);
+        background: rgba(220,38,38,0.24);
+    }
+
+    .dt-submit-row,
+    .dt-bottom-actions {
+        margin-top: 24px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+    }
+
+    .dt-button {
+        min-width: 155px;
+        height: 56px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border-radius: 17px;
+        border: 1px solid rgba(148,163,184,0.24);
+        background: rgba(255,255,255,0.055);
+        color: #ffffff;
+        text-decoration: none;
+        cursor: pointer;
+        padding: 0 22px;
+        font-size: 15px;
+        font-weight: 950;
+        transition: 0.2s ease;
+    }
+
+    .dt-button:hover {
+        transform: translateY(-1px);
+        background: rgba(255,255,255,0.095);
+    }
+
+    .dt-button-primary {
+        border-color: rgba(96,165,250,0.56);
+        background: rgba(59,130,246,0.14);
+        color: #93c5fd;
+    }
+
+    .dt-button-success {
+        border-color: rgba(74,222,128,0.50);
+        background: rgba(34,197,94,0.13);
+        color: #86efac;
+    }
+
+    .dt-result-box {
+        margin-top: 24px;
+        border-radius: 20px;
+        border: 1px solid rgba(100,116,139,0.45);
+        background: rgba(2,6,23,0.72);
+        padding: 20px;
+    }
+
+    .dt-result-title {
+        margin: 0;
+        font-size: 25px;
+        font-weight: 1000;
+    }
+
+    .dt-result-correct { color: #4ade80; }
+    .dt-result-wrong { color: #fb7185; }
+
+    .dt-result-text {
+        margin: 12px 0 0;
+        color: #cbd5e1;
+        font-weight: 800;
+    }
+
+    .dt-explanation {
+        margin-top: 18px;
+        border-radius: 18px;
+        border: 1px solid rgba(96,165,250,0.28);
+        background: rgba(59,130,246,0.10);
+        padding: 18px;
+        line-height: 2;
+        color: #cbd5e1;
+        font-weight: 700;
+    }
+
+    .dt-explanation h3 {
+        margin: 0 0 10px;
+        color: #60a5fa;
+        font-size: 18px;
+        font-weight: 1000;
+    }
+
+    @media (max-width: 1100px) {
+        .dt-exam-wrap {
+            grid-template-columns: 1fr;
+        }
+
+        .dt-sidebar {
+            position: static;
+            order: 2;
+        }
+
+        .dt-main {
+            order: 1;
+        }
+
+        .dt-number-grid {
+            grid-template-columns: repeat(10, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 700px) {
+        .dt-exam-page {
+            padding: 14px 10px 28px;
+        }
+
+        .dt-content {
+            padding: 18px;
+        }
+
+        .dt-hero-content {
+            min-height: 220px;
+            padding: 28px 20px;
+        }
+
+        .dt-question-title {
+            font-size: 27px;
+        }
+
+        .dt-number-grid {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+        }
+
+        .dt-option {
+            grid-template-columns: 40px 1fr 36px;
+            font-size: 15px;
+            padding: 12px;
+        }
+
+        .dt-check,
+        .dt-option-number {
+            width: 34px;
+            height: 34px;
+        }
+
+        .dt-button {
+            width: 100%;
+        }
+    }
+</style>
+
+<main class="dt-exam-page" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}">
+    <div class="dt-exam-wrap">
+
+        <aside class="dt-panel dt-sidebar">
+            <div class="dt-side-top">
+                <div class="dt-side-card">
+                    <p class="dt-side-label">{% trans "Question" %}</p>
+                    <p class="dt-side-value">{% blocktrans with current=current_index|add:1 total=questions|length %}سوال {{ current }} از {{ total }}{% endblocktrans %}</p>
+
+                    <div class="dt-progress-track">
+                        <div class="dt-progress-fill" style="width: {{ progress_percent }}%;"></div>
+                    </div>
+
+                    <p class="dt-progress-text">{% blocktrans with percent=progress_percent %}{{ percent }}% completed{% endblocktrans %}</p>
+                </div>
+
+                <div class="dt-side-card">
+                    <p class="dt-side-label">
+                        {% if is_test_mode %}{% trans "Timer" %}{% else %}{% trans "Mode" %}{% endif %}
                     </p>
 
                     {% if is_test_mode %}
-                        <p id="exam-timer" class="rounded-full bg-red-500/10 px-4 py-2 text-sm font-black text-red-300" data-seconds="{{ remaining_seconds }}" data-result-url="/quiz/exam/{{ exam.id }}/result/">30:00</p>
-                    {% else %}
-                        <p class="rounded-full bg-white/5 px-4 py-2 text-sm font-bold text-slate-300">
-                            {% if is_practice_mode %}تمرین{% elif is_read_mode %}مطالعه{% endif %}
+                        <p
+                            id="exam-timer"
+                            class="dt-side-value dt-timer"
+                            data-seconds="{{ remaining_seconds }}"
+                            data-result-url="{% url 'exam_result' exam.id %}"
+                        >
+                            30:00
                         </p>
+                    {% else %}
+                        <span class="dt-mode-badge {% if is_practice_mode %}dt-mode-practice{% elif is_read_mode %}dt-mode-read{% endif %}">
+                            {% if is_practice_mode %}{% trans "تمرین" %}{% elif is_read_mode %}{% trans "مطالعه" %}{% endif %}
+                        </span>
                     {% endif %}
                 </div>
-
-                <div class="mb-6 h-3 overflow-hidden rounded-full bg-slate-800">
-                    <div class="h-full rounded-full bg-blue-500 transition-all" style="width: {{ progress_percent }}%;"></div>
-                </div>
-
-                <div class="space-y-5">
-                    <div>
-                        <div class="mb-3 rounded-xl bg-blue-500/20 px-4 py-3 text-center text-sm font-black text-blue-300">اطلاعات پایه</div>
-                        <div class="grid grid-cols-3 gap-2 rounded-2xl bg-slate-900 p-3">
-                            {% for item in nav_items %}
-                                {% if item.section == "basic" %}
-                                    <a href="/quiz/exam/{{ exam.id }}/{{ item.question.id }}/" class="relative flex h-12 w-12 items-center justify-center justify-self-center rounded-2xl text-sm font-black shadow-md transition {% if item.is_current %}bg-blue-500 text-white{% elif item.status == 'correct' %}bg-green-500 text-white{% elif item.status == 'wrong' %}bg-yellow-400 text-slate-900{% else %}bg-white text-slate-900 hover:bg-blue-100{% endif %}">
-                                        {{ item.number }}
-                                    </a>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                    <div>
-                        <div class="mb-3 rounded-xl bg-green-500/20 px-4 py-3 text-center text-sm font-black text-green-300">کلاس B</div>
-                        <div class="grid grid-cols-3 gap-2 rounded-2xl bg-slate-900 p-3">
-                            {% for item in nav_items %}
-                                {% if item.section == "class_b" %}
-                                    <a href="/quiz/exam/{{ exam.id }}/{{ item.question.id }}/" class="relative flex h-12 w-12 items-center justify-center justify-self-center rounded-2xl text-sm font-black shadow-md transition {% if item.is_current %}bg-blue-500 text-white{% elif item.status == 'correct' %}bg-green-500 text-white{% elif item.status == 'wrong' %}bg-yellow-400 text-slate-900{% else %}bg-white text-slate-900 hover:bg-blue-100{% endif %}">
-                                        {{ item.number }}
-                                    </a>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-5 space-y-2 rounded-2xl bg-slate-900 p-4 text-xs text-slate-300">
-                    <p>آبی: سوال فعلی</p>
-                    <p>سبز: پاسخ درست</p>
-                    <p>زرد: پاسخ اشتباه</p>
-                    <p>سفید: بدون پاسخ</p>
-                </div>
-
-                <a href="/dashboard/" class="mt-5 block rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-center font-bold hover:bg-white/10">خروج از آزمون</a>
             </div>
+
+            <div class="dt-nav-section">
+                <h3 class="dt-nav-title dt-nav-title-blue">{% trans "اطلاعات پایه" %}</h3>
+
+                <div class="dt-number-grid">
+                    {% for item in nav_items %}
+                        {% if item.section == "basic" %}
+                            <a
+                                href="{% url 'exam_question' exam.id item.question.id %}"
+                                class="dt-qnum
+                                {% if item.is_current %}
+                                    dt-q-current
+                                {% elif item.status == 'correct' %}
+                                    dt-q-correct
+                                {% elif item.status == 'wrong' %}
+                                    dt-q-wrong
+                                {% else %}
+                                    dt-q-empty
+                                {% endif %}"
+                            >
+                                {{ item.number }}
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="dt-nav-section">
+                <h3 class="dt-nav-title dt-nav-title-green">{% trans "کلاس B" %}</h3>
+
+                <div class="dt-number-grid">
+                    {% for item in nav_items %}
+                        {% if item.section == "class_b" %}
+                            <a
+                                href="{% url 'exam_question' exam.id item.question.id %}"
+                                class="dt-qnum
+                                {% if item.is_current %}
+                                    dt-q-current
+                                {% elif item.status == 'correct' %}
+                                    dt-q-correct
+                                {% elif item.status == 'wrong' %}
+                                    dt-q-wrong
+                                {% else %}
+                                    dt-q-empty
+                                {% endif %}"
+                            >
+                                {{ item.number }}
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="dt-legend">
+                <div class="dt-legend-row"><span class="dt-legend-dot" style="background:#2563eb;"></span>{% trans "آبی: سوال فعلی" %}</div>
+                <div class="dt-legend-row"><span class="dt-legend-dot" style="background:#4ade80;"></span>{% trans "سبز: پاسخ درست" %}</div>
+                <div class="dt-legend-row"><span class="dt-legend-dot" style="background:#facc15;"></span>{% trans "زرد: پاسخ اشتباه" %}</div>
+                <div class="dt-legend-row"><span class="dt-legend-dot" style="background:rgba(255,255,255,0.18);"></span>{% trans "خاکستری: بدون پاسخ" %}</div>
+            </div>
+
+            <a href="{% url 'dashboard' %}" class="dt-exit">{% trans "خروج از آزمون" %}</a>
         </aside>
 
-        <section class="rounded-[2rem] border border-white/10 bg-white/5 p-8 lg:col-span-3">
+        <section class="dt-panel dt-main">
 
-            <div class="mb-4 flex flex-wrap items-center gap-3">
-                <p class="rounded-full bg-blue-500/10 px-4 py-2 text-sm font-bold text-blue-300">
-                    {{ question.category.name }} / {{ question.get_section_display }}
-                </p>
+            <div class="dt-hero">
+                <svg class="dt-hero-road" viewBox="0 0 560 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61" stroke="white" stroke-width="22" stroke-linecap="round" opacity="0.055"/>
+                    <path d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10" stroke="white" stroke-width="22" stroke-linecap="round" opacity="0.055"/>
+                    <path d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61" stroke="white" stroke-width="3.2" stroke-linecap="round" opacity="0.68"/>
+                    <path d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10" stroke="white" stroke-width="3.2" stroke-linecap="round" opacity="0.68"/>
+                    <path d="M76 294C125 265 166 232 177 197" stroke="white" stroke-width="3.1" stroke-linecap="round" stroke-dasharray="26 20" opacity="0.45"/>
+                    <path d="M181 172C176 132 145 103 100 82" stroke="white" stroke-width="3.1" stroke-linecap="round" stroke-dasharray="26 20" opacity="0.43"/>
+                    <path d="M323 32L450 159L323 286L196 159L323 32Z" stroke="white" stroke-width="8" opacity="0.09"/>
+                    <path d="M323 99V168" stroke="white" stroke-width="14" stroke-linecap="round" opacity="0.09"/>
+                    <circle cx="323" cy="211" r="8" fill="white" opacity="0.09"/>
+                </svg>
 
-                {% if question.video_url %}
-                    <span class="rounded-full border border-red-400/30 bg-red-500/10 px-4 py-2 text-sm font-bold text-red-300">
-                        🎥 سوال ویدیویی
-                    </span>
-                {% endif %}
+                <div class="dt-hero-content">
+                    <div>
+                        <div class="dt-badge-row">
+                            <span class="dt-badge dt-badge-red">
+                                {{ question.category.name }} / {{ question.get_section_display }}
+                            </span>
+
+                            {% if question.video_url %}
+                                <span class="dt-badge dt-badge-blue">🎥 {% trans "سوال ویدیویی" %}</span>
+                            {% endif %}
+                        </div>
+
+                        <h1 class="dt-question-title">{{ question.title }}</h1>
+                    </div>
+                </div>
             </div>
 
+            <div class="dt-content">
+                <div class="dt-tool-row">
+                    <a
+                        href="{% url 'toggle_favorite' question.id %}"
+                        class="dt-tool {% if is_favorite %}dt-tool-fav-active{% else %}dt-tool-yellow{% endif %}"
+                    >
+                        {% if is_favorite %}⭐ {% trans "ذخیره شده" %}{% else %}☆ {% trans "ذخیره سوال" %}{% endif %}
+                    </a>
 
-            <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                <h1 class="text-3xl font-black leading-relaxed">{{ question.title }}</h1>
-                <button type="button" onclick="speakQuestion()" class="w-fit rounded-full border border-blue-400/20 bg-blue-500/10 px-3 py-1.5 text-sm font-medium text-blue-300 hover:bg-blue-500/20">🔊 صوتی</button>
-            </div>
+                    {% if question.title_translation or question.scenario_translation %}
+                        <button type="button" onclick="toggleTranslation()" class="dt-tool dt-tool-yellow">
+                            🇮🇷 {% trans "نمایش ترجمه فارسی" %}
+                        </button>
+                    {% endif %}
 
-            <div class="mt-4 flex flex-wrap gap-3">
-                <a href="/quiz/favorite/{{ question.id }}/" class="rounded-xl px-4 py-2 font-bold {% if is_favorite %}bg-yellow-400 text-slate-950 hover:bg-yellow-300{% else %}bg-white/10 text-yellow-300 hover:bg-white/20{% endif %}">
-                    {% if is_favorite %}⭐ ذخیره شده{% else %}☆ ذخیره سوال{% endif %}
-                </a>
+                    <button type="button" onclick="speakQuestion()" class="dt-tool dt-tool-blue">
+                        🔊 {% trans "صوتی" %}
+                    </button>
+                </div>
 
                 {% if question.title_translation or question.scenario_translation %}
-                    <button type="button" onclick="toggleTranslation()" class="rounded-xl border border-yellow-400/30 bg-yellow-500/10 px-4 py-2 font-bold text-yellow-300 hover:bg-yellow-500/20">🇮🇷 نمایش ترجمه فارسی</button>
+                    <div id="translation-box" class="dt-translation dt-hidden">
+                        {% if question.scenario_translation %}
+                            <p style="margin:0 0 10px;">{{ question.scenario_translation }}</p>
+                        {% endif %}
+
+                        {% if question.title_translation %}
+                            <p style="margin:0;">{{ question.title_translation }}</p>
+                        {% endif %}
+                    </div>
                 {% endif %}
-            </div>
 
-            {% if question.title_translation or question.scenario_translation %}
-                <div
-                    id="translation-box"
-                    class="mt-4 hidden rounded-2xl border border-yellow-400/20 bg-yellow-500/10 p-4 leading-8 text-slate-200"
-                >
-                    {% if question.scenario_translation %}
-                        <p class="mb-3">{{ question.scenario_translation }}</p>
-                    {% endif %}
+                {% if question.image %}
+                    <div class="dt-media">
+                        <img src="{{ question.image.url }}" alt="{{ question.title }}">
+                    </div>
+                {% endif %}
 
-                    {% if question.title_translation %}
-                        <p>{{ question.title_translation }}</p>
-                    {% endif %}
-                </div>
-            {% endif %}
+                {% if question.video_url %}
+                    <div class="dt-media">
+                        <iframe src="{{ question.video_url }}" allowfullscreen></iframe>
+                    </div>
+                {% endif %}
 
-            {% if question.image %}
-                <div class="mt-6 overflow-hidden rounded-2xl bg-slate-900">
-                    <img src="{{ question.image.url }}" alt="{{ question.title }}" class="w-full object-cover" style="max-height: 560px;">
-                </div>
-            {% endif %}
+                {% if is_read_mode %}
+                    <div class="dt-options">
+                        <div class="dt-option {% if 1 in correct_answers_list %}dt-option-correct{% endif %}">
+                            <span class="dt-check">✓</span>
+                            <span>1. {{ question.option_1 }}</span>
+                            <span class="dt-option-number">1</span>
+                        </div>
 
-            {% if question.video_url %}
-                <div class="mt-6 overflow-hidden rounded-2xl bg-slate-900">
-                    <iframe src="{{ question.video_url }}" class="w-full" style="height: 560px;" allowfullscreen></iframe>
-                </div>
-            {% endif %}
+                        <div class="dt-option {% if 2 in correct_answers_list %}dt-option-correct{% endif %}">
+                            <span class="dt-check">✓</span>
+                            <span>2. {{ question.option_2 }}</span>
+                            <span class="dt-option-number">2</span>
+                        </div>
 
-            {% if is_read_mode %}
-                <div class="mt-8 space-y-4">
-                    <div class="grid gap-3 md:grid-cols-2">
-                        <div class="rounded-2xl border p-5 {% if 1 in correct_answers_list %}border-green-400/40 bg-green-500/10{% else %}border-white/10 bg-slate-900{% endif %}"><p class="font-bold">1. {{ question.option_1 }}</p></div>
-                        <div class="rounded-2xl border p-5 {% if 2 in correct_answers_list %}border-green-400/40 bg-green-500/10{% else %}border-white/10 bg-slate-900{% endif %}"><p class="font-bold">2. {{ question.option_2 }}</p></div>
-                        <div class="rounded-2xl border p-5 {% if 3 in correct_answers_list %}border-green-400/40 bg-green-500/10{% else %}border-white/10 bg-slate-900{% endif %}"><p class="font-bold">3. {{ question.option_3 }}</p></div>
+                        <div class="dt-option {% if 3 in correct_answers_list %}dt-option-correct{% endif %}">
+                            <span class="dt-check">✓</span>
+                            <span>3. {{ question.option_3 }}</span>
+                            <span class="dt-option-number">3</span>
+                        </div>
+
                         {% if question.option_4 %}
-                            <div class="rounded-2xl border p-5 {% if 4 in correct_answers_list %}border-green-400/40 bg-green-500/10{% else %}border-white/10 bg-slate-900{% endif %}"><p class="font-bold">4. {{ question.option_4 }}</p></div>
+                            <div class="dt-option {% if 4 in correct_answers_list %}dt-option-correct{% endif %}">
+                                <span class="dt-check">✓</span>
+                                <span>4. {{ question.option_4 }}</span>
+                                <span class="dt-option-number">4</span>
+                            </div>
                         {% endif %}
                     </div>
 
-                    <div class="rounded-2xl border border-green-400/20 bg-green-500/10 p-5">
-                        <h3 class="font-black text-green-300">جواب صحیح</h3>
-                        <p class="mt-3 text-slate-200">
+                    <div class="dt-result-box">
+                        <h3 class="dt-result-title dt-result-correct">{% trans "جواب صحیح" %}</h3>
+                        <p class="dt-result-text">
                             {% for item in correct_answers_list %}
-                                گزینه {{ item }}{% if not forloop.last %}، {% endif %}
+                                {% blocktrans with option=item %}گزینه {{ option }}{% endblocktrans %}{% if not forloop.last %}، {% endif %}
                             {% endfor %}
                         </p>
                     </div>
 
                     {% if question.explanation %}
-                        <div class="rounded-2xl border border-blue-400/20 bg-blue-500/10 p-5">
-                            <h3 class="font-black text-blue-300">توضیح</h3>
-                            <p class="mt-3 leading-8 text-slate-300">{{ question.explanation }}</p>
+                        <div class="dt-explanation">
+                            <h3>{% trans "توضیح" %}</h3>
+                            {{ question.explanation }}
                         </div>
                     {% endif %}
 
-                    <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+                    <div class="dt-bottom-actions">
                         {% if next_question %}
-                            <a href="/quiz/exam/{{ exam.id }}/{{ next_question.id }}/" class="inline-block rounded-2xl border border-blue-400/30 bg-blue-500/10 px-5 py-3 text-center font-bold text-blue-300 hover:bg-blue-500/20">ادامه</a>
+                            <a href="{% url 'exam_question' exam.id next_question.id %}" class="dt-button dt-button-primary">{% trans "ادامه" %}</a>
                         {% else %}
                             {% if question.category.parent.slug == "hftd-zmon-sl" %}
-                                <a href="/quiz/official-exams/" class="inline-block rounded-2xl border border-green-400/30 bg-green-500/10 px-5 py-3 text-center font-bold text-green-300 hover:bg-green-500/20">پایان مطالعه</a>
+                                <a href="{% url 'official_exams' %}" class="dt-button dt-button-success">{% trans "پایان مطالعه" %}</a>
                             {% else %}
-                                <a href="/quiz/categories/" class="inline-block rounded-2xl border border-green-400/30 bg-green-500/10 px-5 py-3 text-center font-bold text-green-300 hover:bg-green-500/20">پایان مطالعه</a>
+                                <a href="{% url 'category_list' %}" class="dt-button dt-button-success">{% trans "پایان مطالعه" %}</a>
                             {% endif %}
                         {% endif %}
-                        <a href="/dashboard/" class="inline-block rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-center font-bold hover:bg-white/10">لغو</a>
+
+                        <a href="{% url 'dashboard' %}" class="dt-button">{% trans "لغو" %}</a>
                     </div>
-                </div>
-            {% else %}
-                <form method="post" class="mt-8 space-y-4">
-                    {% csrf_token %}
 
-                    <label class="block cursor-pointer rounded-2xl border p-5 text-right text-lg transition {% if is_practice_mode and selected_answer == 1 and is_correct %}border-green-400 bg-green-500/20 text-green-300{% elif is_practice_mode and 1 in selected_answers_list and not is_correct %}border-red-400 bg-red-500/20 text-red-300{% elif is_practice_mode and selected_answer and 1 in correct_answers_list %}border-green-400 bg-green-500/20 text-green-300{% elif is_test_mode and 1 in selected_answers_list %}border-blue-400 bg-blue-500/10 text-blue-300{% else %}border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-500/10{% endif %}">
-                        <input type="checkbox" name="answer" value="1" class="ml-3" {% if 1 in selected_answers_list %}checked{% endif %}>
-                        1. {{ question.option_1 }}
-                    </label>
+                {% else %}
+                    <form method="post">
+                        {% csrf_token %}
 
-                    <label class="block cursor-pointer rounded-2xl border p-5 text-right text-lg transition {% if is_practice_mode and selected_answer == 2 and is_correct %}border-green-400 bg-green-500/20 text-green-300{% elif is_practice_mode and 2 in selected_answers_list and not is_correct %}border-red-400 bg-red-500/20 text-red-300{% elif is_practice_mode and selected_answer and 2 in correct_answers_list %}border-green-400 bg-green-500/20 text-green-300{% elif is_test_mode and 2 in selected_answers_list %}border-blue-400 bg-blue-500/10 text-blue-300{% else %}border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-500/10{% endif %}">
-                        <input type="checkbox" name="answer" value="2" class="ml-3" {% if 2 in selected_answers_list %}checked{% endif %}>
-                        2. {{ question.option_2 }}
-                    </label>
+                        <div class="dt-options">
+                            <label class="dt-option
+                                {% if is_practice_mode and selected_answer == 1 and is_correct %}
+                                    dt-option-correct
+                                {% elif is_practice_mode and 1 in selected_answers_list and not is_correct %}
+                                    dt-option-wrong
+                                {% elif is_practice_mode and selected_answer and 1 in correct_answers_list %}
+                                    dt-option-correct
+                                {% elif is_test_mode and 1 in selected_answers_list %}
+                                    dt-option-selected
+                                {% endif %}
+                            ">
+                                <input type="checkbox" name="answer" value="1" {% if 1 in selected_answers_list %}checked{% endif %}>
+                                <span class="dt-check">1</span>
+                                <span>{{ question.option_1 }}</span>
+                                <span class="dt-option-number">1</span>
+                            </label>
 
-                    <label class="block cursor-pointer rounded-2xl border p-5 text-right text-lg transition {% if is_practice_mode and selected_answer == 3 and is_correct %}border-green-400 bg-green-500/20 text-green-300{% elif is_practice_mode and 3 in selected_answers_list and not is_correct %}border-red-400 bg-red-500/20 text-red-300{% elif is_practice_mode and selected_answer and 3 in correct_answers_list %}border-green-400 bg-green-500/20 text-green-300{% elif is_test_mode and 3 in selected_answers_list %}border-blue-400 bg-blue-500/10 text-blue-300{% else %}border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-500/10{% endif %}">
-                        <input type="checkbox" name="answer" value="3" class="ml-3" {% if 3 in selected_answers_list %}checked{% endif %}>
-                        3. {{ question.option_3 }}
-                    </label>
+                            <label class="dt-option
+                                {% if is_practice_mode and selected_answer == 2 and is_correct %}
+                                    dt-option-correct
+                                {% elif is_practice_mode and 2 in selected_answers_list and not is_correct %}
+                                    dt-option-wrong
+                                {% elif is_practice_mode and selected_answer and 2 in correct_answers_list %}
+                                    dt-option-correct
+                                {% elif is_test_mode and 2 in selected_answers_list %}
+                                    dt-option-selected
+                                {% endif %}
+                            ">
+                                <input type="checkbox" name="answer" value="2" {% if 2 in selected_answers_list %}checked{% endif %}>
+                                <span class="dt-check">2</span>
+                                <span>{{ question.option_2 }}</span>
+                                <span class="dt-option-number">2</span>
+                            </label>
 
-                    {% if question.option_4 %}
-                        <label class="block cursor-pointer rounded-2xl border p-5 text-right text-lg transition {% if is_practice_mode and selected_answer == 4 and is_correct %}border-green-400 bg-green-500/20 text-green-300{% elif is_practice_mode and 4 in selected_answers_list and not is_correct %}border-red-400 bg-red-500/20 text-red-300{% elif is_practice_mode and selected_answer and 4 in correct_answers_list %}border-green-400 bg-green-500/20 text-green-300{% elif is_test_mode and 4 in selected_answers_list %}border-blue-400 bg-blue-500/10 text-blue-300{% else %}border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-500/10{% endif %}">
-                            <input type="checkbox" name="answer" value="4" class="ml-3" {% if 4 in selected_answers_list %}checked{% endif %}>
-                            4. {{ question.option_4 }}
-                        </label>
-                    {% endif %}
+                            <label class="dt-option
+                                {% if is_practice_mode and selected_answer == 3 and is_correct %}
+                                    dt-option-correct
+                                {% elif is_practice_mode and 3 in selected_answers_list and not is_correct %}
+                                    dt-option-wrong
+                                {% elif is_practice_mode and selected_answer and 3 in correct_answers_list %}
+                                    dt-option-correct
+                                {% elif is_test_mode and 3 in selected_answers_list %}
+                                    dt-option-selected
+                                {% endif %}
+                            ">
+                                <input type="checkbox" name="answer" value="3" {% if 3 in selected_answers_list %}checked{% endif %}>
+                                <span class="dt-check">3</span>
+                                <span>{{ question.option_3 }}</span>
+                                <span class="dt-option-number">3</span>
+                            </label>
 
-                    {% if not selected_answer %}
-                        <button type="submit" class="mt-4 rounded-2xl border border-blue-400/30 bg-blue-500/10 px-6 py-3 font-bold text-blue-300 hover:bg-blue-500/20">
-                            {% if is_test_mode %}ثبت و ادامه{% else %}ثبت پاسخ{% endif %}
-                        </button>
-                    {% endif %}
-                </form>
+                            {% if question.option_4 %}
+                                <label class="dt-option
+                                    {% if is_practice_mode and selected_answer == 4 and is_correct %}
+                                        dt-option-correct
+                                    {% elif is_practice_mode and 4 in selected_answers_list and not is_correct %}
+                                        dt-option-wrong
+                                    {% elif is_practice_mode and selected_answer and 4 in correct_answers_list %}
+                                        dt-option-correct
+                                    {% elif is_test_mode and 4 in selected_answers_list %}
+                                        dt-option-selected
+                                    {% endif %}
+                                ">
+                                    <input type="checkbox" name="answer" value="4" {% if 4 in selected_answers_list %}checked{% endif %}>
+                                    <span class="dt-check">4</span>
+                                    <span>{{ question.option_4 }}</span>
+                                    <span class="dt-option-number">4</span>
+                                </label>
+                            {% endif %}
+                        </div>
 
-                {% if selected_answer and is_practice_mode %}
-                    <div class="mt-8">
-                        {% if is_correct %}
-                            <div class="rounded-2xl border border-green-400/30 bg-green-500/10 p-5">
-                                <h2 class="text-2xl font-black text-green-300">جواب صحیح بود ✅</h2>
-                            </div>
-                        {% else %}
-                            <div class="rounded-2xl border border-red-400/30 bg-red-500/10 p-5">
-                                <h2 class="text-2xl font-black text-red-300">جواب اشتباه بود ❌</h2>
-                                <p class="mt-3 text-slate-300">
-                                    جواب صحیح:
-                                    <span class="font-black text-green-300">
-                                        {% for item in correct_answers_list %}
-                                            گزینه {{ item }}{% if not forloop.last %}، {% endif %}
-                                        {% endfor %}
-                                    </span>
-                                </p>
+                        {% if not selected_answer %}
+                            <div class="dt-submit-row">
+                                <button type="submit" class="dt-button dt-button-primary">
+                                    {% if is_test_mode %}{% trans "ثبت و ادامه" %}{% else %}{% trans "ثبت پاسخ" %}{% endif %}
+                                </button>
                             </div>
                         {% endif %}
+                    </form>
+
+                    {% if selected_answer and is_practice_mode %}
+                        <div class="dt-result-box">
+                            {% if is_correct %}
+                                <h3 class="dt-result-title dt-result-correct">{% trans "جواب صحیح بود ✅" %}</h3>
+                            {% else %}
+                                <h3 class="dt-result-title dt-result-wrong">{% trans "جواب اشتباه بود ❌" %}</h3>
+                                <p class="dt-result-text">
+                                    {% trans "جواب صحیح:" %}
+                                    <strong style="color:#4ade80;">
+                                        {% for item in correct_answers_list %}
+                                            {% blocktrans with option=item %}گزینه {{ option }}{% endblocktrans %}{% if not forloop.last %}، {% endif %}
+                                        {% endfor %}
+                                    </strong>
+                                </p>
+                            {% endif %}
+                        </div>
 
                         {% if question.explanation %}
-                            <div class="mt-5 rounded-2xl border border-blue-400/20 bg-blue-500/10 p-5">
-                                <h3 class="font-black text-blue-300">توضیح</h3>
-                                <p class="mt-3 leading-8 text-slate-300">{{ question.explanation }}</p>
+                            <div class="dt-explanation">
+                                <h3>{% trans "توضیح" %}</h3>
+                                {{ question.explanation }}
                             </div>
                         {% endif %}
 
-                        <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+                        <div class="dt-bottom-actions">
                             {% if next_question %}
-                                <a href="/quiz/exam/{{ exam.id }}/{{ next_question.id }}/" class="inline-block rounded-2xl border border-blue-400/30 bg-blue-500/10 px-5 py-3 text-center font-bold text-blue-300 hover:bg-blue-500/20">ادامه</a>
+                                <a href="{% url 'exam_question' exam.id next_question.id %}" class="dt-button dt-button-primary">{% trans "ادامه" %}</a>
                             {% else %}
                                 {% if is_practice_mode %}
                                     {% if question.category.parent.slug == "hftd-zmon-sl" %}
-                                        <a href="/quiz/official-exams/"
-                                           class="inline-block rounded-2xl border border-green-400/30 bg-green-500/10 px-5 py-3 text-center font-bold text-green-300 hover:bg-green-500/20">
-                                            پایان تمرین
-                                        </a>
+                                        <a href="{% url 'official_exams' %}" class="dt-button dt-button-success">{% trans "پایان تمرین" %}</a>
                                     {% else %}
-                                        <a href="/quiz/category-practice/{{ exam.id }}/result/"
-                                           class="inline-block rounded-2xl border border-green-400/30 bg-green-500/10 px-5 py-3 text-center font-bold text-green-300 hover:bg-green-500/20">
-                                            پایان تمرین
-                                        </a>
+                                        <a href="{% url 'category_practice_result' exam.id %}" class="dt-button dt-button-success">{% trans "پایان تمرین" %}</a>
                                     {% endif %}
                                 {% else %}
-                                    <a href="/quiz/exam/{{ exam.id }}/result/"
-                                       class="inline-block rounded-2xl border border-green-400/30 bg-green-500/10 px-5 py-3 text-center font-bold text-green-300 hover:bg-green-500/20">
-                                        مشاهده نتیجه آزمون
-                                    </a>
+                                    <a href="{% url 'exam_result' exam.id %}" class="dt-button dt-button-success">{% trans "مشاهده نتیجه آزمون" %}</a>
                                 {% endif %}
                             {% endif %}
                         </div>
-                    </div>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
+            </div>
         </section>
     </div>
 </main>
@@ -287,7 +1112,7 @@ function toggleTranslation() {
     const box = document.getElementById("translation-box");
 
     if (box) {
-        box.classList.toggle("hidden");
+        box.classList.toggle("dt-hidden");
     }
 }
 
@@ -295,7 +1120,7 @@ function speakQuestion() {
     const text = `{{ question.title|escapejs }}`;
 
     if (!("speechSynthesis" in window)) {
-        alert("مرورگر شما از خواندن متن پشتیبانی نمی‌کند.");
+        alert("{% trans 'مرورگر شما از خواندن متن پشتیبانی نمی‌کند.' %}");
         return;
     }
 
@@ -320,8 +1145,10 @@ function speakQuestion() {
     window.speechSynthesis.speak(speech);
 }
 
-window.speechSynthesis.onvoiceschanged = function() {
-    window.speechSynthesis.getVoices();
-};
+if ("speechSynthesis" in window) {
+    window.speechSynthesis.onvoiceschanged = function() {
+        window.speechSynthesis.getVoices();
+    };
+}
 </script>
 {% endblock %}

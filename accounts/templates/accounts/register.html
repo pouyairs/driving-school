@@ -1,6 +1,7 @@
 {% extends "base/base.html" %}
+{% load i18n %}
 
-{% block title %}ثبت‌نام{% endblock %}
+{% block title %}{% trans "ثبت‌نام" %}{% endblock %}
 
 {% block content %}
 <div class="flex min-h-screen items-center justify-center px-6 py-12">
@@ -9,61 +10,124 @@
 
         <div class="mb-8 text-center">
             <h1 class="mb-2 text-3xl font-black">
-                ساخت حساب کاربری
+                {% trans "ساخت حساب کاربری" %}
             </h1>
 
             <p class="text-slate-400">
-                شروع یادگیری گواهینامه آلمان
+                {% trans "شروع یادگیری گواهینامه آلمان" %}
             </p>
         </div>
 
-        <form method="POST" class="space-y-5">
+        {% if messages %}
+            <div class="mb-5 space-y-3">
+                {% for message in messages %}
+                    <div class="rounded-2xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if form.non_field_errors %}
+            <div class="mb-5 rounded-2xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="POST" class="space-y-5" novalidate>
             {% csrf_token %}
 
             <div>
-                <label class="mb-2 block text-sm text-slate-300">
-                    نام کاربری
+                <label for="id_username" class="mb-2 block text-sm text-slate-300">
+                    {% trans "نام کاربری" %}
                 </label>
 
-                <input type="text" name="username" required
-       class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white outline-none focus:border-blue-400"
-       placeholder="نام کاربری">
+                <input
+                    id="id_username"
+                    type="text"
+                    name="username"
+                    value="{{ form.username.value|default_if_none:'' }}"
+                    required
+                    autocomplete="username"
+                    class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-blue-400"
+                    placeholder="{% trans 'نام کاربری خود را وارد کنید' %}"
+                >
 
+                {% if form.username.errors %}
+                    <div class="mt-2 text-sm text-red-400">
+                        {% for error in form.username.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
 
             <div>
-                <label class="mb-2 block text-sm text-slate-300">
-                    رمز عبور
+                <label for="id_password1" class="mb-2 block text-sm text-slate-300">
+                    {% trans "رمز عبور" %}
                 </label>
 
-                <input type="password" name="password1" required
-       class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white outline-none focus:border-blue-400"
-       placeholder="رمز عبور">
+                <input
+                    id="id_password1"
+                    type="password"
+                    name="password1"
+                    required
+                    autocomplete="new-password"
+                    class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-blue-400"
+                    placeholder="{% trans 'رمز عبور خود را وارد کنید' %}"
+                >
+
+                {% if form.password1.errors %}
+                    <div class="mt-2 text-sm text-red-400">
+                        {% for error in form.password1.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
 
             <div>
-                <label class="mb-2 block text-sm text-slate-300">
-                    تکرار رمز عبور
+                <label for="id_password2" class="mb-2 block text-sm text-slate-300">
+                    {% trans "تکرار رمز عبور" %}
                 </label>
 
-                <input type="password" name="password2" required
-       class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white outline-none focus:border-blue-400"
-       placeholder="تکرار رمز عبور">
+                <input
+                    id="id_password2"
+                    type="password"
+                    name="password2"
+                    required
+                    autocomplete="new-password"
+                    class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-blue-400"
+                    placeholder="{% trans 'رمز عبور را دوباره وارد کنید' %}"
+                >
+
+                {% if form.password2.errors %}
+                    <div class="mt-2 text-sm text-red-400">
+                        {% for error in form.password2.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
 
             <button
                 type="submit"
-                class="w-full rounded-2xl bg-blue-500 px-5 py-3 font-bold transition hover:bg-blue-600"
+                class="w-full rounded-2xl bg-blue-500 px-5 py-3 font-bold text-white transition hover:bg-blue-600"
             >
-                ثبت‌نام
+                {% trans "ثبت‌نام" %}
             </button>
         </form>
 
         <p class="mt-6 text-center text-sm text-slate-400">
-            حساب دارید؟
+            {% trans "حساب کاربری دارید؟" %}
 
-            <a href="/accounts/login/" class="font-bold text-blue-400">
-                ورود
+            <a
+                href="/accounts/login/"
+                class="font-bold text-blue-400 transition hover:text-blue-300"
+            >
+                {% trans "ورود" %}
             </a>
         </p>
 

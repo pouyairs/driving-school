@@ -1,140 +1,857 @@
 {% extends "base/base.html" %}
+{% load i18n %}
+
+{% get_current_language_bidi as LANGUAGE_BIDI %}
 
 {% block title %}
-{{ video.title }}
+    {{ video.title }}
 {% endblock %}
 
 {% block meta_description %}
-{{ video.description }}
+    {{ video.description }}
 {% endblock %}
 
 {% block content %}
-<main class="min-h-screen bg-slate-950 px-6 py-8 text-white">
-    <div class="mx-auto flex max-w-7xl gap-6">
+<style>
+    .dt-page {
+        min-height: 100vh;
+        color: #ffffff;
+        background:
+            radial-gradient(
+                circle at 50% -20%,
+                rgba(30, 64, 175, 0.12),
+                transparent 35%
+            ),
+            radial-gradient(
+                circle at 16% 8%,
+                rgba(127, 29, 29, 0.18),
+                transparent 30%
+            ),
+            #020617;
+        padding: 24px 18px 42px;
+        font-family: inherit;
+    }
 
-        <aside class="hidden w-80 shrink-0 rounded-[2rem] border border-white/10 bg-white/5 p-5 lg:block">
-            <h2 class="mb-6 text-2xl font-black">درس‌ها</h2>
+    .dt-wrap {
+        max-width: 1360px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 330px minmax(0, 1fr);
+        gap: 24px;
+        align-items: start;
+    }
 
-            <a
-    href="{{ video.youtube_url }}"
-    target="_blank"
-    class="mb-6 block rounded-2xl border border-red-400/30 bg-red-500/10 px-5 py-4 text-center font-bold text-red-300 transition hover:bg-red-500/20"
+    .dt-page[dir="ltr"] .dt-wrap {
+        grid-template-columns: minmax(0, 1fr) 330px;
+    }
+
+    .dt-page[dir="ltr"] .dt-sidebar {
+        order: 2;
+    }
+
+    .dt-page[dir="ltr"] .dt-main {
+        order: 1;
+    }
+
+    .dt-panel {
+        border-radius: 28px;
+        border: 1px solid rgba(100, 116, 139, 0.55);
+        background:
+            radial-gradient(
+                circle at 12% 8%,
+                rgba(37, 99, 235, 0.13),
+                transparent 34%
+            ),
+            linear-gradient(
+                145deg,
+                rgba(15, 23, 42, 0.98),
+                rgba(2, 6, 23, 0.985)
+            );
+        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.26);
+    }
+
+    .dt-sidebar {
+        position: sticky;
+        top: 24px;
+        padding: 22px;
+        max-height: calc(100vh - 48px);
+        overflow-y: auto;
+    }
+
+    .dt-sidebar::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .dt-sidebar::-webkit-scrollbar-thumb {
+        background: rgba(148, 163, 184, 0.35);
+        border-radius: 999px;
+    }
+
+    .dt-side-title {
+        margin: 0 0 18px;
+        font-size: 28px;
+        font-weight: 1000;
+        color: #ffffff;
+    }
+
+    .dt-youtube {
+        min-height: 56px;
+        margin-bottom: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border-radius: 18px;
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 1000;
+        border: 1px solid rgba(248, 113, 113, 0.52);
+        background: linear-gradient(
+            135deg,
+            rgba(153, 27, 27, 0.92),
+            rgba(220, 38, 38, 0.82)
+        );
+        box-shadow: 0 18px 34px rgba(127, 29, 29, 0.28);
+        transition: 0.2s ease;
+    }
+
+    .dt-youtube:hover {
+        color: #ffffff;
+        transform: translateY(-1px);
+        background: linear-gradient(
+            135deg,
+            rgba(185, 28, 28, 0.96),
+            rgba(239, 68, 68, 0.86)
+        );
+    }
+
+    .dt-youtube svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .dt-category {
+        margin-top: 22px;
+    }
+
+    .dt-category-title {
+        margin: 0 0 12px;
+        min-height: 42px;
+        display: flex;
+        align-items: center;
+        padding: 8px 14px;
+        border-radius: 15px;
+        color: #93c5fd;
+        background: rgba(59, 130, 246, 0.12);
+        border: 1px solid rgba(96, 165, 250, 0.22);
+        font-size: 14px;
+        line-height: 1.7;
+        font-weight: 1000;
+    }
+
+    .dt-video-list {
+        display: grid;
+        gap: 10px;
+    }
+
+    .dt-video-item {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 12px;
+        align-items: center;
+        border-radius: 18px;
+        padding: 14px;
+        text-decoration: none;
+        border: 1px solid rgba(100, 116, 139, 0.35);
+        background: rgba(2, 6, 23, 0.58);
+        color: #e2e8f0;
+        transition: 0.2s ease;
+    }
+
+    .dt-video-item:hover {
+        border-color: rgba(96, 165, 250, 0.50);
+        background: rgba(30, 41, 59, 0.72);
+        transform: translateY(-1px);
+    }
+
+    .dt-video-item-active {
+        color: #ffffff;
+        border-color: rgba(96, 165, 250, 0.68);
+        background:
+            radial-gradient(
+                circle at 10% 0%,
+                rgba(59, 130, 246, 0.26),
+                transparent 35%
+            ),
+            rgba(37, 99, 235, 0.35);
+        box-shadow: 0 0 24px rgba(37, 99, 235, 0.16);
+    }
+
+    .dt-video-link {
+        color: inherit;
+        text-decoration: none;
+        min-width: 0;
+    }
+
+    .dt-video-title {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.7;
+        font-weight: 950;
+    }
+
+    .dt-video-sub {
+        margin: 6px 0 0;
+        color: #94a3b8;
+        font-size: 12px;
+        font-weight: 750;
+    }
+
+    .dt-video-item-active .dt-video-sub {
+        color: #dbeafe;
+    }
+
+    .dt-watch {
+        display: grid;
+        place-items: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 999px;
+        font-size: 17px;
+        font-weight: 1000;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+    .dt-watch-done {
+        color: #052e16;
+        background: #4ade80;
+        box-shadow: 0 0 18px rgba(74, 222, 128, 0.26);
+    }
+
+    .dt-watch-empty {
+        color: transparent;
+        background: rgba(255, 255, 255, 0.055);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .dt-watch-empty:hover {
+        color: #86efac;
+        border-color: rgba(74, 222, 128, 0.55);
+        background: rgba(34, 197, 94, 0.13);
+    }
+
+    .dt-main {
+        overflow: hidden;
+    }
+
+    .dt-hero {
+        position: relative;
+        overflow: hidden;
+        min-height: 280px;
+        border-radius: 28px 28px 0 0;
+        background:
+            radial-gradient(
+                circle at 68% 0%,
+                rgba(127, 29, 29, 0.68),
+                transparent 34%
+            ),
+            linear-gradient(
+                135deg,
+                #07111f 0%,
+                #020617 44%,
+                #3f030a 100%
+            );
+        border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    .dt-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(
+                180deg,
+                rgba(2, 6, 23, 0.08),
+                rgba(2, 6, 23, 0.84)
+            ),
+            linear-gradient(
+                90deg,
+                rgba(7, 17, 31, 0.92) 0%,
+                rgba(7, 17, 31, 0.45) 42%,
+                transparent 70%
+            );
+        pointer-events: none;
+    }
+
+    .dt-page[dir="rtl"] .dt-hero::before {
+        background:
+            linear-gradient(
+                180deg,
+                rgba(2, 6, 23, 0.08),
+                rgba(2, 6, 23, 0.84)
+            ),
+            linear-gradient(
+                270deg,
+                rgba(7, 17, 31, 0.92) 0%,
+                rgba(7, 17, 31, 0.45) 42%,
+                transparent 70%
+            );
+    }
+
+    .dt-hero-road {
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        width: 58%;
+        height: 100%;
+        opacity: 0.22;
+        pointer-events: none;
+    }
+
+    .dt-page[dir="rtl"] .dt-hero-road {
+        left: auto;
+        right: 0;
+        transform: scaleX(-1);
+    }
+
+    .dt-hero-content {
+        position: relative;
+        z-index: 2;
+        min-height: 280px;
+        padding: 38px 42px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .dt-page[dir="rtl"] .dt-hero-content {
+        text-align: right;
+    }
+
+    .dt-page[dir="ltr"] .dt-hero-content {
+        text-align: left;
+    }
+
+    .dt-badge {
+        min-height: 42px;
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        border-radius: 999px;
+        padding: 0 16px;
+        margin-bottom: 18px;
+        font-size: 13px;
+        font-weight: 950;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.055);
+        color: #e2e8f0;
+    }
+
+    .dt-title {
+        margin: 0;
+        max-width: 860px;
+        font-size: clamp(32px, 4vw, 54px);
+        line-height: 1.25;
+        font-weight: 1000;
+        letter-spacing: -0.03em;
+        text-shadow: 0 4px 18px rgba(0, 0, 0, 0.40);
+    }
+
+    .dt-description {
+        margin: 18px 0 0;
+        max-width: 800px;
+        color: #cbd5e1;
+        font-size: 17px;
+        line-height: 2;
+        font-weight: 650;
+    }
+
+    .dt-content {
+        padding: 26px;
+    }
+
+    .dt-top-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 20px;
+    }
+
+    .dt-btn {
+        min-height: 52px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border-radius: 16px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        background: rgba(255, 255, 255, 0.055);
+        color: #ffffff;
+        text-decoration: none;
+        cursor: pointer;
+        padding: 0 18px;
+        font-size: 15px;
+        font-weight: 950;
+        transition: 0.2s ease;
+    }
+
+    .dt-btn:hover {
+        color: #ffffff;
+        transform: translateY(-1px);
+        background: rgba(255, 255, 255, 0.095);
+    }
+
+    .dt-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .dt-btn-primary {
+        color: #ffffff;
+        background: #dc0d19;
+        border-color: rgba(255, 120, 130, 0.66);
+        box-shadow: 0 18px 34px rgba(127, 29, 29, 0.28);
+    }
+
+    .dt-btn-blue {
+        color: #93c5fd;
+        border-color: rgba(96, 165, 250, 0.42);
+        background: rgba(59, 130, 246, 0.12);
+    }
+
+    .dt-btn-blue:hover {
+        color: #bfdbfe;
+    }
+
+    .dt-player {
+        overflow: hidden;
+        border-radius: 26px;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        background: #020617;
+        box-shadow: 0 20px 48px rgba(0, 0, 0, 0.26);
+    }
+
+    .dt-player iframe {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border: 0;
+    }
+
+    .dt-info {
+        margin-top: 24px;
+        border-radius: 26px;
+        border: 1px solid rgba(100, 116, 139, 0.46);
+        background:
+            radial-gradient(
+                circle at 8% 0%,
+                rgba(37, 99, 235, 0.14),
+                transparent 32%
+            ),
+            rgba(2, 6, 23, 0.58);
+        padding: 22px;
+    }
+
+    .dt-info h2 {
+        margin: 0;
+        font-size: 30px;
+        line-height: 1.45;
+        font-weight: 1000;
+    }
+
+    .dt-info p {
+        margin: 14px 0 0;
+        color: #cbd5e1;
+        line-height: 2;
+        font-weight: 650;
+    }
+
+    .dt-next {
+        margin-top: 24px;
+        border-radius: 26px;
+        border: 1px solid rgba(96, 165, 250, 0.26);
+        background: rgba(59, 130, 246, 0.10);
+        padding: 22px;
+    }
+
+    .dt-next-label {
+        margin: 0;
+        color: #60a5fa;
+        font-size: 14px;
+        font-weight: 1000;
+    }
+
+    .dt-next h3 {
+        margin: 8px 0 18px;
+        font-size: 26px;
+        line-height: 1.4;
+        font-weight: 1000;
+    }
+
+    .dt-next-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .dt-next-card {
+        border-radius: 18px;
+        border: 1px solid rgba(100, 116, 139, 0.38);
+        background: rgba(2, 6, 23, 0.70);
+        padding: 16px;
+        color: #e2e8f0;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+    .dt-next-card:hover {
+        color: #ffffff;
+        border-color: rgba(96, 165, 250, 0.46);
+        background: rgba(30, 41, 59, 0.75);
+        transform: translateY(-1px);
+    }
+
+    .dt-next-card strong {
+        display: block;
+        line-height: 1.8;
+        font-weight: 950;
+    }
+
+    .dt-next-card span {
+        display: block;
+        margin-top: 7px;
+        color: #94a3b8;
+        font-size: 13px;
+        font-weight: 750;
+    }
+
+    .dt-empty-description {
+        color: #94a3b8;
+    }
+
+    @media (max-width: 1100px) {
+        .dt-wrap,
+        .dt-page[dir="ltr"] .dt-wrap {
+            grid-template-columns: 1fr;
+        }
+
+        .dt-sidebar,
+        .dt-page[dir="ltr"] .dt-sidebar {
+            position: static;
+            max-height: none;
+            order: 2;
+        }
+
+        .dt-main,
+        .dt-page[dir="ltr"] .dt-main {
+            order: 1;
+        }
+    }
+
+    @media (max-width: 700px) {
+        .dt-page {
+            padding: 14px 10px 28px;
+        }
+
+        .dt-sidebar {
+            padding: 18px;
+        }
+
+        .dt-hero-content {
+            min-height: 230px;
+            padding: 28px 20px;
+        }
+
+        .dt-title {
+            font-size: 32px;
+        }
+
+        .dt-content {
+            padding: 18px;
+        }
+
+        .dt-next-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .dt-top-actions {
+            display: grid;
+            grid-template-columns: 1fr;
+        }
+
+        .dt-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<main
+    class="dt-page"
+    dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}"
 >
-    ▶ تماشا در یوتیوب
-</a>
+    <div class="dt-wrap">
 
-            <div class="space-y-6">
-                {% for category in categories %}
-                    <div>
-                        <h3 class="mb-3 text-sm font-bold text-blue-300">
-                            {{ category.name }}
-                        </h3>
+        <aside class="dt-panel dt-sidebar">
+            <h2 class="dt-side-title">
+                {% trans "درس‌ها" %}
+            </h2>
 
-                        <div class="space-y-2">
-                            {% for item in category.videos.all %}
-                                {% if item.is_published %}
-                                    <div class="flex items-center justify-between gap-3 rounded-2xl p-4 transition {% if item.id == video.id %} bg-blue-500 text-white {% else %} bg-slate-900 hover:bg-slate-800 {% endif %}">
-                                        <a href="/videos/{{ item.id }}/" class="flex-1">
-                                            <p class="font-bold">{{ item.title }}</p>
-                                            <p class="mt-2 text-sm opacity-70">مشاهده درس</p>
-                                        </a>
-
-                                        {% if item.id in watched_video_ids %}
-                                            <div class="flex items-center gap-2">
-                                                <a
-                                                    href="/videos/{{ item.id }}/watched/"
-                                                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-500 text-white shadow-lg shadow-green-500/30 transition hover:scale-110"
-                                                >
-                                                    ✓
-                                                </a>
-
-                                                <span class="text-xs font-bold text-green-300">
-                                                    مشاهده شد
-                                                </span>
-                                            </div>
-                                        {% else %}
-                                            <div class="flex items-center gap-2">
-                                                <a
-                                                    href="/videos/{{ item.id }}/watched/"
-                                                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-white/20 bg-white/5 text-transparent transition hover:scale-110 hover:border-green-400 hover:bg-green-500/20 hover:text-green-300"
-                                                >
-                                                    ✓
-                                                </a>
-
-                                                <span class="text-xs font-bold text-slate-400">
-                                                    مشاهده نشده
-                                                </span>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        </aside>
-
-        <div class="flex-1">
             <a
-                href="/dashboard/"
-                class="mb-6 inline-block text-sm font-bold text-blue-300 hover:text-blue-200"
+                href="{{ video.youtube_url }}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="dt-youtube"
             >
-                ← برگشت به داشبورد
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                >
+                    <path d="M21.6 7.2s-.2-1.5-.8-2.2c-.8-.8-1.7-.8-2.1-.9C15.8 3.9 12 3.9 12 3.9h0s-3.8 0-6.7.2c-.4.1-1.3.1-2.1.9-.6.7-.8 2.2-.8 2.2S2.2 9 2.2 10.9v1.8c0 1.9.2 3.7.2 3.7s.2 1.5.8 2.2c.8.8 1.8.8 2.3.9 1.7.2 6.5.2 6.5.2s3.8 0 6.7-.3c.4 0 1.3-.1 2.1-.9.6-.7.8-2.2.8-2.2s.2-1.9.2-3.7v-1.8c0-1.9-.2-3.7-.2-3.7ZM10.1 14.8V8.4l6.1 3.2-6.1 3.2Z"></path>
+                </svg>
+
+                <span>{% trans "تماشا در یوتیوب" %}</span>
             </a>
 
-            <section class="rounded-[2rem] border border-white/10 bg-white/5 p-5 shadow-2xl shadow-blue-950/20">
-                <div class="aspect-video overflow-hidden rounded-[1.5rem] bg-slate-900">
+            {% for category in categories %}
+                <div class="dt-category">
+                    <h3 class="dt-category-title">
+                        {{ category.name }}
+                    </h3>
+
+                    <div class="dt-video-list">
+                        {% for item in category.videos.all %}
+                            {% if item.is_published %}
+                                <div class="dt-video-item {% if item.id == video.id %}dt-video-item-active{% endif %}">
+                                    <a
+                                        href="{% url 'video_detail' item.id %}"
+                                        class="dt-video-link"
+                                    >
+                                        <p class="dt-video-title">
+                                            {{ item.title }}
+                                        </p>
+
+                                        <p class="dt-video-sub">
+                                            {% trans "مشاهده درس" %}
+                                        </p>
+                                    </a>
+
+                                    {% if item.id in watched_video_ids %}
+                                        <a
+                                            href="{% url 'mark_video_watched' item.id %}"
+                                            class="dt-watch dt-watch-done"
+                                            aria-label="{% trans 'علامت‌گذاری به‌عنوان مشاهده‌نشده' %}"
+                                            title="{% trans 'مشاهده شده' %}"
+                                        >
+                                            ✓
+                                        </a>
+                                    {% else %}
+                                        <a
+                                            href="{% url 'mark_video_watched' item.id %}"
+                                            class="dt-watch dt-watch-empty"
+                                            aria-label="{% trans 'علامت‌گذاری به‌عنوان مشاهده‌شده' %}"
+                                            title="{% trans 'علامت‌گذاری به‌عنوان مشاهده‌شده' %}"
+                                        >
+                                            ✓
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        {% empty %}
+                            <p class="dt-video-sub">
+                                {% trans "هنوز ویدیویی در این دسته‌بندی وجود ندارد." %}
+                            </p>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% empty %}
+                <p class="dt-video-sub">
+                    {% trans "هنوز دسته‌بندی‌ای ساخته نشده است." %}
+                </p>
+            {% endfor %}
+        </aside>
+
+        <section class="dt-panel dt-main">
+            <div class="dt-hero">
+                <svg
+                    class="dt-hero-road"
+                    viewBox="0 0 560 340"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                >
+                    <path
+                        d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61"
+                        stroke="white"
+                        stroke-width="22"
+                        stroke-linecap="round"
+                        opacity="0.055"
+                    />
+
+                    <path
+                        d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10"
+                        stroke="white"
+                        stroke-width="22"
+                        stroke-linecap="round"
+                        opacity="0.055"
+                    />
+
+                    <path
+                        d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61"
+                        stroke="white"
+                        stroke-width="3.2"
+                        stroke-linecap="round"
+                        opacity="0.68"
+                    />
+
+                    <path
+                        d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10"
+                        stroke="white"
+                        stroke-width="3.2"
+                        stroke-linecap="round"
+                        opacity="0.68"
+                    />
+
+                    <path
+                        d="M76 294C125 265 166 232 177 197"
+                        stroke="white"
+                        stroke-width="3.1"
+                        stroke-linecap="round"
+                        stroke-dasharray="26 20"
+                        opacity="0.45"
+                    />
+
+                    <path
+                        d="M181 172C176 132 145 103 100 82"
+                        stroke="white"
+                        stroke-width="3.1"
+                        stroke-linecap="round"
+                        stroke-dasharray="26 20"
+                        opacity="0.43"
+                    />
+
+                    <path
+                        d="M323 32L450 159L323 286L196 159L323 32Z"
+                        stroke="white"
+                        stroke-width="8"
+                        opacity="0.09"
+                    />
+
+                    <path
+                        d="M323 99V168"
+                        stroke="white"
+                        stroke-width="14"
+                        stroke-linecap="round"
+                        opacity="0.09"
+                    />
+
+                    <circle
+                        cx="323"
+                        cy="211"
+                        r="8"
+                        fill="white"
+                        opacity="0.09"
+                    />
+                </svg>
+
+                <div class="dt-hero-content">
+                    <div>
+                        <div class="dt-badge">
+                            <span>{% trans "درس رانندگی" %}</span>
+                            <span aria-hidden="true">▶</span>
+                        </div>
+
+                        <h1 class="dt-title">
+                            {{ video.title }}
+                        </h1>
+
+                        {% if video.description %}
+                            <p class="dt-description">
+                                {{ video.description }}
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="dt-content">
+                <div class="dt-top-actions">
+                    <a
+                        href="{% url 'dashboard' %}"
+                        class="dt-btn dt-btn-primary"
+                    >
+                        {% trans "برگشت به داشبورد" %}
+                    </a>
+
+                    <a
+                        href="{{ video.youtube_url }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="dt-btn dt-btn-blue"
+                    >
+                        {% trans "باز کردن در یوتیوب" %}
+                    </a>
+                </div>
+
+                <div class="dt-player">
                     <iframe
                         src="{{ video.youtube_embed_url }}"
                         title="{{ video.title }}"
-                        class="h-full w-full"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerpolicy="strict-origin-when-cross-origin"
                         allowfullscreen
                     ></iframe>
                 </div>
 
-                <div class="mt-6">
-                    <h1 class="text-3xl font-black">
+                <div class="dt-info">
+                    <h2>
                         {{ video.title }}
-                    </h1>
+                    </h2>
 
-                    <p class="mt-4 leading-8 text-slate-300">
-                        {{ video.description }}
-                    </p>
-
-                    {% if next_videos %}
-                        <div class="mt-8 rounded-[2rem] border border-blue-400/20 bg-blue-500/10 p-6">
-                            <p class="text-sm font-bold text-blue-300">
-                                ادامه مسیر یادگیری
-                            </p>
-
-                            <h3 class="mt-2 text-2xl font-black">
-                                درس‌های پیشنهادی بعدی
-                            </h3>
-
-                            <div class="mt-5 grid gap-4 md:grid-cols-2">
-                                {% for item in next_videos %}
-                                    <a
-                                        href="/videos/{{ item.id }}/"
-                                        class="rounded-2xl bg-slate-900 p-4 transition hover:bg-slate-800"
-                                    >
-                                        <p class="font-bold">
-                                            {{ item.title }}
-                                        </p>
-
-                                        <p class="mt-2 text-sm text-slate-400">
-                                            شروع این درس
-                                        </p>
-                                    </a>
-                                {% endfor %}
-                            </div>
-                        </div>
+                    {% if video.description %}
+                        <p>
+                            {{ video.description }}
+                        </p>
+                    {% else %}
+                        <p class="dt-empty-description">
+                            {% trans "برای این ویدیو هنوز توضیحی ثبت نشده است." %}
+                        </p>
                     {% endif %}
                 </div>
-            </section>
-        </div>
+
+                {% if next_videos %}
+                    <div class="dt-next">
+                        <p class="dt-next-label">
+                            {% trans "ادامه مسیر یادگیری" %}
+                        </p>
+
+                        <h3>
+                            {% trans "درس‌های پیشنهادی بعدی" %}
+                        </h3>
+
+                        <div class="dt-next-grid">
+                            {% for item in next_videos %}
+                                <a
+                                    href="{% url 'video_detail' item.id %}"
+                                    class="dt-next-card"
+                                >
+                                    <strong>
+                                        {{ item.title }}
+                                    </strong>
+
+                                    <span>
+                                        {% trans "شروع این درس" %}
+                                    </span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
 
     </div>
 </main>

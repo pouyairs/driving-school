@@ -1,120 +1,554 @@
 {% extends "base/base.html" %}
+{% load i18n %}
+
+{% get_current_language_bidi as LANGUAGE_BIDI %}
 
 {% block title %}
-نتیجه تمرین
+{% trans "نتیجه تمرین" %}
 {% endblock %}
 
 {% block content %}
-<main class="min-h-screen bg-slate-950 px-6 py-10 text-white">
-    <div class="mx-auto max-w-5xl">
+<style>
 
-        <section class="rounded-[2rem] border border-white/10 bg-white/5 p-8 text-center">
+    .dt-page[dir="rtl"] {
+        direction: rtl;
+    }
 
-            <div class="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-blue-500/20 text-5xl">
-                📚
-            </div>
+    .dt-page[dir="ltr"] {
+        direction: ltr;
+    }
 
-            <h1 class="text-4xl font-black text-blue-300">
-                نتیجه تمرین
-            </h1>
+    .dt-page[dir="rtl"] .dt-hero-content {
+        text-align: right;
+    }
 
-            <p class="mt-4 text-slate-400">
-                این نتیجه مربوط به تمرین سوالات دسته‌بندی است، نه آزمون رسمی.
-            </p>
+    .dt-page[dir="ltr"] .dt-hero-content {
+        text-align: left;
+    }
 
-            <div class="mt-8 grid gap-4 md:grid-cols-4">
-                <div class="rounded-2xl bg-slate-900 p-5">
-                    <p class="text-sm text-slate-400">کل سوال‌ها</p>
-                    <p class="mt-2 text-3xl font-black">{{ total_questions }}</p>
-                </div>
+    .dt-page[dir="ltr"] .dt-road {
+        left: auto;
+        right: 0;
+        transform: scaleX(-1);
+    }
 
-                <div class="rounded-2xl bg-slate-900 p-5">
-                    <p class="text-sm text-slate-400">پاسخ داده‌شده</p>
-                    <p class="mt-2 text-3xl font-black">{{ answered_count }}</p>
-                </div>
+    .dt-page[dir="ltr"] .dt-hero::before {
+        background: linear-gradient(
+            270deg,
+            rgba(7, 17, 31, 0.93) 0%,
+            rgba(7, 17, 31, 0.65) 32%,
+            transparent 58%
+        );
+    }
 
-                <div class="rounded-2xl bg-slate-900 p-5">
-                    <p class="text-sm text-slate-400">درست</p>
-                    <p class="mt-2 text-3xl font-black text-green-300">{{ correct_count }}</p>
-                </div>
+    .dt-page {
+        min-height: 100vh;
+        background:
+            radial-gradient(circle at 50% -20%, rgba(30, 64, 175, 0.12), transparent 35%),
+            #020617;
+        color: #ffffff;
+        padding: 28px 22px 48px;
+        font-family: inherit;
+    }
 
-                <div class="rounded-2xl bg-slate-900 p-5">
-                    <p class="text-sm text-slate-400">غلط</p>
-                    <p class="mt-2 text-3xl font-black text-red-300">{{ wrong_count }}</p>
-                </div>
-            </div>
+    .dt-wrap {
+        max-width: 1180px;
+        margin: 0 auto;
+    }
 
-            {% if wrong_items %}
-                <div class="mt-8 text-right">
-                    <h2 class="mb-5 text-2xl font-black text-red-300">
-                        سوال‌های اشتباه برای مرور
-                    </h2>
+    .dt-hero {
+        position: relative;
+        overflow: hidden;
+        min-height: 300px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 34px;
+        background:
+            radial-gradient(circle at 74% 20%, rgba(37, 99, 235, 0.34), transparent 30%),
+            radial-gradient(circle at 74% 20%, rgba(127, 29, 29, 0.58), transparent 38%),
+            linear-gradient(135deg, #07111f 0%, #020617 44%, #3f030a 100%);
+        box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
+        margin-bottom: 30px;
+    }
 
-                    <div class="space-y-4">
-                        {% for item in wrong_items %}
-                            <div class="rounded-2xl border border-red-400/20 bg-red-500/10 p-5">
-                                <h3 class="text-lg font-black leading-8">
-                                    {{ item.question.title }}
-                                </h3>
+    .dt-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, rgba(7, 17, 31, 0.93) 0%, rgba(7, 17, 31, 0.65) 32%, transparent 58%);
+        pointer-events: none;
+    }
 
-                                <div class="mt-4 grid gap-3 md:grid-cols-2">
-                                    <div class="rounded-xl bg-slate-950 p-4">
-                                        <p class="text-sm text-slate-400">جواب شما</p>
-                                        <p class="mt-2 font-black text-red-300">
-                                            {% for selected in item.selected_answers %}
-                                                گزینه {{ selected }}{% if not forloop.last %}، {% endif %}
-                                            {% endfor %}
-                                        </p>
-                                    </div>
+    .dt-road {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 52%;
+        height: 100%;
+        opacity: 0.18;
+        pointer-events: none;
+    }
 
-                                    <div class="rounded-xl bg-slate-950 p-4">
-                                        <p class="text-sm text-slate-400">جواب صحیح</p>
-                                        <p class="mt-2 font-black text-green-300">
-                                            {% for correct in item.correct_answers %}
-                                                گزینه {{ correct }}{% if not forloop.last %}، {% endif %}
-                                            {% endfor %}
-                                        </p>
-                                    </div>
-                                </div>
+    .dt-hero-content {
+        position: relative;
+        z-index: 2;
+        min-height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        text-align: right;
+        padding: 42px 66px;
+    }
 
-                                {% if item.question.explanation %}
-                                    <div class="mt-4 rounded-xl bg-slate-950 p-4">
-                                        <p class="font-black text-blue-300">توضیح</p>
-                                        <p class="mt-2 leading-8 text-slate-300">
-                                            {{ item.question.explanation }}
-                                        </p>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
+    .dt-hero-box {
+        max-width: 700px;
+    }
+
+    .dt-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 22px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.34);
+        background: rgba(255, 255, 255, 0.055);
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 900;
+        box-shadow: 0 16px 34px rgba(0,0,0,0.22);
+        margin-bottom: 22px;
+    }
+
+    .dt-title {
+        margin: 0;
+        font-size: clamp(34px, 4vw, 56px);
+        line-height: 1.18;
+        font-weight: 1000;
+        letter-spacing: -0.03em;
+        text-shadow: 0 4px 18px rgba(0,0,0,0.42);
+    }
+
+    .dt-subtitle {
+        margin: 22px 0 0;
+        max-width: 650px;
+        font-size: 18px;
+        line-height: 2;
+        font-weight: 650;
+        color: rgba(226, 232, 240, 0.95);
+    }
+
+    .dt-actions {
+        margin-top: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .dt-hero-btn {
+        min-width: 165px;
+        height: 58px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        border-radius: 18px;
+        font-size: 16px;
+        font-weight: 950;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+    .dt-hero-btn svg {
+        width: 23px;
+        height: 23px;
+    }
+
+    .dt-hero-btn-main {
+        color: #ffffff;
+        background: #dc0d19;
+        border: 1px solid rgba(255, 120, 130, 0.66);
+        box-shadow: 0 18px 34px rgba(127, 29, 29, 0.35);
+    }
+
+    .dt-hero-btn-main:hover {
+        background: #ef1723;
+        transform: translateY(-1px);
+    }
+
+    .dt-hero-btn-soft {
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.055);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        box-shadow: 0 18px 34px rgba(0, 0, 0, 0.18);
+    }
+
+    .dt-hero-btn-soft:hover {
+        background: rgba(255, 255, 255, 0.095);
+        transform: translateY(-1px);
+    }
+
+    .dt-result-card {
+        border-radius: 28px;
+        border: 1px solid rgba(100, 116, 139, 0.55);
+        background:
+            radial-gradient(circle at 12% 8%, rgba(37, 99, 235, 0.13), transparent 34%),
+            linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.985));
+        box-shadow: 0 18px 44px rgba(0,0,0,0.26);
+        padding: 28px;
+        margin-bottom: 26px;
+    }
+
+    .dt-stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .dt-stat {
+        position: relative;
+        overflow: hidden;
+        min-height: 130px;
+        border-radius: 24px;
+        border: 1px solid rgba(100, 116, 139, 0.48);
+        background: rgba(15, 23, 42, 0.72);
+        padding: 22px;
+    }
+
+    .dt-stat::before {
+        content: "";
+        position: absolute;
+        width: 140px;
+        height: 140px;
+        border-radius: 999px;
+        left: -70px;
+        top: -70px;
+        background: rgba(59, 130, 246, 0.10);
+        filter: blur(6px);
+    }
+
+    .dt-stat-label {
+        position: relative;
+        margin: 0;
+        color: #94a3b8;
+        font-size: 14px;
+        font-weight: 850;
+    }
+
+    .dt-stat-value {
+        position: relative;
+        margin: 14px 0 0;
+        color: #ffffff;
+        font-size: 42px;
+        line-height: 1;
+        font-weight: 1000;
+    }
+
+    .dt-stat-blue .dt-stat-value { color: #60a5fa; }
+    .dt-stat-green .dt-stat-value { color: #4ade80; }
+    .dt-stat-red .dt-stat-value { color: #fb7185; }
+    .dt-stat-yellow .dt-stat-value { color: #facc15; }
+
+    .dt-section-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .dt-section-title h2 {
+        margin: 0;
+        font-size: 28px;
+        line-height: 1.4;
+        font-weight: 1000;
+    }
+
+    .dt-section-title span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        height: 44px;
+        border-radius: 999px;
+        border: 1px solid rgba(248, 113, 113, 0.45);
+        background: rgba(239, 68, 68, 0.11);
+        color: #fb7185;
+        font-weight: 1000;
+    }
+
+    .dt-wrong-list {
+        display: grid;
+        gap: 18px;
+    }
+
+    .dt-wrong-item {
+        border-radius: 24px;
+        border: 1px solid rgba(248, 113, 113, 0.22);
+        background:
+            radial-gradient(circle at 10% 5%, rgba(239, 68, 68, 0.12), transparent 28%),
+            rgba(15, 23, 42, 0.72);
+        padding: 22px;
+    }
+
+    .dt-question-title {
+        margin: 0;
+        font-size: 19px;
+        line-height: 1.85;
+        font-weight: 1000;
+        color: #ffffff;
+    }
+
+    .dt-answer-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 18px;
+    }
+
+    .dt-answer-box {
+        border-radius: 18px;
+        border: 1px solid rgba(100, 116, 139, 0.40);
+        background: rgba(2, 6, 23, 0.75);
+        padding: 16px;
+    }
+
+    .dt-answer-label {
+        margin: 0;
+        font-size: 13px;
+        color: #94a3b8;
+        font-weight: 850;
+    }
+
+    .dt-answer-value {
+        margin: 9px 0 0;
+        font-size: 16px;
+        font-weight: 1000;
+    }
+
+    .dt-answer-wrong { color: #fb7185; }
+    .dt-answer-correct { color: #4ade80; }
+
+    .dt-explanation {
+        margin-top: 16px;
+        border-radius: 18px;
+        border: 1px solid rgba(96, 165, 250, 0.22);
+        background: rgba(59, 130, 246, 0.08);
+        padding: 16px;
+    }
+
+    .dt-explanation-title {
+        margin: 0;
+        color: #60a5fa;
+        font-size: 15px;
+        font-weight: 1000;
+    }
+
+    .dt-explanation-text {
+        margin: 8px 0 0;
+        color: #cbd5e1;
+        line-height: 1.95;
+        font-weight: 600;
+    }
+
+    .dt-success {
+        border-radius: 24px;
+        border: 1px solid rgba(74, 222, 128, 0.26);
+        background:
+            radial-gradient(circle at 50% 0%, rgba(34, 197, 94, 0.18), transparent 38%),
+            rgba(15, 23, 42, 0.72);
+        padding: 34px;
+        text-align: center;
+    }
+
+    .dt-success-icon {
+        width: 82px;
+        height: 82px;
+        margin: 0 auto 16px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        border: 1px solid rgba(74, 222, 128, 0.36);
+        background: rgba(34, 197, 94, 0.13);
+        color: #4ade80;
+    }
+
+    .dt-success-icon svg {
+        width: 44px;
+        height: 44px;
+    }
+
+    .dt-success h2 {
+        margin: 0;
+        color: #4ade80;
+        font-size: 28px;
+        font-weight: 1000;
+    }
+
+    .dt-success p {
+        margin: 12px 0 0;
+        color: #cbd5e1;
+        font-weight: 650;
+    }
+
+    @media (max-width: 1024px) {
+        .dt-road { display: none; }
+        .dt-hero-content { padding: 34px 28px; justify-content: center; }
+        .dt-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 720px) {
+        .dt-page { padding: 18px 14px 34px; }
+        .dt-hero { min-height: auto; }
+        .dt-hero-content { min-height: auto; padding: 30px 20px; }
+        .dt-title { font-size: 34px; }
+        .dt-subtitle { font-size: 15px; }
+        .dt-actions { justify-content: stretch; }
+        .dt-hero-btn { width: 100%; }
+        .dt-result-card { padding: 20px; }
+        .dt-stats { grid-template-columns: 1fr; }
+        .dt-answer-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+<main class="dt-page" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}">
+    <section class="dt-wrap">
+
+        <div class="dt-hero">
+            <svg class="dt-road" viewBox="0 0 560 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61" stroke="white" stroke-width="22" stroke-linecap="round" opacity="0.055"/>
+                <path d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10" stroke="white" stroke-width="22" stroke-linecap="round" opacity="0.055"/>
+                <path d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61" stroke="white" stroke-width="3.2" stroke-linecap="round" opacity="0.68"/>
+                <path d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10" stroke="white" stroke-width="3.2" stroke-linecap="round" opacity="0.68"/>
+                <path d="M76 294C125 265 166 232 177 197" stroke="white" stroke-width="3.1" stroke-linecap="round" stroke-dasharray="26 20" opacity="0.45"/>
+                <path d="M181 172C176 132 145 103 100 82" stroke="white" stroke-width="3.1" stroke-linecap="round" stroke-dasharray="26 20" opacity="0.43"/>
+                <path d="M323 32L450 159L323 286L196 159L323 32Z" stroke="white" stroke-width="8" opacity="0.09"/>
+                <path d="M323 99V168" stroke="white" stroke-width="14" stroke-linecap="round" opacity="0.09"/>
+                <circle cx="323" cy="211" r="8" fill="white" opacity="0.09"/>
+            </svg>
+
+            <div class="dt-hero-content">
+                <div class="dt-hero-box">
+                    <div class="dt-badge">
+                        <span>{% trans "Practice Result" %}</span>
+                        <span>📚</span>
+                    </div>
+
+                    <h1 class="dt-title">{% trans "نتیجه تمرین" %}</h1>
+
+                    <p class="dt-subtitle">
+                        {% trans "این نتیجه مربوط به تمرین سوالات دسته‌بندی است، نه آزمون رسمی. جواب‌های اشتباه را مرور کن و دوباره تمرین را ادامه بده." %}
+                    </p>
+
+                    <div class="dt-actions">
+                        <a href="{% url 'category_list' %}" class="dt-hero-btn dt-hero-btn-main">
+                            <span>{% trans "دسته‌بندی‌ها" %}</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 6h16"></path>
+                                <path d="M4 12h16"></path>
+                                <path d="M4 18h16"></path>
+                            </svg>
+                        </a>
+
+                        <a href="{% url 'dashboard' %}" class="dt-hero-btn dt-hero-btn-soft">
+                            <span>{% trans "داشبورد" %}</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                            </svg>
+                        </a>
                     </div>
                 </div>
-            {% else %}
-                <div class="mt-8 rounded-2xl border border-green-400/20 bg-green-500/10 p-5">
-                    <h2 class="text-2xl font-black text-green-300">
-                        هیچ سوال اشتباهی نداشتی 🎉
-                    </h2>
-                </div>
-            {% endif %}
-
-            <div class="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-                <a
-                    href="/quiz/categories/"
-                    class="rounded-2xl bg-blue-500 px-6 py-3 font-bold hover:bg-blue-600"
-                >
-                    برگشت به دسته‌بندی‌ها
-                </a>
-
-                <a
-                    href="/dashboard/"
-                    class="rounded-2xl border border-white/10 bg-white/5 px-6 py-3 font-bold hover:bg-white/10"
-                >
-                    برگشت به داشبورد
-                </a>
             </div>
+        </div>
 
+        <section class="dt-result-card">
+            <div class="dt-stats">
+                <div class="dt-stat dt-stat-blue">
+                    <p class="dt-stat-label">{% trans "کل سوال‌ها" %}</p>
+                    <p class="dt-stat-value">{{ total_questions }}</p>
+                </div>
+
+                <div class="dt-stat dt-stat-yellow">
+                    <p class="dt-stat-label">{% trans "پاسخ داده‌شده" %}</p>
+                    <p class="dt-stat-value">{{ answered_count }}</p>
+                </div>
+
+                <div class="dt-stat dt-stat-green">
+                    <p class="dt-stat-label">{% trans "درست" %}</p>
+                    <p class="dt-stat-value">{{ correct_count }}</p>
+                </div>
+
+                <div class="dt-stat dt-stat-red">
+                    <p class="dt-stat-label">{% trans "غلط" %}</p>
+                    <p class="dt-stat-value">{{ wrong_count }}</p>
+                </div>
+            </div>
         </section>
 
-    </div>
+        {% if wrong_items %}
+            <section class="dt-result-card">
+                <div class="dt-section-title">
+                    <h2>{% trans "سوال‌های اشتباه برای مرور" %}</h2>
+                    <span>{{ wrong_count }}</span>
+                </div>
+
+                <div class="dt-wrong-list">
+                    {% for item in wrong_items %}
+                        <article class="dt-wrong-item">
+                            <h3 class="dt-question-title">
+                                {{ item.question.title }}
+                            </h3>
+
+                            <div class="dt-answer-grid">
+                                <div class="dt-answer-box">
+                                    <p class="dt-answer-label">{% trans "جواب شما" %}</p>
+                                    <p class="dt-answer-value dt-answer-wrong">
+                                        {% for selected in item.selected_answers %}
+                                            {% blocktrans with option=selected %}گزینه {{ option }}{% endblocktrans %}{% if not forloop.last %}، {% endif %}
+                                        {% empty %}
+                                            {% trans "بدون پاسخ" %}
+                                        {% endfor %}
+                                    </p>
+                                </div>
+
+                                <div class="dt-answer-box">
+                                    <p class="dt-answer-label">{% trans "جواب صحیح" %}</p>
+                                    <p class="dt-answer-value dt-answer-correct">
+                                        {% for correct in item.correct_answers %}
+                                            {% blocktrans with option=correct %}گزینه {{ option }}{% endblocktrans %}{% if not forloop.last %}، {% endif %}
+                                        {% endfor %}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {% if item.question.explanation %}
+                                <div class="dt-explanation">
+                                    <p class="dt-explanation-title">{% trans "توضیح" %}</p>
+                                    <p class="dt-explanation-text">
+                                        {{ item.question.explanation }}
+                                    </p>
+                                </div>
+                            {% endif %}
+                        </article>
+                    {% endfor %}
+                </div>
+            </section>
+        {% else %}
+            <section class="dt-result-card">
+                <div class="dt-success">
+                    <div class="dt-success-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 6L9 17l-5-5"></path>
+                        </svg>
+                    </div>
+
+                    <h2>{% trans "هیچ سوال اشتباهی نداشتی 🎉" %}</h2>
+                    <p>{% trans "عالی بود. می‌تونی برگردی و دسته‌بندی بعدی را تمرین کنی." %}</p>
+                </div>
+            </section>
+        {% endif %}
+
+    </section>
 </main>
 {% endblock %}

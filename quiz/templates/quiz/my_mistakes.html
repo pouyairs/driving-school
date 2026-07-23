@@ -1,110 +1,485 @@
 {% extends "base/base.html" %}
+{% load i18n %}
+
+{% get_current_language_bidi as LANGUAGE_BIDI %}
 
 {% block title %}
-سوال‌های اشتباه من
-{% endblock %}
-
+{% trans "سوال‌های اشتباه من" %}{% endblock %}
 {% block content %}
-<main class="min-h-screen bg-slate-950 px-6 py-10 text-white">
+<style>
+.dt-page[dir="rtl"]{direction:rtl}.dt-page[dir="ltr"]{direction:ltr}.dt-page[dir="ltr"] .dt-road{left:auto;right:0;transform:scaleX(-1)}.dt-page[dir="ltr"] .dt-hero-content{text-align:left}.dt-page[dir="rtl"] .dt-hero-content{text-align:right}.dt-page[dir="ltr"] .dt-hero::before{background:linear-gradient(270deg,rgba(7,17,31,.93)0%,rgba(7,17,31,.65)32%,transparent 58%)}
+    .dt-page {
+        min-height: 100vh;
+        background:
+            radial-gradient(circle at 50% -20%, rgba(30, 64, 175, 0.12), transparent 35%),
+            #020617;
+        color: #ffffff;
+        
+        padding: 28px 22px 48px;
+        font-family: inherit;
+    }
 
-    <div class="mx-auto max-w-5xl">
+    .dt-wrap {
+        max-width: 1180px;
+        margin: 0 auto;
+    }
 
-        <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    .dt-hero {
+        position: relative;
+        overflow: hidden;
+        min-height: 300px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 34px;
+        background:
+            radial-gradient(circle at 74% 20%, rgba(127, 29, 29, 0.72), transparent 34%),
+            linear-gradient(135deg, #07111f 0%, #020617 44%, #3f030a 100%);
+        box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
+        margin-bottom: 30px;
+    }
 
-            <div>
-                <h1 class="text-4xl font-black">
-                    ❌ سوال‌های اشتباه من
-                </h1>
+    .dt-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, rgba(7, 17, 31, 0.93) 0%, rgba(7, 17, 31, 0.65) 32%, transparent 58%);
+        pointer-events: none;
+    }
 
-                <p class="mt-2 text-slate-400">
-                    سوال‌هایی که قبلاً اشتباه پاسخ داده‌ای و نیاز به مرور دارند.
-                </p>
-            </div>
+    .dt-road {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 52%;
+        height: 100%;
+        opacity: 0.18;
+        pointer-events: none;
+    }
 
-            <div class="flex flex-wrap gap-3">
+    .dt-hero-content {
+        position: relative;
+        z-index: 2;
+        min-height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        text-align: right;
+        padding: 42px 66px;
+    }
 
-                <a
-                    href="/quiz/practice-mistakes/"
-                    class="rounded-2xl border border-red-400/30 bg-red-500/10 px-5 py-3 font-bold text-red-300 hover:bg-red-500/20"
-                >
-                    🎯 تمرین سوال‌های اشتباه
-                </a>
+    .dt-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 22px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.34);
+        background: rgba(255, 255, 255, 0.055);
+        font-size: 14px;
+        font-weight: 900;
+        box-shadow: 0 16px 34px rgba(0,0,0,0.22);
+        margin-bottom: 22px;
+    }
 
-                <a
-                    href="/dashboard/"
-                    class="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 font-bold hover:bg-white/10"
-                >
-                    برگشت به داشبورد
-                </a>
+    .dt-title {
+        margin: 0;
+        font-size: clamp(34px, 4vw, 56px);
+        line-height: 1.18;
+        font-weight: 1000;
+        letter-spacing: -0.03em;
+        text-shadow: 0 4px 18px rgba(0,0,0,0.42);
+    }
 
-            </div>
+    .dt-subtitle {
+        margin: 22px 0 0;
+        max-width: 650px;
+        font-size: 18px;
+        line-height: 2;
+        font-weight: 650;
+        color: rgba(226, 232, 240, 0.95);
+    }
 
-        </div>
+    .dt-actions {
+        margin-top: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
 
-        <div class="space-y-5">
+    .dt-hero-btn {
+        min-width: 280px;
+        height: 58px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        border-radius: 18px;
+        font-size: 16px;
+        font-weight: 950;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
 
-            {% for mistake in mistakes %}
+    .dt-hero-btn svg {
+        width: 23px;
+        height: 23px;
+    }
 
-                <section class="rounded-[2rem] border border-red-400/20 bg-red-500/5 p-6">
+    .dt-hero-btn-main {
+        color: #ffffff;
+        background: #dc0d19;
+        border: 1px solid rgba(255, 120, 130, 0.66);
+        box-shadow: 0 18px 34px rgba(127, 29, 29, 0.35);
+    }
 
-                    <p class="text-sm font-bold text-red-300">
-                        {{ mistake.question.category.name }} /
-                        {{ mistake.question.get_section_display }}
+    .dt-hero-btn-main:hover {
+        background: #ef1723;
+        transform: translateY(-1px);
+    }
+
+    .dt-hero-btn-soft {
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.055);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        box-shadow: 0 18px 34px rgba(0, 0, 0, 0.18);
+    }
+
+    .dt-hero-btn-soft:hover {
+        background: rgba(255, 255, 255, 0.095);
+        transform: translateY(-1px);
+    }
+
+    .dt-list {
+        display: grid;
+        gap: 20px;
+    }
+
+    .dt-mistake-card {
+        border-radius: 28px;
+        border: 1px solid rgba(248, 113, 113, 0.22);
+        background:
+            radial-gradient(circle at 10% 6%, rgba(239, 68, 68, 0.13), transparent 31%),
+            linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.985));
+        box-shadow: 0 18px 44px rgba(0,0,0,0.26);
+        padding: 24px;
+        transition: 0.25s ease;
+    }
+
+    .dt-mistake-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(248, 113, 113, 0.52);
+    }
+
+    .dt-card-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 18px;
+    }
+
+    .dt-meta {
+        margin: 0 0 10px;
+        color: #fb7185;
+        font-size: 14px;
+        font-weight: 1000;
+    }
+
+    .dt-question-title {
+        margin: 0;
+        font-size: 24px;
+        line-height: 1.7;
+        font-weight: 1000;
+        color: #ffffff;
+    }
+
+    .dt-icon {
+        width: 68px;
+        height: 68px;
+        flex: 0 0 68px;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        color: #fb7185;
+        border: 1px solid rgba(251, 113, 133, 0.45);
+        background: rgba(244, 63, 94, 0.12);
+        box-shadow: 0 12px 26px rgba(0,0,0,0.22);
+    }
+
+    .dt-icon svg {
+        width: 36px;
+        height: 36px;
+    }
+
+    .dt-translation {
+        margin-top: 18px;
+        border-radius: 20px;
+        border: 1px solid rgba(100, 116, 139, 0.42);
+        background: rgba(2, 6, 23, 0.75);
+        padding: 18px;
+        color: #cbd5e1;
+        line-height: 2;
+        font-weight: 650;
+    }
+
+    .dt-options-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 20px;
+    }
+
+    .dt-option {
+        border-radius: 20px;
+        border: 1px solid rgba(100, 116, 139, 0.42);
+        background: rgba(2, 6, 23, 0.72);
+        padding: 16px;
+        min-height: 70px;
+        display: flex;
+        align-items: center;
+        line-height: 1.8;
+        font-weight: 850;
+        color: #e2e8f0;
+    }
+
+    .dt-card-actions {
+        margin-top: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .dt-card-btn {
+        min-width: 155px;
+        height: 48px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border-radius: 14px;
+        font-size: 14px;
+        font-weight: 950;
+        text-decoration: none;
+        transition: 0.2s ease;
+        padding: 0 16px;
+    }
+
+    .dt-card-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .dt-btn-open {
+        color: #60a5fa;
+        background: rgba(59, 130, 246, 0.12);
+        border: 1px solid rgba(59, 130, 246, 0.58);
+    }
+
+    .dt-btn-open:hover {
+        background: rgba(59, 130, 246, 0.2);
+    }
+
+    .dt-btn-practice {
+        color: #fb7185;
+        background: rgba(244, 63, 94, 0.12);
+        border: 1px solid rgba(251, 113, 133, 0.58);
+    }
+
+    .dt-btn-practice:hover {
+        background: rgba(244, 63, 94, 0.2);
+    }
+
+    .dt-empty {
+        border-radius: 28px;
+        border: 1px solid rgba(74, 222, 128, 0.26);
+        background:
+            radial-gradient(circle at 50% 0%, rgba(34, 197, 94, 0.16), transparent 38%),
+            linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.985));
+        box-shadow: 0 18px 44px rgba(0,0,0,0.26);
+        padding: 42px 24px;
+        text-align: center;
+    }
+
+    .dt-empty-icon {
+        width: 86px;
+        height: 86px;
+        margin: 0 auto 18px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        color: #4ade80;
+        border: 1px solid rgba(74, 222, 128, 0.36);
+        background: rgba(34, 197, 94, 0.13);
+    }
+
+    .dt-empty-icon svg {
+        width: 46px;
+        height: 46px;
+    }
+
+    .dt-empty h2 {
+        margin: 0;
+        color: #4ade80;
+        font-size: 28px;
+        font-weight: 1000;
+    }
+
+    .dt-empty p {
+        margin: 12px auto 0;
+        max-width: 620px;
+        color: #cbd5e1;
+        line-height: 1.9;
+        font-weight: 650;
+    }
+
+    @media (max-width: 1024px) {
+        .dt-road { display: none; }
+        .dt-hero-content { padding: 34px 28px; justify-content: center; }
+    }
+
+    @media (max-width: 720px) {
+        .dt-page { padding: 18px 14px 34px; }
+        .dt-hero { min-height: auto; }
+        .dt-hero-content { min-height: auto; padding: 30px 20px; }
+        .dt-title { font-size: 34px; }
+        .dt-subtitle { font-size: 15px; }
+        .dt-actions { justify-content: stretch; }
+        .dt-hero-btn { width: 100%; }
+        .dt-card-head { flex-direction: column-reverse; }
+        .dt-options-grid { grid-template-columns: 1fr; }
+        .dt-card-btn { width: 100%; }
+    }
+</style>
+
+<main class="dt-page" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}">
+    <section class="dt-wrap">
+
+        <div class="dt-hero">
+            <svg class="dt-road" viewBox="0 0 560 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61" stroke="white" stroke-width="22" stroke-linecap="round" opacity="0.055"/>
+                <path d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10" stroke="white" stroke-width="22" stroke-linecap="round" opacity="0.055"/>
+                <path d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61" stroke="white" stroke-width="3.2" stroke-linecap="round" opacity="0.68"/>
+                <path d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10" stroke="white" stroke-width="3.2" stroke-linecap="round" opacity="0.68"/>
+                <path d="M76 294C125 265 166 232 177 197" stroke="white" stroke-width="3.1" stroke-linecap="round" stroke-dasharray="26 20" opacity="0.45"/>
+                <path d="M181 172C176 132 145 103 100 82" stroke="white" stroke-width="3.1" stroke-linecap="round" stroke-dasharray="26 20" opacity="0.43"/>
+                <path d="M323 32L450 159L323 286L196 159L323 32Z" stroke="white" stroke-width="8" opacity="0.09"/>
+                <path d="M323 99V168" stroke="white" stroke-width="14" stroke-linecap="round" opacity="0.09"/>
+                <circle cx="323" cy="211" r="8" fill="white" opacity="0.09"/>
+            </svg>
+
+            <div class="dt-hero-content">
+                <div>
+                    <div class="dt-badge">
+                        <span>{% trans "Wrong Questions" %}</span>
+                        <span>❌</span>
+                    </div>
+
+                    <h1 class="dt-title">{% trans "سوال‌های اشتباه من" %}</h1>
+
+                    <p class="dt-subtitle">
+                        {% trans "سوال‌هایی که قبلاً اشتباه پاسخ داده‌ای اینجا ذخیره می‌شوند تا دوباره مرورشان کنی و نقطه‌ضعف‌ها را تبدیل به قدرت کنی." %}
                     </p>
 
-                    <h2 class="mt-3 text-2xl font-black leading-9">
-                        {{ mistake.question.title }}
-                    </h2>
+                    <div class="dt-actions">
+                        <a href="{% url 'practice_mistakes' %}" class="dt-hero-btn dt-hero-btn-main">
+                            <span>{% trans "تمرین سوال‌های اشتباه" %}</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 20h9"></path>
+                                <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"></path>
+                            </svg>
+                        </a>
+
+                        <a href="{% url 'dashboard' %}" class="dt-hero-btn dt-hero-btn-soft">
+                            <span>{% trans "داشبورد" %}</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dt-list">
+            {% for mistake in mistakes %}
+                <section class="dt-mistake-card">
+
+                    <div class="dt-card-head">
+                        <div>
+                            <p class="dt-meta">
+                                {{ mistake.question.category.name }} /
+                                {{ mistake.question.get_section_display }}
+                            </p>
+
+                            <h2 class="dt-question-title">
+                                {{ mistake.question.title }}
+                            </h2>
+                        </div>
+
+                        <div class="dt-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 9v4"></path>
+                                <path d="M12 17h.01"></path>
+                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
 
                     {% if mistake.question.title_translation %}
-                        <div class="mt-4 rounded-2xl bg-slate-950 p-4 leading-8 text-slate-300">
+                        <div class="dt-translation">
                             {{ mistake.question.title_translation }}
                         </div>
                     {% endif %}
 
-                    <div class="mt-5 grid gap-3 md:grid-cols-2">
-
-                        <div class="rounded-2xl bg-slate-900 p-4">
-                            1. {{ mistake.question.option_1 }}
-                        </div>
-
-                        <div class="rounded-2xl bg-slate-900 p-4">
-                            2. {{ mistake.question.option_2 }}
-                        </div>
-
-                        <div class="rounded-2xl bg-slate-900 p-4">
-                            3. {{ mistake.question.option_3 }}
-                        </div>
+                    <div class="dt-options-grid">
+                        <div class="dt-option">1. {{ mistake.question.option_1 }}</div>
+                        <div class="dt-option">2. {{ mistake.question.option_2 }}</div>
+                        <div class="dt-option">3. {{ mistake.question.option_3 }}</div>
 
                         {% if mistake.question.option_4 %}
-                            <div class="rounded-2xl bg-slate-900 p-4">
-                                4. {{ mistake.question.option_4 }}
-                            </div>
+                            <div class="dt-option">4. {{ mistake.question.option_4 }}</div>
                         {% endif %}
+                    </div>
 
+                    <div class="dt-card-actions">
+                        <a href="{% url 'question_detail' mistake.question.id %}" class="dt-card-btn dt-btn-open">
+                            {% trans "باز کردن سوال" %}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M15 3h6v6"></path>
+                                <path d="M10 14L21 3"></path>
+                                <path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"></path>
+                            </svg>
+                        </a>
+
+                        <a href="{% url 'practice_mistakes' %}" class="dt-card-btn dt-btn-practice">
+                            {% trans "تمرین اشتباه‌ها" %}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 20h9"></path>
+                                <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"></path>
+                            </svg>
+                        </a>
                     </div>
 
                 </section>
-
             {% empty %}
+                <div class="dt-empty">
+                    <div class="dt-empty-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 6L9 17l-5-5"></path>
+                        </svg>
+                    </div>
 
-                <div class="rounded-2xl border border-green-400/20 bg-green-500/10 p-8 text-center">
+                    <h2>{% trans "هنوز هیچ سوال اشتباهی نداری 🎉" %}</h2>
 
-                    <h2 class="text-2xl font-black text-green-300">
-                        🎉 هنوز هیچ سوال اشتباهی نداری
-                    </h2>
-
-                    <p class="mt-3 text-slate-400">
-                        عالیه! هنوز سوالی برای مرور در این بخش ثبت نشده است.
+                    <p>
+                        {% trans "عالیه! هنوز سوالی برای مرور در این بخش ثبت نشده است. همین مسیر را ادامه بده." %}
                     </p>
-
                 </div>
-
             {% endfor %}
-
         </div>
 
-    </div>
-
+    </section>
 </main>
 {% endblock %}

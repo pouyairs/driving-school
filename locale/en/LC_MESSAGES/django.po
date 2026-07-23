@@ -1,0 +1,2263 @@
+
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-23 12:42+0200\n"
+"PO-Revision-Date: 2026-07-23 15:00+0200\n"
+"Last-Translator: \n"
+"Language: en\n"
+"Language-Team: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: accounts/templates/accounts/login.html:4 accounts/templates/accounts/login.html:271
+#: accounts/templates/accounts/register.html:130 core/templates/core/home.html:1096
+msgid "ورود"
+msgstr "Log in"
+
+# | msgid "ورود به آزمون‌ها"
+#: accounts/templates/accounts/login.html:37
+msgid "ورود به حساب"
+msgstr "Go to Exams"
+
+#: accounts/templates/accounts/login.html:41
+msgid "برای ادامه یادگیری گواهینامه آلمان وارد حساب خود شوید."
+msgstr "Log in to continue learning for the German driving licence."
+
+# | msgid "کل کاربران"
+#: accounts/templates/accounts/login.html:109 accounts/templates/accounts/register.html:44
+#: core/templates/core/admin_reports.html:678
+msgid "نام کاربری"
+msgstr "Total Users"
+
+#: accounts/templates/accounts/login.html:133 accounts/templates/accounts/register.html:55
+msgid "نام کاربری خود را وارد کنید"
+msgstr "Enter your username"
+
+#: accounts/templates/accounts/login.html:157 accounts/templates/accounts/register.html:69
+msgid "رمز عبور"
+msgstr "Password"
+
+#: accounts/templates/accounts/login.html:185 accounts/templates/accounts/register.html:79
+msgid "رمز عبور خود را وارد کنید"
+msgstr "Enter your password"
+
+# | msgid "نمایش ترجمه فارسی"
+#: accounts/templates/accounts/login.html:205 accounts/templates/accounts/login.html:337
+msgid "نمایش رمز عبور"
+msgstr "Show Persian Translation"
+
+# | msgid "هنوز هیچ سوال اشتباهی نداری 🎉"
+#: accounts/templates/accounts/login.html:304
+msgid "هنوز حساب کاربری ندارید؟"
+msgstr "You don't have any wrong questions yet 🎉"
+
+#: accounts/templates/accounts/login.html:314
+msgid "ثبت‌نام کنید"
+msgstr "Register"
+
+#: accounts/templates/accounts/login.html:338
+msgid "پنهان کردن رمز عبور"
+msgstr "Hide password"
+
+#: accounts/templates/accounts/register.html:4 accounts/templates/accounts/register.html:119
+msgid "ثبت‌نام"
+msgstr "Register"
+
+# | msgid "۱. ساخت اسلاید صفحه اصلی"
+#: accounts/templates/accounts/register.html:13
+msgid "ساخت حساب کاربری"
+msgstr "1. Create Homepage Slides"
+
+# | msgid "ویدیوهای آموزشی گواهینامه آلمان"
+#: accounts/templates/accounts/register.html:17
+msgid "شروع یادگیری گواهینامه آلمان"
+msgstr "German Driving Licence Video Lessons"
+
+#: accounts/templates/accounts/register.html:93
+msgid "تکرار رمز عبور"
+msgstr "Repeat password"
+
+#: accounts/templates/accounts/register.html:103
+msgid "رمز عبور را دوباره وارد کنید"
+msgstr "Enter the password again"
+
+# | msgid "باز کردن نسخه کاربری سایت"
+#: accounts/templates/accounts/register.html:124
+msgid "حساب کاربری دارید؟"
+msgstr "Open the User Version"
+
+#: core/templates/admin/index.html:618
+msgid "مرکز کنترل مدیریت"
+msgstr "Administration Control Center"
+
+#: core/templates/admin/index.html:623
+msgid "مدیریت سایت"
+msgstr "Site Management"
+
+#: core/templates/admin/index.html:628
+msgid "اسلایدر، ویدیوها، دسته‌بندی‌ها، سوالات، کاربران و گزارش‌های پروژه را از همین صفحه مدیریت کنید."
+msgstr "Manage sliders, videos, categories, questions, users, and project reports from one place."
+
+#: core/templates/admin/index.html:634 core/templates/admin/index.html:705
+#: core/templates/admin/index.html:770
+msgid "گزارش‌ها"
+msgstr "Reports"
+
+#: core/templates/admin/index.html:638
+msgid "افزودن اسلاید"
+msgstr "Add Slide"
+
+#: core/templates/admin/index.html:642
+msgid "افزودن ویدیو"
+msgstr "Add Video"
+
+#: core/templates/admin/index.html:651 core/templates/admin/index.html:784
+msgid "مشاهده سایت"
+msgstr "View Website"
+
+# | msgid "کل کاربران"
+#: core/templates/admin/index.html:666 core/templates/admin/index.html:761
+#: core/templates/core/home.html:1391
+msgid "کاربران"
+msgstr "Total Users"
+
+#: core/templates/admin/index.html:667
+msgid "مدیریت کاربران"
+msgstr "Manage Users"
+
+# | msgid "ویدیو"
+#: core/templates/admin/index.html:679 core/templates/admin/index.html:725
+#: core/templates/core/admin_reports.html:529 core/templates/core/dashboard.html:874
+#: core/templates/core/dashboard.html:1001 core/templates/core/home.html:1061
+#: core/templates/core/home.html:1235 core/templates/core/home.html:1383
+msgid "ویدیوها"
+msgstr "Videos"
+
+#: core/templates/admin/index.html:680 videos/templates/videos/video_list.html:576
+msgid "ویدیوهای آموزشی"
+msgstr "Educational Videos"
+
+#: core/templates/admin/index.html:692
+msgid "سوالات"
+msgstr "Questions"
+
+#: core/templates/admin/index.html:693
+msgid "بانک سوالات"
+msgstr "Question Bank"
+
+#: core/templates/admin/index.html:706
+msgid "گزارش پروژه"
+msgstr "Project Reports"
+
+#: core/templates/admin/index.html:716
+msgid "اسلایدر صفحه اصلی"
+msgstr "Homepage Slider"
+
+#: core/templates/admin/index.html:717
+msgid "مدیریت تصویر، متن و لینک بنرها"
+msgstr "Manage banner images, text, and links."
+
+#: core/templates/admin/index.html:726
+msgid "افزودن و مدیریت درس‌های آموزشی"
+msgstr "Add and manage educational lessons."
+
+#: core/templates/admin/index.html:734
+msgid "دسته‌بندی ویدیوها"
+msgstr "Video Categories"
+
+#: core/templates/admin/index.html:735
+msgid "مرتب‌سازی مسیر یادگیری"
+msgstr "Organize the Learning Path"
+
+#: core/templates/admin/index.html:743
+msgid "سوالات آزمون"
+msgstr "Exam Questions"
+
+#: core/templates/admin/index.html:744
+msgid "مدیریت سوال، گزینه‌ها و پاسخ صحیح"
+msgstr "Manage questions, answer choices, and correct answers."
+
+#: core/templates/admin/index.html:752
+msgid "دسته‌بندی سوالات"
+msgstr "Question Categories"
+
+#: core/templates/admin/index.html:753
+msgid "ساخت موضوعات و زیرمجموعه‌ها"
+msgstr "Create topics and subcategories."
+
+#: core/templates/admin/index.html:762
+msgid "مشاهده و مدیریت کاربران سایت"
+msgstr "View and manage website users."
+
+#: core/templates/admin/index.html:771
+msgid "آمار آزمون‌ها، کاربران و ویدیوها"
+msgstr "Statistics for exams, users, and videos."
+
+#: core/templates/admin/index.html:785
+msgid "باز کردن نسخه کاربری سایت"
+msgstr "Open the User Version"
+
+#: core/templates/admin/index.html:794
+msgid "مدیریت مدل‌ها"
+msgstr "Manage Models"
+
+#: core/templates/admin/index.html:825
+msgid "افزودن"
+msgstr "Add"
+
+#: core/templates/admin/index.html:834
+msgid "مشاهده"
+msgstr "View"
+
+#: core/templates/admin/index.html:841
+msgid "مدیریت"
+msgstr "Manage"
+
+#: core/templates/admin/index.html:853
+msgid "هیچ مدلی برای مدیریت وجود ندارد."
+msgstr "There are no models available to manage."
+
+#: core/templates/admin/index.html:860
+msgid "فعالیت‌های اخیر"
+msgstr "Recent Activity"
+
+#: core/templates/admin/index.html:866
+msgid "هیچ فعالیت جدیدی ثبت نشده است."
+msgstr "No recent activity."
+
+#: core/templates/admin/index.html:898
+msgid "محتوای ناشناخته"
+msgstr "Unknown Content"
+
+#: core/templates/admin/index.html:909
+msgid "مسیر پیشنهادی مدیریت"
+msgstr "Recommended Administration Workflow"
+
+#: core/templates/admin/index.html:913
+msgid "برای مدیریت آسان‌تر سایت، مراحل زیر را به‌ترتیب انجام دهید."
+msgstr "Follow these steps to set up and manage your website efficiently."
+
+#: core/templates/admin/index.html:918
+msgid "۱. ساخت اسلاید صفحه اصلی"
+msgstr "1. Create Homepage Slides"
+
+#: core/templates/admin/index.html:923
+msgid "۲. افزودن دسته‌بندی ویدیوها"
+msgstr "2. Add Video Categories"
+
+#: core/templates/admin/index.html:928
+msgid "۳. افزودن ویدیوهای آموزشی"
+msgstr "3. Add Educational Videos"
+
+#: core/templates/admin/index.html:933
+msgid "۴. وارد کردن سوالات آزمون"
+msgstr "4. Import Exam Questions"
+
+#: core/templates/admin/index.html:938
+msgid "۵. بررسی گزارش‌ها"
+msgstr "5. Review Reports"
+
+#: core/templates/admin/index.html:946
+msgid "نکته فروش پروژه"
+msgstr "Project Selling Point"
+
+#: core/templates/admin/index.html:950
+msgid ""
+"این پنل طوری طراحی شده است که مشتری غیرتکنیکال نیز بتواند محتوای اصلی سایت را بدون تغییر کد "
+"مدیریت کند."
+msgstr ""
+"This administration panel is designed so that even non-technical customers can manage the "
+"website's content without modifying any code."
+
+# | msgid "ویدیوهای آموزشی گواهینامه آلمان"
+#: core/templates/base/base.html:21 core/templates/core/dashboard.html:867
+#: core/templates/core/home.html:1056 core/templates/core/home.html:1452
+msgid "آموزش گواهینامه آلمان"
+msgstr "German Driving Licence Video Lessons"
+
+#: core/templates/base/base.html:27
+msgid ""
+"آموزش فارسی گواهینامه آلمان، آزمون تئوری، تابلوها، قوانین رانندگی و ویدیوهای آموزشی برای "
+"فارسی‌زبان‌های آلمان."
+msgstr ""
+"Persian-language German driving-licence lessons, theory tests, road signs, driving rules, and "
+"educational videos for Persian speakers in Germany."
+
+#: core/templates/base/base.html:169 core/templates/core/home.html:1069
+msgid "انتخاب زبان"
+msgstr "Select Language"
+
+#: core/templates/base/base.html:194
+msgid "تغییر زبان به فارسی"
+msgstr "Switch to Persian"
+
+#: core/templates/base/base.html:223
+msgid "تغییر زبان به آلمانی"
+msgstr "Switch to German"
+
+#: core/templates/base/base.html:252
+msgid "تغییر زبان به انگلیسی"
+msgstr "Switch to English"
+
+#: core/templates/core/admin_reports.html:453
+msgid "تحلیل پنل مدیریت"
+msgstr "Admin Dashboard Analytics"
+
+#: core/templates/core/admin_reports.html:458
+msgid "گزارش‌های"
+msgstr "Reports"
+
+#: core/templates/core/admin_reports.html:459
+msgid "پروژه"
+msgstr "Project"
+
+#: core/templates/core/admin_reports.html:463
+msgid ""
+"نمای کلی کاربران، آزمون‌ها، فعالیت‌های آموزشی، دشوارترین سوالات، میزان مشاهده ویدیوها و شاخص‌های "
+"درآمدی آینده."
+msgstr ""
+"Overview of users, exams, learning activity, difficult questions, video engagement, and future "
+"revenue metrics."
+
+#: core/templates/core/admin_reports.html:469
+msgid "نرخ قبولی کلی"
+msgstr "Overall Pass Rate"
+
+#: core/templates/core/admin_reports.html:477
+msgid "کل کاربران"
+msgstr "Total Users"
+
+#: core/templates/core/admin_reports.html:482
+msgid "کاربران ثبت‌نام‌شده"
+msgstr "Registered Users"
+
+#: core/templates/core/admin_reports.html:487
+msgid "کل آزمون‌ها"
+msgstr "Total Exams"
+
+#: core/templates/core/admin_reports.html:492
+msgid "تمام جلسات آزمون"
+msgstr "All Exam Sessions"
+
+# | msgid "آزمون‌های ردشده"
+#: core/templates/core/admin_reports.html:497 core/templates/core/dashboard.html:1014
+msgid "آزمون‌های قبول‌شده"
+msgstr "Failed Exams"
+
+#: core/templates/core/admin_reports.html:504
+#, python-format
+msgid ""
+"\n"
+"                        نرخ قبولی %(rate)s٪\n"
+"                    "
+msgstr ""
+"\n"
+"                        Pass Rate %(rate)s%%\n"
+"                    "
+
+#: core/templates/core/admin_reports.html:512
+msgid "آزمون‌های ردشده"
+msgstr "Failed Exams"
+
+#: core/templates/core/admin_reports.html:519
+#, python-format
+msgid ""
+"\n"
+"                        نرخ ردشدن %(rate)s٪\n"
+"                    "
+msgstr ""
+"\n"
+"                        Failure Rate %(rate)s%%\n"
+"                    "
+
+#: core/templates/core/admin_reports.html:534
+msgid "ویدیوهای منتشرشده"
+msgstr "Published Videos"
+
+#: core/templates/core/admin_reports.html:539
+msgid "ویدیوهای مشاهده‌شده"
+msgstr "Watched videos"
+
+#: core/templates/core/admin_reports.html:544
+msgid "کل سوابق مشاهده"
+msgstr "Total Views"
+
+#: core/templates/core/admin_reports.html:549
+msgid "میانگین امتیاز خطا"
+msgstr "Average Penalty Points"
+
+#: core/templates/core/admin_reports.html:554
+msgid "میانگین هر آزمون"
+msgstr "Average per Exam"
+
+#: core/templates/core/admin_reports.html:559
+msgid "درآمد"
+msgstr "Revenue"
+
+#: core/templates/core/admin_reports.html:566
+#, python-format
+msgid ""
+"\n"
+"                        %(count)s پرداخت\n"
+"                    "
+msgstr ""
+"\n"
+"                        %(count)s Payments\n"
+"                    "
+
+#: core/templates/core/admin_reports.html:576
+msgid "سوالات با بیشترین پاسخ اشتباه"
+msgstr "Most Frequently Missed Questions"
+
+#: core/templates/core/admin_reports.html:579
+msgid "سوالاتی که بیشترین تعداد پاسخ نادرست را داشته‌اند."
+msgstr "Questions with the highest number of incorrect answers."
+
+#: core/templates/core/admin_reports.html:588 quiz/templates/quiz/official_exams.html:471
+#: quiz/templates/quiz/question_detail.html:664 quiz/templates/quiz/question_detail.html:692
+#: quiz/templates/quiz/question_detail.html:716 quiz/templates/quiz/question_detail.html:929
+msgid "سوال"
+msgstr "Question"
+
+#: core/templates/core/admin_reports.html:589 core/templates/core/admin_reports.html:635
+#: core/templates/core/admin_reports.html:724
+msgid "دسته‌بندی"
+msgstr "Category"
+
+#: core/templates/core/admin_reports.html:590
+msgid "بخش"
+msgstr "Section"
+
+#: core/templates/core/admin_reports.html:591 core/templates/core/admin_reports.html:636
+msgid "تعداد پاسخ اشتباه"
+msgstr "Incorrect Answers"
+
+#: core/templates/core/admin_reports.html:611
+msgid "هنوز پاسخ اشتباهی ثبت نشده است."
+msgstr "No incorrect answers have been recorded yet."
+
+#: core/templates/core/admin_reports.html:623
+msgid "دشوارترین دسته‌بندی‌ها"
+msgstr "Most Difficult Categories"
+
+#: core/templates/core/admin_reports.html:626
+msgid "دسته‌بندی‌هایی که بیشترین پاسخ اشتباه را ایجاد کرده‌اند."
+msgstr "Categories with the highest number of incorrect answers."
+
+#: core/templates/core/admin_reports.html:654
+msgid "هنوز اطلاعاتی برای دسته‌بندی‌ها ثبت نشده است."
+msgstr "No category statistics are available yet."
+
+#: core/templates/core/admin_reports.html:666
+msgid "فعال‌ترین کاربران"
+msgstr "Most Active Users"
+
+#: core/templates/core/admin_reports.html:669
+msgid "کاربرانی که بیشترین تعداد جلسات آزمون را تکمیل کرده‌اند."
+msgstr "Users who have completed the most exam sessions."
+
+#: core/templates/core/admin_reports.html:679
+msgid "ایمیل"
+msgstr "Email"
+
+#: core/templates/core/admin_reports.html:680
+msgid "تعداد آزمون"
+msgstr "Exam Count"
+
+#: core/templates/core/admin_reports.html:699
+msgid "هنوز فعالیتی از کاربران ثبت نشده است."
+msgstr "No user activity has been recorded yet."
+
+#: core/templates/core/admin_reports.html:711
+msgid "پربازدیدترین ویدیوها"
+msgstr "Most Viewed Videos"
+
+#: core/templates/core/admin_reports.html:714
+msgid "ویدیوها بر اساس تعداد دفعات مشاهده مرتب شده‌اند."
+msgstr "Videos are sorted by total number of views."
+
+#: core/templates/core/admin_reports.html:723
+msgid "ویدیو"
+msgstr "Video"
+
+#: core/templates/core/admin_reports.html:725
+msgid "تعداد مشاهده"
+msgstr "Views"
+
+#: core/templates/core/admin_reports.html:744
+msgid "هنوز اطلاعاتی درباره مشاهده ویدیوها ثبت نشده است."
+msgstr "No video viewing data is available yet."
+
+#: core/templates/core/coming_soon.html:7
+msgid "این مسیر هنوز آماده نیست"
+msgstr "This Section Isn't Ready Yet"
+
+#: core/templates/core/coming_soon.html:11
+msgid "این بخش از سایت هنوز در دست ساخت است و به‌زودی فعال خواهد شد."
+msgstr "This section is currently under development and will be available soon."
+
+#: core/templates/core/coming_soon.html:428
+msgid "مسیر موقتاً بسته است"
+msgstr "This Route Is Temporarily Closed"
+
+#: core/templates/core/coming_soon.html:432
+msgid "اوه... این مسیر هنوز"
+msgstr "Oops... This section has not"
+
+#: core/templates/core/coming_soon.html:433
+msgid "باز نشده است!"
+msgstr "been opened yet!"
+
+#: core/templates/core/coming_soon.html:437
+msgid ""
+"این صفحه هنوز در دست ساخت است. مانند یک خیابان در حال تعمیر، فعلاً امکان ورود به آن وجود ندارد؛ "
+"اما مسیرهای اصلی سایت باز هستند و می‌توانید از آن‌ها استفاده کنید."
+msgstr ""
+"This page is still under construction. Like a road under repair, it is temporarily unavailable, "
+"but you can continue using the main sections of the website."
+
+#: core/templates/core/coming_soon.html:445
+msgid "در دست ساخت"
+msgstr "Under Construction"
+
+#: core/templates/core/coming_soon.html:448
+msgid "این بخش به‌زودی فعال می‌شود. فعلاً می‌توانید از آزمون‌ها، تمرین سوالات یا داشبورد استفاده کنید."
+msgstr ""
+"This section will be available soon. In the meantime, you can use the exams, practice questions, "
+"or your dashboard."
+
+# | msgid "آزمون‌های ردشده"
+#: core/templates/core/coming_soon.html:461 core/templates/core/home.html:1063
+#: core/templates/core/home.html:1236 core/templates/core/home.html:1466
+#: quiz/templates/quiz/official_exams.html:7 quiz/templates/quiz/official_exams.html:421
+#: quiz/templates/quiz/official_exams.html:424
+msgid "آزمون‌های رسمی"
+msgstr "Failed Exams"
+
+#: core/templates/core/coming_soon.html:462
+msgid "شروع آزمون شبیه‌سازی‌شده"
+msgstr "Start Simulated Exam"
+
+# | msgid "بانک سوالات"
+#: core/templates/core/coming_soon.html:473 core/templates/core/dashboard.html:925
+msgid "تمرین سوالات"
+msgstr "Question Bank"
+
+#: core/templates/core/coming_soon.html:474
+msgid "یادگیری مرحله‌ای"
+msgstr "Step-by-Step Learning"
+
+# | msgid "داشبورد یادگیری"
+#: core/templates/core/coming_soon.html:485 core/templates/core/dashboard.html:872
+#: core/templates/core/home.html:1093 core/templates/core/home.html:1234
+#: quiz/templates/quiz/category_detail.html:473 quiz/templates/quiz/category_list.html:434
+#: quiz/templates/quiz/category_practice_result.html:452 quiz/templates/quiz/exam_history.html:362
+#: quiz/templates/quiz/exam_mode_select.html:28 quiz/templates/quiz/exam_result.html:506
+#: quiz/templates/quiz/exam_review.html:394 quiz/templates/quiz/favorites.html:366
+#: quiz/templates/quiz/my_mistakes.html:392 quiz/templates/quiz/official_exams.html:429
+msgid "داشبورد"
+msgstr "Learning Dashboard"
+
+#: core/templates/core/coming_soon.html:486
+msgid "مشاهده پیشرفت"
+msgstr "View Progress"
+
+#: core/templates/core/coming_soon.html:491
+msgid "برگشت به صفحه اصلی"
+msgstr "Back to Home"
+
+#: core/templates/core/dashboard.html:7
+msgid "داشبورد یادگیری"
+msgstr "Learning Dashboard"
+
+#: core/templates/core/dashboard.html:873
+msgid "پیشرفت من"
+msgstr "My Progress"
+
+#: core/templates/core/dashboard.html:875 core/templates/core/dashboard.html:985
+#: quiz/templates/quiz/exam_history.html:7 quiz/templates/quiz/exam_history.html:354
+msgid "تاریخچه آزمون‌ها"
+msgstr "Exam History"
+
+#: core/templates/core/dashboard.html:876 core/templates/core/dashboard.html:975
+#: quiz/templates/quiz/exam_result.html:552
+msgid "سوال‌های اشتباه"
+msgstr "Wrong Questions"
+
+#: core/templates/core/dashboard.html:877 core/templates/core/dashboard.html:980
+#: quiz/templates/quiz/favorites.html:7
+msgid "علاقه‌مندی‌ها"
+msgstr "Favorites"
+
+# | msgid "دسته‌بندی"
+#: core/templates/core/dashboard.html:878 core/templates/core/dashboard.html:970
+#: core/templates/core/home.html:1062 core/templates/core/home.html:1237
+#: core/templates/core/home.html:1331 core/templates/core/home.html:1465
+#: quiz/templates/quiz/category_detail.html:465 quiz/templates/quiz/category_practice_result.html:443
+#: quiz/templates/quiz/official_exams.html:439 quiz/templates/quiz/question_detail.html:911
+msgid "دسته‌بندی‌ها"
+msgstr "Category"
+
+#: core/templates/core/dashboard.html:883
+msgid "تداوم روزانه"
+msgstr "Daily Streak"
+
+#: core/templates/core/dashboard.html:884
+msgid "هر روز کمی تمرین کن تا به قبولی نزدیک‌تر شوی."
+msgstr "Practice a little every day to get closer to passing."
+
+#: core/templates/core/dashboard.html:887
+msgid "تداوم"
+msgstr "Streak"
+
+#: core/templates/core/dashboard.html:908
+msgid "داشبورد حرفه‌ای"
+msgstr "Professional Dashboard"
+
+#: core/templates/core/dashboard.html:913
+#, python-format
+msgid "سلام %(username)s"
+msgstr "Hi %(username)s"
+
+#: core/templates/core/dashboard.html:913
+msgid "آماده‌ای؟"
+msgstr "Ready?"
+
+#: core/templates/core/dashboard.html:917
+msgid ""
+"آزمون‌ها، تمرین‌ها، ویدیوها و پیشرفتت را از اینجا مدیریت کن. امروز فقط چند قدم تا بهتر شدن فاصله "
+"داری."
+msgstr ""
+"Manage your exams, practice sessions, videos, and progress from here. You're only a few steps "
+"away from improving today."
+
+# | msgid "شروع آزمون ←"
+#: core/templates/core/dashboard.html:921 core/templates/core/home.html:1193
+#: quiz/templates/quiz/exam_history.html:372
+msgid "شروع آزمون"
+msgstr "Start Exam ←"
+
+#: core/templates/core/dashboard.html:923 core/templates/core/dashboard.html:1136
+msgid "ادامه یادگیری"
+msgstr "Continue Learning"
+
+# | msgid "اسلایدر صفحه اصلی"
+#: core/templates/core/dashboard.html:927 core/templates/core/home.html:1060
+#: quiz/templates/quiz/category_list.html:426
+msgid "صفحه اصلی"
+msgstr "Homepage Slider"
+
+#: core/templates/core/dashboard.html:928 core/templates/core/home.html:1094
+msgid "خروج"
+msgstr "Log out"
+
+#: core/templates/core/dashboard.html:937
+msgid "نرخ قبولی"
+msgstr "Pass Rate"
+
+# | msgid "۱ آزمون"
+#: core/templates/core/dashboard.html:945 core/templates/core/home.html:1427
+msgid "آزمون"
+msgstr "Exam"
+
+#: core/templates/core/dashboard.html:950
+msgid "قبولی"
+msgstr "Passed"
+
+#: core/templates/core/dashboard.html:955
+msgid "اشتباه"
+msgstr "Wrong"
+
+#: core/templates/core/dashboard.html:965
+msgid "ورود به آزمون‌ها"
+msgstr "Go to Exams"
+
+# | msgid "پیشرفت من"
+#: core/templates/core/dashboard.html:992 quiz/templates/quiz/category_detail.html:547
+#: quiz/templates/quiz/category_list.html:508
+msgid "پیشرفت"
+msgstr "My Progress"
+
+#: core/templates/core/dashboard.html:996
+msgid "پیشرفت ویدیوها"
+msgstr "Video Progress"
+
+#: core/templates/core/dashboard.html:1005
+msgid "درس‌های دیده‌شده"
+msgstr "Completed Lessons"
+
+#: core/templates/core/dashboard.html:1010
+msgid "قبولی‌ها"
+msgstr "Passed Exams"
+
+#: core/templates/core/dashboard.html:1019
+msgid "اشتباهات"
+msgstr "Mistakes"
+
+#: core/templates/core/dashboard.html:1023
+msgid "سوال‌های نیازمند مرور"
+msgstr "Questions to Review"
+
+#: core/templates/core/dashboard.html:1033
+msgid "عملکرد"
+msgstr "Performance"
+
+#: core/templates/core/dashboard.html:1034
+msgid "عملکرد شما در دسته‌بندی‌ها"
+msgstr "Your Performance by Category"
+
+#: core/templates/core/dashboard.html:1035
+msgid "میزان موفقیت شما در هر مبحث آموزشی"
+msgstr "Your success rate in each learning category."
+
+#: core/templates/core/dashboard.html:1052
+msgid "هنوز عملکردی در دسته‌بندی‌ها ثبت نشده است."
+msgstr "No category performance data is available yet."
+
+#: core/templates/core/dashboard.html:1054
+msgid "بعد از تمرین سوالات دسته‌بندی، آمار اینجا نمایش داده می‌شود."
+msgstr "Your statistics will appear here after practicing category questions."
+
+#: core/templates/core/dashboard.html:1062
+msgid "مسیر یادگیری"
+msgstr "Learning Path"
+
+#: core/templates/core/dashboard.html:1063
+msgid "مسیر ویدیوهای آموزشی"
+msgstr "Educational Video Path"
+
+#: core/templates/core/dashboard.html:1064
+msgid "ویدیوها بر اساس دسته‌بندی آموزشی نمایش داده می‌شوند."
+msgstr "Videos are organized by learning category."
+
+#: core/templates/core/dashboard.html:1075 videos/templates/videos/video_list.html:619
+#, python-format
+msgid "آموزش‌های مربوط به %(category_name)s"
+msgstr "%(category_name)s Lessons"
+
+#: core/templates/core/dashboard.html:1093
+msgid "مشاهده شد"
+msgstr "Watched"
+
+#: core/templates/core/dashboard.html:1099 videos/templates/videos/video_list.html:690
+msgid "تماشای درس"
+msgstr "Watch Lesson"
+
+#: core/templates/core/dashboard.html:1105 videos/templates/videos/video_list.html:712
+msgid "هنوز ویدیویی داخل این دسته‌بندی نیست."
+msgstr "There are no videos in this category yet."
+
+#: core/templates/core/dashboard.html:1113
+msgid "هنوز دسته‌بندی ویدیویی برای مسیر آموزشی ساخته نشده است."
+msgstr "No video categories have been created for the learning path yet."
+
+#: core/templates/core/dashboard.html:1116
+msgid "رفتن به پنل مدیریت"
+msgstr "Go to Admin Panel"
+
+#: core/templates/core/dashboard.html:1126
+msgid "امروز"
+msgstr "Today"
+
+#: core/templates/core/dashboard.html:1127
+msgid "مسیر امروز"
+msgstr "Today's Plan"
+
+#: core/templates/core/dashboard.html:1128
+msgid "قدم بعدی برای ادامه یادگیری"
+msgstr "Your Next Learning Step"
+
+#: core/templates/core/dashboard.html:1132
+msgid "هنوز ویدیویی ثبت نشده است."
+msgstr "No videos have been added yet."
+
+#: core/templates/core/dashboard.html:1141
+msgid "کامل شد"
+msgstr "Completed"
+
+#: core/templates/core/dashboard.html:1142
+msgid "همه ویدیوها دیده شده‌اند"
+msgstr "All Videos Completed"
+
+#: core/templates/core/dashboard.html:1148
+msgid "۳ ویدیو"
+msgstr "3 Videos"
+
+#: core/templates/core/dashboard.html:1152
+msgid "۴۰ سوال"
+msgstr "40 Questions"
+
+#: core/templates/core/dashboard.html:1156
+msgid "۱ آزمون"
+msgstr "1 Exam"
+
+#: core/templates/core/dashboard.html:1163
+msgid "دستاوردها"
+msgstr "Achievements"
+
+#: core/templates/core/dashboard.html:1164
+msgid "افتخارات"
+msgstr "Badges"
+
+#: core/templates/core/dashboard.html:1170
+msgid "اولین قبولی"
+msgstr "First Pass"
+
+#: core/templates/core/dashboard.html:1177
+msgid "تداوم هفت‌روزه"
+msgstr "7-Day Streak"
+
+#: core/templates/core/dashboard.html:1184
+msgid "حالت تمرکز"
+msgstr "Focus Mode"
+
+#: core/templates/core/dashboard.html:1191
+msgid "سوال‌های ذخیره‌شده"
+msgstr "Saved Questions"
+
+# | msgid "ویدیوهای آموزشی گواهینامه آلمان"
+#: core/templates/core/home.html:7
+msgid "آموزش گواهینامه آلمان به زبان فارسی"
+msgstr "German Driving Licence Video Lessons"
+
+# | msgid ""
+# | "ویدیوهای آموزشی گواهینامه آلمان به زبان فارسی، دسته‌بندی‌شده برای یادگیری "
+# | "بهتر آزمون تئوری."
+#: core/templates/core/home.html:11
+msgid ""
+"آموزش گواهینامه آلمان به زبان فارسی همراه با ویدیو، دسته‌بندی آموزشی، آزمون شبیه‌ساز، سوالات "
+"تئوری و مسیر یادگیری."
+msgstr ""
+"Persian-language German driving licence video lessons, organized by category for effective theory"
+" exam preparation."
+
+#: core/templates/core/home.html:1064 core/templates/core/home.html:1464
+msgid "بلاگ"
+msgstr "Blog"
+
+# | msgid "شروع این درس"
+#: core/templates/core/home.html:1097
+msgid "شروع رایگان"
+msgstr "Start This Lesson"
+
+#: core/templates/core/home.html:1179 quiz/templates/quiz/category_detail.html:453
+#: quiz/templates/quiz/category_list.html:414
+msgid "Driving Theory MVP"
+msgstr "Driving Theory MVP"
+
+# | msgid "آزمون شبیه‌ساز گواهینامه"
+#: core/templates/core/home.html:1184
+msgid "آموزش گواهینامه"
+msgstr "Driving Licence Exam Simulator"
+
+#: core/templates/core/home.html:1184
+msgid "آلمان"
+msgstr "Germany"
+
+# | msgid ""
+# | "ویدیوهای آموزشی گواهینامه آلمان به زبان فارسی، دسته‌بندی‌شده برای یادگیری "
+# | "بهتر آزمون تئوری."
+#: core/templates/core/home.html:1188
+msgid ""
+"آموزش کامل و ساده برای آزمون تئوری گواهینامه آلمان به زبان فارسی؛ ویدیو، آزمون، پیشرفت و تمرین در"
+" یک پنل."
+msgstr ""
+"Persian-language German driving licence video lessons, organized by category for effective theory"
+" exam preparation."
+
+# | msgid "پیشرفت ویدیوها"
+#: core/templates/core/home.html:1192
+msgid "مشاهده ویدیوها"
+msgstr "Video Progress"
+
+# | msgid "مسیر یادگیری"
+#: core/templates/core/home.html:1200
+msgid "مسیر یادگیری هوشمند"
+msgstr "Learning Path"
+
+#: core/templates/core/home.html:1201
+msgid "ویدیو، آزمون، پیشرفت و تمرین در یک پنل"
+msgstr "Videos, tests, progress, and practice in one dashboard"
+
+#: core/templates/core/home.html:1225
+msgid "سلام"
+msgstr "Hello"
+
+#: core/templates/core/home.html:1226
+msgid "خوش آمدید"
+msgstr "Welcome"
+
+#: core/templates/core/home.html:1228
+msgid "سلام!"
+msgstr "Hello!"
+
+#: core/templates/core/home.html:1229
+msgid "برای شروع وارد شوید"
+msgstr "Log in to get started"
+
+#: core/templates/core/home.html:1238
+msgid "تنظیمات"
+msgstr "Settings"
+
+# | msgid "سوال‌های اشتباه"
+#: core/templates/core/home.html:1243 core/templates/core/home.html:1251
+msgid "شبکه‌های اجتماعی"
+msgstr "Wrong Questions"
+
+# | msgid "تماشا در یوتیوب"
+#: core/templates/core/home.html:1244 core/templates/core/home.html:1473
+msgid "یوتیوب"
+msgstr "Watch on YouTube"
+
+# | msgid "ویدیوهای آموزشی گواهینامه آلمان"
+#: core/templates/core/home.html:1245
+msgid "ویدیوهای آموزشی جدید و نکات مهم آزمون"
+msgstr "German Driving Licence Video Lessons"
+
+# | msgid "مشاهده شده"
+#: core/templates/core/home.html:1246
+msgid "مشاهده کانال"
+msgstr "Watched"
+
+#: core/templates/core/home.html:1252 core/templates/core/home.html:1474
+msgid "اینستاگرام"
+msgstr "Instagram"
+
+#: core/templates/core/home.html:1253
+msgid "آموزش‌های کوتاه و اخبار جدید"
+msgstr "Short lessons and the latest news"
+
+# | msgid "باز کردن سوال"
+#: core/templates/core/home.html:1254
+msgid "دنبال کردن"
+msgstr "Open Question"
+
+#: core/templates/core/home.html:1259
+msgid "پشتیبانی"
+msgstr "Support"
+
+#: core/templates/core/home.html:1260
+msgid "تلگرام"
+msgstr "Telegram"
+
+#: core/templates/core/home.html:1261
+msgid "پشتیبانی و ارتباط مستقیم با ما"
+msgstr "Support and direct contact with us"
+
+#: core/templates/core/home.html:1262
+msgid "پیام به پشتیبانی"
+msgstr "Message support"
+
+# | msgid "مشاهده شده"
+#: core/templates/core/home.html:1270
+msgid "مشاهده همه"
+msgstr "Watched"
+
+# | msgid "درس‌های رانندگی"
+#: core/templates/core/home.html:1273
+msgid "درس‌های رایگان"
+msgstr "Driving Lessons"
+
+# | msgid "ویدیوهای آموزشی"
+#: core/templates/core/home.html:1274
+msgid "ویدیوهای رایگان"
+msgstr "Educational Videos"
+
+# | msgid "مرتب‌سازی مسیر یادگیری"
+#: core/templates/core/home.html:1275
+msgid "چند درس مهم برای شروع سریع مسیر یادگیری."
+msgstr "Organize the Learning Path"
+
+# | msgid "درست"
+#: core/templates/core/home.html:1290
+msgid "درس"
+msgstr "Correct"
+
+#: core/templates/core/home.html:1302
+msgid "تابلوهای مهم در آلمان"
+msgstr "Important road signs in Germany"
+
+#: core/templates/core/home.html:1311
+msgid "حق تقدم در تقاطع‌ها"
+msgstr "Right of way at intersections"
+
+#: core/templates/core/home.html:1320
+msgid "آشنایی با آزمون تئوری"
+msgstr "Introduction to the theory test"
+
+# | msgid "دشوارترین دسته‌بندی‌ها"
+#: core/templates/core/home.html:1328
+msgid "مشاهده همه دسته‌بندی‌ها"
+msgstr "Most Difficult Categories"
+
+# | msgid "دسته‌بندی سوالات"
+#: core/templates/core/home.html:1332
+msgid "دسته‌بندی‌های اصلی"
+msgstr "Main categories"
+
+# | msgid "تعداد آزمون"
+#: core/templates/core/home.html:1339
+msgid "آمادگی آزمون"
+msgstr "Exam Count"
+
+#: core/templates/core/home.html:1340
+msgid "98 سؤال"
+msgstr "98 questions"
+
+#: core/templates/core/home.html:1345
+msgid "قوانین"
+msgstr "Rules"
+
+#: core/templates/core/home.html:1346
+msgid "134 سؤال"
+msgstr "134 questions"
+
+#: core/templates/core/home.html:1351
+msgid "تابلوها"
+msgstr "Road signs"
+
+#: core/templates/core/home.html:1352
+msgid "156 سؤال"
+msgstr "156 questions"
+
+# | msgid "درس رانندگی"
+#: core/templates/core/home.html:1357
+msgid "رانندگی"
+msgstr "Driving Lesson"
+
+#: core/templates/core/home.html:1358
+msgid "189 سؤال"
+msgstr "189 questions"
+
+# | msgid "تمرین اشتباه‌ها"
+#: core/templates/core/home.html:1363
+msgid "تمرین سؤال"
+msgstr "Practice Mistakes"
+
+#: core/templates/core/home.html:1364
+msgid "245 سؤال"
+msgstr "245 questions"
+
+#: core/templates/core/home.html:1375
+msgid "دوره‌ها"
+msgstr "Courses"
+
+# | msgid "سوالات"
+#: core/templates/core/home.html:1399
+msgid "مقالات"
+msgstr "Questions"
+
+# | msgid "مشاهده سایت"
+#: core/templates/core/home.html:1407
+msgid "مشاهده همه مقالات"
+msgstr "View Website"
+
+#: core/templates/core/home.html:1410
+msgid "وبلاگ"
+msgstr "Blog"
+
+# | msgid "ویدیوهای آموزشی"
+#: core/templates/core/home.html:1411
+msgid "وبلاگ آموزشی"
+msgstr "Educational Videos"
+
+#: core/templates/core/home.html:1419
+msgid "راهنما"
+msgstr "Guide"
+
+# | msgid "ویدیوهای آموزشی گواهینامه آلمان"
+#: core/templates/core/home.html:1420
+msgid "مراحل گرفتن گواهینامه آلمان"
+msgstr "German Driving Licence Video Lessons"
+
+#: core/templates/core/home.html:1428
+msgid "آمادگی کامل برای آزمون تئوری"
+msgstr "Complete preparation for the theory test"
+
+#: core/templates/core/home.html:1435
+msgid "نکات طلایی"
+msgstr "Key tips"
+
+#: core/templates/core/home.html:1436
+msgid "اشتباهات رایج در آزمون تئوری"
+msgstr "Common mistakes in the theory test"
+
+# | msgid ""
+# | "ویدیوهای آموزشی گواهینامه آلمان به زبان فارسی، دسته‌بندی‌شده برای یادگیری "
+# | "بهتر آزمون تئوری."
+#: core/templates/core/home.html:1456
+msgid "آموزش آزمون تئوری گواهینامه آلمان به زبان فارسی، همراه با ویدیوهای آموزشی و آزمون شبیه‌سازی‌شده."
+msgstr ""
+"Persian-language German driving licence video lessons, organized by category for effective theory"
+" exam preparation."
+
+# | msgid "اطلاعات پایه"
+#: core/templates/core/home.html:1463
+msgid "اطلاعات"
+msgstr "Basic Information"
+
+#: core/templates/core/home.html:1470
+msgid "ارتباط با ما"
+msgstr "Contact us"
+
+#: core/templates/core/home.html:1471
+msgid "درباره ما"
+msgstr "About us"
+
+#: core/templates/core/home.html:1472
+msgid "تماس با ما"
+msgstr "Contact us"
+
+# | msgid "یکی از زیرمجموعه‌ها را انتخاب کن و با همان حالت Premium"
+#: quiz/templates/quiz/category_detail.html:460
+msgid "یکی از زیرمجموعه‌ها را انتخاب کن و با همان حالت Premium مطالعه، تمرین یا آزمون بده."
+msgstr "Choose a subcategory and continue learning with the same premium experience."
+
+#: quiz/templates/quiz/category_detail.html:493
+#, python-format
+msgid "%(question_count)s سوال"
+msgid_plural "%(question_count)s سوال"
+msgstr[0] ""
+msgstr[1] ""
+
+#: quiz/templates/quiz/category_detail.html:543
+msgid "این زیرمجموعه را انتخاب کن و سوالاتش را به‌صورت مرحله‌ای جلو ببر."
+msgstr "Select this subcategory and work through its questions step by step."
+
+#: quiz/templates/quiz/category_detail.html:557 quiz/templates/quiz/category_list.html:518
+msgid "مشاهده زیرمجموعه‌ها"
+msgstr "View Subcategories"
+
+# | msgid "حالت تمرین"
+#: quiz/templates/quiz/category_detail.html:562 quiz/templates/quiz/category_detail.html:574
+#: quiz/templates/quiz/exam_question.html:749
+msgid "تمرین"
+msgstr "Practice"
+
+#: quiz/templates/quiz/category_detail.html:567 quiz/templates/quiz/category_detail.html:579
+#: quiz/templates/quiz/exam_question.html:749
+msgid "مطالعه"
+msgstr "Read"
+
+#: quiz/templates/quiz/category_detail.html:593
+msgid "زیرمجموعه‌ای وجود ندارد"
+msgstr "No Subcategories Available"
+
+#: quiz/templates/quiz/category_detail.html:594
+msgid "برای این دسته هنوز زیرمجموعه‌ای ثبت نشده است."
+msgstr "No subcategories have been created for this category yet."
+
+#: quiz/templates/quiz/category_list.html:7 quiz/templates/quiz/category_list.html:418
+msgid "تمرین بر اساس دسته‌بندی"
+msgstr "Practice by Category"
+
+#: quiz/templates/quiz/category_list.html:421
+msgid ""
+"یک دسته‌بندی انتخاب کن و با حالت مطالعه، تمرین یا آزمون سوالات گواهینامه را مرحله‌به‌مرحله جلو "
+"ببر."
+msgstr "Choose a category and learn through Study, Practice, or Exam mode step by step."
+
+#: quiz/templates/quiz/category_list.html:504
+msgid "سوالات این بخش را بخوان، تمرین کن و در پایان با حالت آزمون خودت را بسنج."
+msgstr "Read the questions, practice them, and then test yourself in Exam Mode."
+
+#: quiz/templates/quiz/category_list.html:547
+msgid "هنوز دسته‌بندی‌ای وجود ندارد"
+msgstr "No Categories Available Yet"
+
+#: quiz/templates/quiz/category_list.html:548
+msgid "ابتدا از پنل مدیریت دسته‌بندی بساز."
+msgstr "Create categories first from the administration panel."
+
+#: quiz/templates/quiz/category_practice_result.html:7
+#: quiz/templates/quiz/category_practice_result.html:435
+msgid "نتیجه تمرین"
+msgstr "Practice Results"
+
+# | msgid "Practice"
+#: quiz/templates/quiz/category_practice_result.html:431
+msgid "Practice Result"
+msgstr "Practice"
+
+#: quiz/templates/quiz/category_practice_result.html:438
+msgid ""
+"این نتیجه مربوط به تمرین سوالات دسته‌بندی است، نه آزمون رسمی. جواب‌های اشتباه را مرور کن و دوباره"
+" تمرین را ادامه بده."
+msgstr ""
+"These results are from Practice Mode, not the official exam. Review your incorrect answers and "
+"keep practicing."
+
+#: quiz/templates/quiz/category_practice_result.html:468 quiz/templates/quiz/exam_result.html:522
+msgid "کل سوال‌ها"
+msgstr "Total Questions"
+
+#: quiz/templates/quiz/category_practice_result.html:473 quiz/templates/quiz/exam_history.html:400
+#: quiz/templates/quiz/exam_result.html:527
+msgid "پاسخ داده‌شده"
+msgstr "Answered"
+
+#: quiz/templates/quiz/category_practice_result.html:478 quiz/templates/quiz/exam_result.html:532
+msgid "درست"
+msgstr "Correct"
+
+#: quiz/templates/quiz/category_practice_result.html:483 quiz/templates/quiz/exam_result.html:537
+msgid "غلط"
+msgstr "Incorrect"
+
+#: quiz/templates/quiz/category_practice_result.html:492
+msgid "سوال‌های اشتباه برای مرور"
+msgstr "Questions to Review"
+
+#: quiz/templates/quiz/category_practice_result.html:505 quiz/templates/quiz/exam_result.html:575
+#: quiz/templates/quiz/exam_review.html:483
+msgid "جواب شما"
+msgstr "Your Answer"
+
+#: quiz/templates/quiz/category_practice_result.html:508
+#: quiz/templates/quiz/category_practice_result.html:519 quiz/templates/quiz/exam_question.html:926
+#: quiz/templates/quiz/exam_question.html:1047 quiz/templates/quiz/exam_result.html:579
+#: quiz/templates/quiz/exam_result.html:591 quiz/templates/quiz/exam_review.html:487
+#: quiz/templates/quiz/exam_review.html:499
+#, python-format
+msgid "گزینه %(option)s"
+msgstr "Option %(option)s"
+
+#: quiz/templates/quiz/category_practice_result.html:510
+msgid "بدون پاسخ"
+msgstr "No Answer"
+
+#: quiz/templates/quiz/category_practice_result.html:516 quiz/templates/quiz/exam_question.html:923
+#: quiz/templates/quiz/exam_result.html:588 quiz/templates/quiz/exam_review.html:495
+msgid "جواب صحیح"
+msgstr "Correct Answer"
+
+#: quiz/templates/quiz/category_practice_result.html:527 quiz/templates/quiz/exam_question.html:933
+#: quiz/templates/quiz/exam_question.html:1056 quiz/templates/quiz/exam_result.html:599
+#: quiz/templates/quiz/exam_review.html:507 quiz/templates/quiz/question_detail.html:903
+msgid "توضیح"
+msgstr "Explanation"
+
+#: quiz/templates/quiz/category_practice_result.html:546 quiz/templates/quiz/exam_result.html:618
+msgid "هیچ سوال اشتباهی نداشتی 🎉"
+msgstr "Perfect! No Incorrect Answers 🎉"
+
+#: quiz/templates/quiz/category_practice_result.html:547
+msgid "عالی بود. می‌تونی برگردی و دسته‌بندی بعدی را تمرین کنی."
+msgstr "Excellent! You can now continue with the next category."
+
+#: quiz/templates/quiz/exam_history.html:350
+msgid "Exam History"
+msgstr "Exam History"
+
+# | msgid ""
+# | "سوال‌هایی که قبلاً اشتباه پاسخ داده‌ای اینجا ذخیره می‌شوند تا دوباره مرورشان "
+# | "کنی و نقطه‌ضعف‌ها را تبدیل به قدرت کنی."
+#: quiz/templates/quiz/exam_history.html:357
+msgid ""
+"نتیجه آزمون‌هایی که قبلاً انجام داده‌ای را اینجا ببین، پاسخ‌ها را مرور کن و پیشرفتت را "
+"مرحله‌به‌مرحله دنبال کن."
+msgstr ""
+"Questions you answered incorrectly are saved here so you can review them and turn weaknesses into"
+" strengths."
+
+#: quiz/templates/quiz/exam_history.html:390
+#, python-format
+msgid "آزمون شماره %(exam_id)s"
+msgstr "Exam %(exam_id)s"
+
+# | msgid "تاریخچه آزمون‌ها"
+#: quiz/templates/quiz/exam_history.html:394
+msgid "تاریخ شروع:"
+msgstr "Exam History"
+
+# | msgid "امتیاز خطا:"
+#: quiz/templates/quiz/exam_history.html:407
+msgid "امتیاز خطا"
+msgstr "Error points"
+
+#: quiz/templates/quiz/exam_history.html:415 quiz/templates/quiz/exam_history.html:420
+msgid "وضعیت"
+msgstr "Status"
+
+# | msgid "قبولی"
+#: quiz/templates/quiz/exam_history.html:416
+msgid "قبول ✅"
+msgstr "Passed"
+
+#: quiz/templates/quiz/exam_history.html:421
+msgid "رد ❌"
+msgstr "Failed ❌"
+
+# | msgid "مشاهده شده"
+#: quiz/templates/quiz/exam_history.html:428
+msgid "مشاهده نتیجه"
+msgstr "Watched"
+
+#: quiz/templates/quiz/exam_history.html:436 quiz/templates/quiz/exam_result.html:498
+msgid "مرور پاسخ‌ها"
+msgstr "Review Answers"
+
+# | msgid "هنوز آزمونی ساخته نشده"
+#: quiz/templates/quiz/exam_history.html:455
+msgid "هنوز آزمونی انجام نداده‌ای."
+msgstr "No Exams Available Yet"
+
+#: quiz/templates/quiz/exam_history.html:456
+msgid "از اینجا اولین آزمونت را شروع کن و نتیجه‌اش در تاریخچه ذخیره می‌شود."
+msgstr "Start your first exam here; its result will be saved in your history."
+
+# | msgid "خروج از آزمون"
+#: quiz/templates/quiz/exam_history.html:460
+msgid "شروع اولین آزمون"
+msgstr "Exit Exam"
+
+#: quiz/templates/quiz/exam_mode_select.html:6 quiz/templates/quiz/exam_mode_select.html:20
+msgid "انتخاب حالت آزمون"
+msgstr "Select Exam Mode"
+
+#: quiz/templates/quiz/exam_mode_select.html:17
+msgid "Driving Theory"
+msgstr "Driving Theory"
+
+#: quiz/templates/quiz/exam_mode_select.html:23
+msgid "قبل از شروع مشخص کن قصد مطالعه، تمرین یا شبیه‌سازی آزمون واقعی را داری."
+msgstr "Before you begin, choose whether you want to Study, Practice, or take a Real Exam simulation."
+
+#: quiz/templates/quiz/exam_mode_select.html:44 quiz/templates/quiz/official_exams.html:494
+msgid "حالت تمرین"
+msgstr "Practice Mode"
+
+#: quiz/templates/quiz/exam_mode_select.html:47
+msgid "هر سؤال را پاسخ بده، نتیجه را همان لحظه ببین و همراه با توضیح یاد بگیر."
+msgstr "Answer each question, see the result instantly, and learn from the explanation."
+
+#: quiz/templates/quiz/exam_mode_select.html:52
+msgid "شروع تمرین ←"
+msgstr "Start Practice ←"
+
+#: quiz/templates/quiz/exam_mode_select.html:54
+msgid "شروع تمرین →"
+msgstr "Start Practice →"
+
+#: quiz/templates/quiz/exam_mode_select.html:67 quiz/templates/quiz/official_exams.html:424
+#: quiz/templates/quiz/official_exams.html:502
+msgid "حالت مطالعه"
+msgstr "Study Mode"
+
+#: quiz/templates/quiz/exam_mode_select.html:70
+msgid "تمام پاسخ‌های صحیح و توضیحات را بدون محدودیت زمانی مشاهده و مرور کن."
+msgstr "Review all correct answers and explanations without any time limit."
+
+#: quiz/templates/quiz/exam_mode_select.html:75
+msgid "شروع مطالعه ←"
+msgstr "Start Study ←"
+
+#: quiz/templates/quiz/exam_mode_select.html:77
+msgid "شروع مطالعه →"
+msgstr "Start Study →"
+
+#: quiz/templates/quiz/exam_mode_select.html:90 quiz/templates/quiz/exam_question.html:7
+#: quiz/templates/quiz/official_exams.html:424 quiz/templates/quiz/official_exams.html:486
+msgid "آزمون واقعی"
+msgstr "Real Exam"
+
+#: quiz/templates/quiz/exam_mode_select.html:93
+msgid "شبیه‌سازی کامل آزمون رسمی با زمان، امتیاز خطا و نتیجه نهایی."
+msgstr "A complete simulation of the official exam with a timer, penalty points, and final results."
+
+#: quiz/templates/quiz/exam_mode_select.html:98
+msgid "شروع آزمون ←"
+msgstr "Start Exam ←"
+
+#: quiz/templates/quiz/exam_mode_select.html:100
+msgid "شروع آزمون →"
+msgstr "Start Exam →"
+
+#: quiz/templates/quiz/exam_player.html:6
+msgid "آزمون شبیه‌ساز گواهینامه"
+msgstr "Driving Licence Exam Simulator"
+
+#: quiz/templates/quiz/exam_player.html:22
+msgid "No Image / Video"
+msgstr "No Image / Video"
+
+# | msgid "Question"
+#: quiz/templates/quiz/exam_player.html:29
+msgid "Video Question"
+msgstr "Question"
+
+#: quiz/templates/quiz/exam_player.html:35
+msgid "ابتدا فیلم را مشاهده کن، سپس برای پاسخ دادن وارد سوال شو."
+msgstr "Watch the video first, then proceed to answer the question."
+
+#: quiz/templates/quiz/exam_player.html:40
+msgid "Start Film"
+msgstr "Start Film"
+
+# | msgid "Question"
+#: quiz/templates/quiz/exam_player.html:45
+msgid "Go to Question"
+msgstr "Question"
+
+#: quiz/templates/quiz/exam_player.html:50
+#, python-format
+msgid "You can watch the video <span class=\"text-2xl\">%(count)s</span> more time(s)."
+msgstr "You can watch the video <span class=\"text-2xl\">%(count)s</span> more time(s)."
+
+#: quiz/templates/quiz/exam_player.html:64
+msgid "Basic knowledge"
+msgstr "Basic Knowledge"
+
+#: quiz/templates/quiz/exam_player.html:65
+msgid "Class B"
+msgstr "Class B"
+
+#: quiz/templates/quiz/exam_player.html:69
+#, python-format
+msgid "%(left)s Question(s) Left"
+msgstr "%(left)s Question(s) Left"
+
+#: quiz/templates/quiz/exam_player.html:84
+msgid "Cancel"
+msgstr "Cancel"
+
+#: quiz/templates/quiz/exam_player.html:87
+msgid "Favorite"
+msgstr "Favorite"
+
+#: quiz/templates/quiz/exam_player.html:92
+msgid "حل سؤال ←"
+msgstr "Solve question ←"
+
+#: quiz/templates/quiz/exam_player.html:92
+msgid "Solve →"
+msgstr "Solve →"
+
+#: quiz/templates/quiz/exam_question.html:723
+msgid "Question"
+msgstr "Question"
+
+#: quiz/templates/quiz/exam_question.html:724
+#, python-format
+msgid "سوال %(current)s از %(total)s"
+msgstr "Question %(current)s of %(total)s"
+
+#: quiz/templates/quiz/exam_question.html:730
+#, python-format
+msgid "%(percent)s%% completed"
+msgstr "%(percent)s%% Completed"
+
+#: quiz/templates/quiz/exam_question.html:735
+msgid "Timer"
+msgstr "Timer"
+
+#: quiz/templates/quiz/exam_question.html:735
+msgid "Mode"
+msgstr "Mode"
+
+#: quiz/templates/quiz/exam_question.html:756
+msgid "اطلاعات پایه"
+msgstr "Basic Information"
+
+#: quiz/templates/quiz/exam_question.html:782
+msgid "کلاس B"
+msgstr "Class B"
+
+#: quiz/templates/quiz/exam_question.html:808
+msgid "آبی: سوال فعلی"
+msgstr "Blue: Current Question"
+
+#: quiz/templates/quiz/exam_question.html:809
+msgid "سبز: پاسخ درست"
+msgstr "Green: Correct Answer"
+
+#: quiz/templates/quiz/exam_question.html:810
+msgid "زرد: پاسخ اشتباه"
+msgstr "Yellow: Incorrect Answer"
+
+#: quiz/templates/quiz/exam_question.html:811
+msgid "خاکستری: بدون پاسخ"
+msgstr "Gray: No Answer"
+
+#: quiz/templates/quiz/exam_question.html:814
+msgid "خروج از آزمون"
+msgstr "Exit Exam"
+
+#: quiz/templates/quiz/exam_question.html:840
+msgid "سوال ویدیویی"
+msgstr "Video Question"
+
+#: quiz/templates/quiz/exam_question.html:855
+msgid "ذخیره شده"
+msgstr "Saved"
+
+#: quiz/templates/quiz/exam_question.html:855
+msgid "ذخیره سوال"
+msgstr "Save Question"
+
+#: quiz/templates/quiz/exam_question.html:860 quiz/templates/quiz/question_detail.html:706
+msgid "نمایش ترجمه فارسی"
+msgstr "Show Persian Translation"
+
+#: quiz/templates/quiz/exam_question.html:865
+msgid "صوتی"
+msgstr "Audio"
+
+#: quiz/templates/quiz/exam_question.html:940 quiz/templates/quiz/exam_question.html:1063
+msgid "ادامه"
+msgstr "Continue"
+
+#: quiz/templates/quiz/exam_question.html:943 quiz/templates/quiz/exam_question.html:945
+msgid "پایان مطالعه"
+msgstr "Finish Study"
+
+#: quiz/templates/quiz/exam_question.html:949
+msgid "لغو"
+msgstr "Cancel"
+
+#: quiz/templates/quiz/exam_question.html:1031
+msgid "ثبت و ادامه"
+msgstr "Submit & Continue"
+
+#: quiz/templates/quiz/exam_question.html:1031
+msgid "ثبت پاسخ"
+msgstr "Submit Answer"
+
+#: quiz/templates/quiz/exam_question.html:1040 quiz/templates/quiz/question_detail.html:884
+msgid "جواب صحیح بود ✅"
+msgstr "Correct Answer ✅"
+
+#: quiz/templates/quiz/exam_question.html:1042 quiz/templates/quiz/question_detail.html:886
+msgid "جواب اشتباه بود ❌"
+msgstr "Incorrect Answer ❌"
+
+#: quiz/templates/quiz/exam_question.html:1044 quiz/templates/quiz/question_detail.html:888
+msgid "جواب صحیح:"
+msgstr "Correct Answer:"
+
+#: quiz/templates/quiz/exam_question.html:1067 quiz/templates/quiz/exam_question.html:1069
+msgid "پایان تمرین"
+msgstr "Finish Practice"
+
+#: quiz/templates/quiz/exam_question.html:1072
+msgid "مشاهده نتیجه آزمون"
+msgstr "View Exam Results"
+
+#: quiz/templates/quiz/exam_question.html:1123 quiz/templates/quiz/question_detail.html:955
+msgid "مرورگر شما از خواندن متن پشتیبانی نمی‌کند."
+msgstr "Your browser does not support text-to-speech."
+
+#: quiz/templates/quiz/exam_result.html:7
+msgid "نتیجه آزمون"
+msgstr "Exam Results"
+
+#: quiz/templates/quiz/exam_result.html:470
+msgid "Exam Result"
+msgstr "Exam Result"
+
+#: quiz/templates/quiz/exam_result.html:479
+msgid "قبول شدی"
+msgstr "You Passed"
+
+#: quiz/templates/quiz/exam_result.html:481
+msgid "قبول نشدی"
+msgstr "You Didn't Pass"
+
+#: quiz/templates/quiz/exam_result.html:485
+msgid "نتیجه آزمون شبیه‌سازی‌شده گواهینامه. امتیاز خطا، جواب‌های درست و سوال‌های اشتباه را اینجا مرور کن."
+msgstr ""
+"Review your simulated driving-theory result, error points, correct answers, and incorrect "
+"questions here."
+
+#: quiz/templates/quiz/exam_result.html:490
+msgid "شروع آزمون جدید"
+msgstr "Start a New Exam"
+
+#: quiz/templates/quiz/exam_result.html:543
+msgid "Fehlerpunkte / امتیاز خطا"
+msgstr "Error points"
+
+#: quiz/templates/quiz/exam_result.html:545
+msgid "معیار قبولی فعلی: حداکثر ۱۰ امتیاز خطا"
+msgstr "Current passing requirement: maximum 10 penalty points."
+
+#: quiz/templates/quiz/exam_result.html:561
+#, python-format
+msgid "سوال %(number)s"
+msgstr "Question %(number)s"
+
+#: quiz/templates/quiz/exam_result.html:568
+msgid "امتیاز خطا:"
+msgstr "Penalty Points:"
+
+#: quiz/templates/quiz/exam_result.html:619
+msgid "عالی بود. این دقیقاً همان چیزی است که برای قبولی می‌خواهیم."
+msgstr "Excellent! That's exactly the performance needed to pass."
+
+#: quiz/templates/quiz/exam_review.html:7
+msgid "مرور آزمون"
+msgstr "Exam Review"
+
+#: quiz/templates/quiz/exam_review.html:374
+msgid "Exam Review"
+msgstr "Exam Review"
+
+#: quiz/templates/quiz/exam_review.html:378
+msgid "مرور پاسخ‌های آزمون"
+msgstr "Review Exam Answers"
+
+#: quiz/templates/quiz/exam_review.html:381
+msgid ""
+"پاسخ‌های درست و اشتباه این آزمون را با جزئیات بررسی کن و سوال‌هایی که نیاز به مرور دارند را بهتر "
+"یاد بگیر."
+msgstr ""
+"Review every correct and incorrect answer in detail and strengthen the topics that need more "
+"practice."
+
+#: quiz/templates/quiz/exam_review.html:386
+msgid "برگشت به نتیجه"
+msgstr "Back to Results"
+
+#: quiz/templates/quiz/exam_review.html:414
+#, python-format
+msgid "سوال %(number)s — %(category)s"
+msgstr "Question %(number)s — %(category)s"
+
+#: quiz/templates/quiz/exam_review.html:423
+msgid "درست ✅"
+msgstr "Correct ✅"
+
+#: quiz/templates/quiz/exam_review.html:425
+msgid "اشتباه ❌"
+msgstr "Incorrect ❌"
+
+#: quiz/templates/quiz/exam_review.html:489
+msgid "پاسخی ثبت نشده"
+msgstr "No Answer Submitted"
+
+#: quiz/templates/quiz/exam_review.html:518
+msgid "هنوز پاسخی برای این آزمون ثبت نشده است."
+msgstr "No answers have been recorded for this exam."
+
+#: quiz/templates/quiz/favorites.html:346
+msgid "Saved Questions"
+msgstr "Saved Questions"
+
+#: quiz/templates/quiz/favorites.html:350
+msgid "سوال‌های علاقه‌مندی"
+msgstr "Favorite Questions"
+
+#: quiz/templates/quiz/favorites.html:353
+msgid ""
+"سوال‌هایی که برای مرور بعدی ذخیره کرده‌ای اینجا جمع می‌شوند. هر وقت خواستی، مستقیم آن‌ها را تمرین"
+" یا بررسی کن."
+msgstr ""
+"Questions you've saved for later review are collected here. Practice or review them whenever you "
+"like."
+
+#: quiz/templates/quiz/favorites.html:358
+msgid "تمرین علاقه‌مندی‌ها"
+msgstr "Practice Favorites"
+
+#: quiz/templates/quiz/favorites.html:405 quiz/templates/quiz/my_mistakes.html:448
+msgid "باز کردن سوال"
+msgstr "Open Question"
+
+#: quiz/templates/quiz/favorites.html:414
+msgid "حذف از علاقه‌مندی‌ها"
+msgstr "Remove from Favorites"
+
+#: quiz/templates/quiz/favorites.html:434
+msgid "هنوز سوالی به علاقه‌مندی‌ها اضافه نکرده‌ای ⭐"
+msgstr "You haven't added any favorite questions yet ⭐"
+
+#: quiz/templates/quiz/favorites.html:437
+msgid ""
+"هنگام تمرین یا آزمون، روی دکمه ذخیره سوال بزن تا سوال‌های مهم برای مرور بعدی اینجا نمایش داده "
+"شوند."
+msgstr ""
+"While practicing or taking an exam, click 'Save Question' to keep important questions here for "
+"later review."
+
+#: quiz/templates/quiz/my_mistakes.html:7 quiz/templates/quiz/my_mistakes.html:376
+msgid "سوال‌های اشتباه من"
+msgstr "My Wrong Questions"
+
+#: quiz/templates/quiz/my_mistakes.html:372
+msgid "Wrong Questions"
+msgstr "Wrong Questions"
+
+#: quiz/templates/quiz/my_mistakes.html:379
+msgid ""
+"سوال‌هایی که قبلاً اشتباه پاسخ داده‌ای اینجا ذخیره می‌شوند تا دوباره مرورشان کنی و نقطه‌ضعف‌ها را"
+" تبدیل به قدرت کنی."
+msgstr ""
+"Questions you answered incorrectly are saved here so you can review them and turn weaknesses into"
+" strengths."
+
+#: quiz/templates/quiz/my_mistakes.html:384
+msgid "تمرین سوال‌های اشتباه"
+msgstr "Practice Wrong Questions"
+
+#: quiz/templates/quiz/my_mistakes.html:457
+msgid "تمرین اشتباه‌ها"
+msgstr "Practice Mistakes"
+
+#: quiz/templates/quiz/my_mistakes.html:474
+msgid "هنوز هیچ سوال اشتباهی نداری 🎉"
+msgstr "You don't have any wrong questions yet 🎉"
+
+# | msgid ""
+# | "عالیه! هنوز سوالی برای مرور در این بخش ثبت نشده است. همین روند را ادامه "
+# | "بده."
+#: quiz/templates/quiz/my_mistakes.html:477
+msgid "عالیه! هنوز سوالی برای مرور در این بخش ثبت نشده است. همین مسیر را ادامه بده."
+msgstr "Excellent! There are no questions to review yet. Keep up the great work."
+
+#: quiz/templates/quiz/official_exams.html:417
+msgid "Official Driving Exams"
+msgstr "Official Driving Exams"
+
+#: quiz/templates/quiz/official_exams.html:457
+msgid "آزمون رسمی"
+msgstr "Official Exam"
+
+#: quiz/templates/quiz/official_exams.html:476
+msgid "Progress"
+msgstr "Progress"
+
+#: quiz/templates/quiz/official_exams.html:520
+msgid "هنوز آزمونی ساخته نشده"
+msgstr "No Exams Available Yet"
+
+#: quiz/templates/quiz/official_exams.html:521
+msgid "ابتدا در پنل مدیریت زیرمجموعه‌های «هفتاد آزمون اصلی» را بساز."
+msgstr "First create the '70 Official Exams' subcategories in the admin panel."
+
+# | msgid "سوالات آزمون"
+#: quiz/templates/quiz/question_detail.html:7 quiz/templates/quiz/question_detail.html:657
+msgid "سوال آزمون"
+msgstr "Exam Questions"
+
+#: quiz/templates/quiz/question_detail.html:652 videos/templates/videos/video_detail.html:786
+#: videos/templates/videos/video_list.html:588
+msgid "برگشت به داشبورد"
+msgstr "Back to Dashboard"
+
+#: quiz/templates/quiz/question_detail.html:659
+msgid "با تمرین مداوم، رانندگی ایمن را یاد بگیر"
+msgstr "Learn safe driving through consistent practice."
+
+#: quiz/templates/quiz/question_detail.html:672
+msgid "Practice"
+msgstr "Practice"
+
+#: quiz/templates/quiz/question_detail.html:783 quiz/templates/quiz/question_detail.html:812
+#: quiz/templates/quiz/question_detail.html:841 quiz/templates/quiz/question_detail.html:871
+msgid "پاسخ شما"
+msgstr "Your Answer"
+
+#: quiz/templates/quiz/question_detail.html:785 quiz/templates/quiz/question_detail.html:814
+#: quiz/templates/quiz/question_detail.html:843 quiz/templates/quiz/question_detail.html:873
+msgid "پاسخ صحیح"
+msgstr "Correct answer"
+
+#: quiz/templates/quiz/question_detail.html:921
+msgid "بازگشت به داشبورد"
+msgstr "Return to Dashboard"
+
+#: videos/templates/videos/video_detail.html:599
+msgid "درس‌ها"
+msgstr "Lessons"
+
+#: videos/templates/videos/video_detail.html:616
+msgid "تماشا در یوتیوب"
+msgstr "Watch on YouTube"
+
+#: videos/templates/videos/video_detail.html:638
+msgid "مشاهده درس"
+msgstr "View Lesson"
+
+#: videos/templates/videos/video_detail.html:646
+msgid "علامت‌گذاری به‌عنوان مشاهده‌نشده"
+msgstr "Mark as Unwatched"
+
+#: videos/templates/videos/video_detail.html:647
+msgid "مشاهده شده"
+msgstr "Watched"
+
+#: videos/templates/videos/video_detail.html:655 videos/templates/videos/video_detail.html:656
+msgid "علامت‌گذاری به‌عنوان مشاهده‌شده"
+msgstr "Mark as Watched"
+
+#: videos/templates/videos/video_detail.html:665
+msgid "هنوز ویدیویی در این دسته‌بندی وجود ندارد."
+msgstr "There are no videos in this category yet."
+
+#: videos/templates/videos/video_detail.html:672
+msgid "هنوز دسته‌بندی‌ای ساخته نشده است."
+msgstr "No categories have been created yet."
+
+#: videos/templates/videos/video_detail.html:763
+msgid "درس رانندگی"
+msgstr "Driving Lesson"
+
+#: videos/templates/videos/video_detail.html:795
+msgid "باز کردن در یوتیوب"
+msgstr "Open on YouTube"
+
+#: videos/templates/videos/video_detail.html:820
+msgid "برای این ویدیو هنوز توضیحی ثبت نشده است."
+msgstr "No description has been added for this video yet."
+
+#: videos/templates/videos/video_detail.html:828
+msgid "ادامه مسیر یادگیری"
+msgstr "Continue Learning"
+
+#: videos/templates/videos/video_detail.html:832
+msgid "درس‌های پیشنهادی بعدی"
+msgstr "Recommended Next Lessons"
+
+#: videos/templates/videos/video_detail.html:846
+msgid "شروع این درس"
+msgstr "Start This Lesson"
+
+#: videos/templates/videos/video_list.html:7
+msgid "ویدیوهای آموزشی گواهینامه آلمان"
+msgstr "German Driving Licence Video Lessons"
+
+#: videos/templates/videos/video_list.html:11
+msgid "ویدیوهای آموزشی گواهینامه آلمان به زبان فارسی، دسته‌بندی‌شده برای یادگیری بهتر آزمون تئوری."
+msgstr ""
+"Persian-language German driving licence video lessons, organized by category for effective theory"
+" exam preparation."
+
+#: videos/templates/videos/video_list.html:571
+msgid "درس‌های رانندگی"
+msgstr "Driving Lessons"
+
+#: videos/templates/videos/video_list.html:580
+msgid ""
+"همه درس‌های ویدیویی بر اساس دسته‌بندی مرتب شده‌اند تا مسیر یادگیری گواهینامه آلمان ساده‌تر و "
+"حرفه‌ای‌تر شود."
+msgstr ""
+"All video lessons are organized by category to make your German driving licence learning journey "
+"easier and more structured."
+
+#: videos/templates/videos/video_list.html:654
+#, python-format
+msgid "تماشای %(video_title)s"
+msgstr "Watch %(video_title)s"
+
+#: videos/templates/videos/video_list.html:721
+msgid "هنوز دسته‌بندی‌ای ساخته نشده"
+msgstr "No Categories Created Yet"
+
+#: videos/templates/videos/video_list.html:725
+msgid "از پنل مدیریت، دسته‌بندی و ویدیو اضافه کنید."
+msgstr "Add categories and videos from the administration panel."
+
+#: i18n_fix:1
+msgid "هسته سایت"
+msgstr "Site content"
+
+#: i18n_fix:1
+msgid "آزمون‌ها"
+msgstr "Quizzes"
+
+#: i18n_fix:1
+msgid "قرمز"
+msgstr "Red"
+
+#: i18n_fix:1
+msgid "آبی"
+msgstr "Blue"
+
+#: i18n_fix:1
+msgid "سبز"
+msgstr "Green"
+
+#: i18n_fix:1
+msgid "بنفش"
+msgstr "Purple"
+
+#: i18n_fix:1
+msgid "عنوان"
+msgstr "Title"
+
+#: i18n_fix:1
+msgid "متن رنگی داخل عنوان"
+msgstr "Highlighted title text"
+
+#: i18n_fix:1
+msgid "توضیح کوتاه"
+msgstr "Short description"
+
+#: i18n_fix:1
+msgid "عکس بنر"
+msgstr "Banner image"
+
+#: i18n_fix:1
+msgid "متن Badge"
+msgstr "Badge text"
+
+#: i18n_fix:1
+msgid "آیکون Badge"
+msgstr "Badge icon"
+
+#: i18n_fix:1
+msgid "متن دکمه اصلی"
+msgstr "Primary button text"
+
+#: i18n_fix:1
+msgid "لینک دکمه اصلی"
+msgstr "Primary button link"
+
+#: i18n_fix:1
+msgid "متن دکمه دوم"
+msgstr "Secondary button text"
+
+#: i18n_fix:1
+msgid "لینک دکمه دوم"
+msgstr "Secondary button link"
+
+#: i18n_fix:1
+msgid "آیکون کارت سمت چپ"
+msgstr "Preview card icon"
+
+#: i18n_fix:1
+msgid "عنوان کارت سمت چپ"
+msgstr "Preview card title"
+
+#: i18n_fix:1
+msgid "متن کارت سمت چپ"
+msgstr "Preview card text"
+
+#: i18n_fix:1
+msgid "رنگ اسلاید"
+msgstr "Slide color"
+
+#: i18n_fix:1
+msgid "ترتیب نمایش"
+msgstr "Display order"
+
+#: i18n_fix:1
+msgid "فعال باشد؟"
+msgstr "Active"
+
+#: i18n_fix:1
+msgid "اسلاید صفحه اصلی"
+msgstr "Homepage slide"
+
+#: i18n_fix:1
+msgid "اسلایدهای صفحه اصلی"
+msgstr "Homepage slides"
+
+#: i18n_fix:1
+msgid "محتوای اسلاید"
+msgstr "Slide content"
+
+#: i18n_fix:1
+msgid "دکمه‌ها"
+msgstr "Buttons"
+
+#: i18n_fix:1
+msgid "بخش پیش‌نمایش"
+msgstr "Preview section"
+
+#: i18n_fix:1
+msgid "تصویر و ظاهر"
+msgstr "Image and appearance"
+
+#: i18n_fix:1
+msgid "تنظیمات انتشار"
+msgstr "Publishing settings"
+
+#: i18n_fix:1
+msgid "دسته‌بندی والد"
+msgstr "Parent category"
+
+#: i18n_fix:1
+msgid "نام"
+msgstr "Name"
+
+#: i18n_fix:1
+msgid "نامک"
+msgstr "Slug"
+
+#: i18n_fix:1
+msgid "دسته‌بندی سؤال"
+msgstr "Question category"
+
+#: i18n_fix:1
+msgid "دسته‌بندی‌های سؤال"
+msgstr "Question categories"
+
+#: i18n_fix:1
+msgid "دانش پایه"
+msgstr "Basic knowledge"
+
+#: i18n_fix:1
+msgid "دسته‌بندی اصلی"
+msgstr "Main category"
+
+#: i18n_fix:1
+msgid "دسته‌بندی والد اصلی را انتخاب کنید؛ برای مثال مواد مخدر یا هفتاد آزمون اصلی."
+msgstr "Select the main parent category; for example, drugs or the seventy official exams."
+
+#: i18n_fix:1
+msgid "زیرمجموعه"
+msgstr "Subcategory"
+
+#: i18n_fix:1
+msgid "زیردسته"
+msgstr "Subcategory"
+
+#: i18n_fix:1
+msgid "زیردسته‌ها"
+msgstr "Subcategories"
+
+#: i18n_fix:1
+msgid "زیرمجموعه را انتخاب کنید؛ برای مثال هروئین یا آزمون ۱."
+msgstr "Select a subcategory; for example, heroin or Exam 1."
+
+#: i18n_fix:1
+msgid "سناریو"
+msgstr "Scenario"
+
+#: i18n_fix:1
+msgid "ترجمه سناریو"
+msgstr "Scenario translation"
+
+#: i18n_fix:1
+msgid "متن سؤال"
+msgstr "Question text"
+
+#: i18n_fix:1
+msgid "ترجمه سؤال"
+msgstr "Question translation"
+
+#: i18n_fix:1
+msgid "ترجمه فارسی سؤال"
+msgstr "Persian translation of the question"
+
+#: i18n_fix:1
+msgid "تصویر"
+msgstr "Image"
+
+#: i18n_fix:1
+msgid "نشانی ویدیو"
+msgstr "Video URL"
+
+#: i18n_fix:1
+msgid "حداکثر دفعات پخش ویدیو"
+msgstr "Maximum video replays"
+
+#: i18n_fix:1
+msgid "حداکثر تعداد دفعات مجاز مشاهده ویدیو پیش از پاسخ‌دادن"
+msgstr "Maximum number of times the video may be viewed before answering"
+
+#: i18n_fix:1
+msgid "گزینه ۱"
+msgstr "Option 1"
+
+#: i18n_fix:1
+msgid "ترجمه گزینه ۱"
+msgstr "Option 1 translation"
+
+#: i18n_fix:1
+msgid "گزینه ۲"
+msgstr "Option 2"
+
+#: i18n_fix:1
+msgid "ترجمه گزینه ۲"
+msgstr "Option 2 translation"
+
+#: i18n_fix:1
+msgid "گزینه ۳"
+msgstr "Option 3"
+
+#: i18n_fix:1
+msgid "ترجمه گزینه ۳"
+msgstr "Option 3 translation"
+
+#: i18n_fix:1
+msgid "گزینه ۴"
+msgstr "Option 4"
+
+#: i18n_fix:1
+msgid "ترجمه گزینه ۴"
+msgstr "Option 4 translation"
+
+#: i18n_fix:1
+msgid "پاسخ‌های صحیح"
+msgstr "Correct answers"
+
+#: i18n_fix:1
+msgid "برای چند پاسخ صحیح، شماره‌ها را با ویرگول وارد کنید؛ مانند 1,2,4"
+msgstr "For multiple correct answers, enter the numbers separated by commas, such as 1,2,4."
+
+#: i18n_fix:1
+msgid "توضیح پاسخ"
+msgstr "Answer explanation"
+
+#: i18n_fix:1
+msgid "منتشر شده"
+msgstr "Published"
+
+#: i18n_fix:1
+msgid "زمان ایجاد"
+msgstr "Created at"
+
+#: i18n_fix:1
+msgid "سؤال"
+msgstr "Question"
+
+#: i18n_fix:1
+msgid "سؤال‌ها"
+msgstr "Questions"
+
+#: i18n_fix:1
+msgid "کاربر"
+msgstr "User"
+
+#: i18n_fix:1
+msgid "حالت"
+msgstr "Mode"
+
+#: i18n_fix:1
+msgid "زمان شروع"
+msgstr "Started at"
+
+#: i18n_fix:1
+msgid "زمان پایان"
+msgstr "Finished at"
+
+#: i18n_fix:1
+msgid "پایان یافته"
+msgstr "Finished"
+
+#: i18n_fix:1
+msgid "جلسه آزمون"
+msgstr "Exam session"
+
+#: i18n_fix:1
+msgid "جلسه‌های آزمون"
+msgstr "Exam sessions"
+
+#: i18n_fix:1
+msgid "پاسخ انتخاب‌شده"
+msgstr "Selected answer"
+
+#: i18n_fix:1
+msgid "پاسخ‌های انتخاب‌شده"
+msgstr "Selected answers"
+
+#: i18n_fix:1
+msgid "برای چند پاسخ انتخابی، شماره‌ها را با ویرگول وارد کنید؛ مانند 1,2,4"
+msgstr "For multiple selected answers, enter the numbers separated by commas, such as 1,2,4."
+
+#: i18n_fix:1
+msgid "صحیح است"
+msgstr "Is correct"
+
+#: i18n_fix:1
+msgid "زمان پاسخ"
+msgstr "Answered at"
+
+#: i18n_fix:1
+msgid "پاسخ آزمون"
+msgstr "Exam answer"
+
+#: i18n_fix:1
+msgid "پاسخ‌های آزمون"
+msgstr "Exam answers"
+
+#: i18n_fix:1
+msgid "سؤال اشتباه"
+msgstr "Incorrect question"
+
+#: i18n_fix:1
+msgid "سؤال‌های اشتباه"
+msgstr "Incorrect questions"
+
+#: i18n_fix:1
+msgid "سؤال موردعلاقه"
+msgstr "Favorite question"
+
+#: i18n_fix:1
+msgid "سؤال‌های موردعلاقه"
+msgstr "Favorite questions"
+
+#: i18n_fix:1
+msgid "ترجمه سؤال‌های انتخاب‌شده به فارسی با Gemini"
+msgstr "Translate selected questions into Persian with Gemini"
+
+#: i18n_fix:1
+msgid "محتوای سوال"
+msgstr "Question content"
+
+#: i18n_fix:1
+msgid "گزینه‌های پاسخ"
+msgstr "Answer options"
+
+#: i18n_fix:1
+msgid "توضیحات و تنظیمات آزمون"
+msgstr "Explanation and exam settings"
+
+#: i18n_fix:1
+msgid "دسته‌بندی ویدیو"
+msgstr "Video category"
+
+#: i18n_fix:1
+msgid "دسته‌بندی‌های ویدیو"
+msgstr "Video categories"
+
+#: i18n_fix:1
+msgid "توضیحات"
+msgstr "Description"
+
+#: i18n_fix:1
+msgid "نشانی یوتیوب"
+msgstr "YouTube URL"
+
+#: i18n_fix:1
+msgid "زمان مشاهده"
+msgstr "Watched at"
+
+#: i18n_fix:1
+msgid "ویدیوی مشاهده‌شده"
+msgstr "Watched video"
+
+#: i18n_fix:1
+msgid "محتوای ویدیو"
+msgstr "Video content"
+
+#: i18n_fix:1
+msgid "دسته‌بندی و ویدیو"
+msgstr "Category and video"
+
+#: i18n_fix:1
+msgid "متغیر GEMINI_API_KEY تنظیم نشده است."
+msgstr "The GEMINI_API_KEY environment variable is not configured."
+
+#: i18n_fix:1
+#, python-format
+msgid "ترجمه سؤال شماره %(question_id)s ناموفق بود: %(error)s"
+msgstr "Translation of question %(question_id)s failed: %(error)s"
+
+#: i18n_fix:1
+#, python-format
+msgid "%(count)s سؤال با موفقیت به فارسی ترجمه شد."
+msgstr "%(count)s question(s) were successfully translated into Persian."
+
+#: i18n_fix:1
+#, python-format
+msgid "ترجمه %(count)s سؤال ناموفق بود."
+msgstr "Translation failed for %(count)s question(s)."
+

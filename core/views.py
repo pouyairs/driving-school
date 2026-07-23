@@ -6,15 +6,25 @@ from django.shortcuts import render
 
 from quiz.models import ExamAnswer, ExamSession, Question, QuizCategory, WrongQuestion
 from videos.models import Category, Video, WatchedVideo
+from .models import HeroSlide
 
 
 def home(request):
     User = get_user_model()
 
+    hero_slides = HeroSlide.objects.filter(is_active=True).order_by("order", "-created_at")
+
+    featured_videos = (
+        Video.objects.filter(is_published=True)
+        .order_by("order", "-created_at")[:3]
+    )
+
     return render(
         request,
         "core/home.html",
         {
+            "hero_slides": hero_slides,
+            "featured_videos": featured_videos,
             "videos_count": Video.objects.filter(is_published=True).count(),
             "courses_count": Category.objects.count(),
             "students_count": User.objects.count(),
@@ -30,9 +40,7 @@ def dashboard(request):
     total_videos = Video.objects.filter(is_published=True).count()
 
     watched_video_ids = list(
-        WatchedVideo.objects.filter(
-            user=request.user
-        ).values_list("video_id", flat=True)
+        WatchedVideo.objects.filter(user=request.user).values_list("video_id", flat=True)
     )
 
     watched_count = len(watched_video_ids)
@@ -71,7 +79,7 @@ def dashboard(request):
         .filter(parent__isnull=False)
         .exclude(parent__slug="hftd-zmon-sl")
         .order_by("id")
-        )
+    )
 
     for category in learning_categories:
         question_ids = Question.objects.filter(
@@ -172,9 +180,7 @@ def admin_reports(request):
         ExamAnswer.objects.filter(is_correct=False)
         .exclude(question__category__slug="hftd-zmon-sl")
         .exclude(question__category__parent__slug="hftd-zmon-sl")
-        .values(
-            "question__category__name",
-        )
+        .values("question__category__name")
         .annotate(wrong_count=Count("id"))
         .order_by("-wrong_count")[:10]
     )
@@ -218,5 +224,11 @@ def admin_reports(request):
             "total_revenue": 0,
         },
     )
+
+
 def coming_soon(request):
     return render(request, "core/coming_soon.html")
+
+
+def custom_404(request, exception):
+    return render(request, "core/404.html", status=404)

@@ -1,350 +1,1201 @@
 {% extends "base/base.html" %}
+{% load i18n %}
+
+{% get_current_language_bidi as LANGUAGE_BIDI %}
 
 {% block title %}
-داشبورد یادگیری
+{% trans "داشبورد یادگیری" %}
 {% endblock %}
 
 {% block content %}
-<main class="min-h-screen bg-slate-950 text-white">
-    <div class="flex">
+<style>
 
-        <!-- Sidebar -->
-        <aside class="hidden min-h-screen w-72 border-l border-white/10 bg-slate-900/50 p-6 lg:block">
-            <div class="mb-10">
-                <h2 class="text-2xl font-black">داشبورد</h2>
-                <p class="mt-2 text-sm text-slate-400">آموزش گواهینامه آلمان</p>
-            </div>
+    .dash-page[dir="rtl"] {
+        direction: rtl;
+    }
 
-            <nav class="space-y-3">
-                <a href="/dashboard/" class="flex items-center rounded-2xl bg-blue-500 px-4 py-3 font-bold">
-                    داشبورد
-                </a>
+    .dash-page[dir="ltr"] {
+        direction: ltr;
+    }
 
-                <a href="#progress" class="flex items-center rounded-2xl px-4 py-3 text-slate-300 transition hover:bg-white/5">
-                    پیشرفت من
-                </a>
+    .dash-page[dir="ltr"] .dash-road {
+        left: auto;
+        right: 0;
+        transform: scaleX(-1);
+    }
 
-                <a href="#videos" class="flex items-center rounded-2xl px-4 py-3 text-slate-300 transition hover:bg-white/5">
-                    ویدیوهای آموزشی
-                </a>
+    .dash-page[dir="ltr"] .dash-kicker,
+    .dash-page[dir="ltr"] .dash-section-title,
+    .dash-page[dir="ltr"] .dash-section-desc {
+        text-align: left;
+    }
 
-                <a href="/quiz/history/" class="flex items-center rounded-2xl px-4 py-3 text-slate-300 transition hover:bg-white/5">
-                    تاریخچه آزمون‌ها
-                </a>
+    .dash-page[dir="rtl"] .dash-kicker,
+    .dash-page[dir="rtl"] .dash-section-title,
+    .dash-page[dir="rtl"] .dash-section-desc {
+        text-align: right;
+    }
 
-                <a href="/quiz/my-mistakes/" class="flex items-center rounded-2xl px-4 py-3 text-slate-300 transition hover:bg-white/5">
-                    سوال‌های اشتباه
-                </a>
+    .dash-page {
+        min-height: 100vh;
+        color: #ffffff;
+        background:
+            radial-gradient(circle at 50% -20%, rgba(30, 64, 175, 0.13), transparent 32%),
+            radial-gradient(circle at 12% 10%, rgba(127, 29, 29, 0.18), transparent 30%),
+            radial-gradient(circle at 90% 85%, rgba(34, 197, 94, 0.08), transparent 28%),
+            #020617;
+        font-family: inherit;
+        padding: 22px;
+    }
 
-                <a href="/quiz/favorites/" class="flex items-center rounded-2xl px-4 py-3 text-slate-300 transition hover:bg-white/5">
-                    علاقه‌مندی‌ها
-                </a>
+    .dash-shell {
+        max-width: 1560px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 290px minmax(0, 1fr);
+        gap: 28px;
+        align-items: start;
+    }
 
-                <a href="/quiz/categories/" class="flex items-center rounded-2xl px-4 py-3 text-slate-300 transition hover:bg-white/5">
-                    دسته‌بندی‌ها
-                </a>
-            </nav>
+    .dash-glass {
+        border: 1px solid rgba(100, 116, 139, 0.52);
+        background:
+            radial-gradient(circle at 14% 8%, rgba(37, 99, 235, 0.12), transparent 32%),
+            linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.985));
+        box-shadow: 0 18px 44px rgba(0,0,0,0.26);
+    }
+
+    .dash-sidebar {
+        position: sticky;
+        top: 22px;
+        display: grid;
+        gap: 18px;
+    }
+
+    .dash-profile {
+        border-radius: 26px;
+        padding: 20px;
+    }
+
+    .dash-profile-head {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 22px;
+    }
+
+    .dash-avatar {
+        width: 62px;
+        height: 62px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        border: 1px solid rgba(168, 85, 247, 0.48);
+        background: rgba(168, 85, 247, 0.13);
+        color: #c084fc;
+        font-size: 28px;
+        font-weight: 1000;
+    }
+
+    .dash-name {
+        margin: 0;
+        color: #ffffff;
+        font-size: 20px;
+        font-weight: 1000;
+    }
+
+    .dash-sub {
+        margin: 6px 0 0;
+        color: #94a3b8;
+        font-size: 13px;
+        font-weight: 750;
+    }
+
+    .dash-nav {
+        display: grid;
+        gap: 8px;
+    }
+
+    .dash-nav-link {
+        min-height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-radius: 14px;
+        border: 1px solid rgba(100, 116, 139, 0.30);
+        background: rgba(2, 6, 23, 0.48);
+        padding: 0 16px;
+        color: #e2e8f0;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 950;
+        transition: 0.2s ease;
+    }
+
+    .dash-nav-link:hover,
+    .dash-nav-link.active {
+        border-color: rgba(248, 113, 113, 0.52);
+        background: rgba(244, 63, 94, 0.12);
+        color: #fb7185;
+        transform: translateY(-1px);
+    }
+
+    .dash-side-card {
+        border-radius: 22px;
+        padding: 20px;
+    }
+
+    .dash-side-title {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 1000;
+    }
+
+    .dash-side-text {
+        margin: 10px 0 0;
+        color: #94a3b8;
+        line-height: 1.8;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .dash-streak {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 16px;
+        border-radius: 16px;
+        background: rgba(234,179,8,0.11);
+        border: 1px solid rgba(250,204,21,0.28);
+        padding: 14px;
+    }
+
+    .dash-streak strong {
+        color: #facc15;
+        font-size: 24px;
+    }
+
+    .dash-main {
+        display: grid;
+        gap: 22px;
+    }
+
+    .dash-hero {
+        position: relative;
+        overflow: hidden;
+        border-radius: 30px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        background:
+            radial-gradient(circle at 76% 0%, rgba(127, 29, 29, 0.62), transparent 34%),
+            linear-gradient(135deg, #07111f 0%, #020617 46%, #3b0208 100%);
+        box-shadow: 0 26px 70px rgba(0,0,0,0.42);
+    }
+
+    .dash-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(90deg, rgba(7, 17, 31, 0.90) 0%, rgba(7, 17, 31, 0.45) 45%, transparent 72%),
+            radial-gradient(circle at 22% 88%, rgba(59,130,246,0.12), transparent 30%);
+        pointer-events: none;
+    }
+
+    .dash-road {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 52%;
+        height: 100%;
+        opacity: 0.18;
+        pointer-events: none;
+    }
+
+    .dash-hero-inner {
+        position: relative;
+        z-index: 2;
+        min-height: 330px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 360px;
+        gap: 32px;
+        align-items: center;
+        padding: 42px 48px;
+    }
+
+    .dash-badge {
+        width: fit-content;
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.28);
+        background: rgba(255,255,255,0.055);
+        padding: 10px 18px;
+        font-size: 13px;
+        font-weight: 1000;
+        margin-bottom: 18px;
+    }
+
+    .dash-hero-title {
+        margin: 0;
+        font-size: clamp(36px, 4.5vw, 64px);
+        line-height: 1.16;
+        letter-spacing: -0.045em;
+        font-weight: 1000;
+        text-shadow: 0 8px 26px rgba(0,0,0,0.45);
+    }
+
+    .dash-hero-title span {
+        color: #fb7185;
+    }
+
+    .dash-hero-text {
+        margin: 18px 0 0;
+        max-width: 720px;
+        color: #cbd5e1;
+        line-height: 2;
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    .dash-hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 28px;
+    }
+
+    .dash-btn {
+        min-height: 54px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border-radius: 17px;
+        text-decoration: none;
+        padding: 0 20px;
+        font-size: 14px;
+        font-weight: 1000;
+        transition: 0.2s ease;
+    }
+
+    .dash-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .dash-btn-red {
+        color: #ffffff;
+        background: #dc0d19;
+        border: 1px solid rgba(255,120,130,0.66);
+        box-shadow: 0 18px 34px rgba(127, 29, 29, 0.35);
+    }
+
+    .dash-btn-red:hover {
+        background: #ef1723;
+    }
+
+    .dash-btn-soft {
+        color: #ffffff;
+        border: 1px solid rgba(255,255,255,0.16);
+        background: rgba(255,255,255,0.055);
+    }
+
+    .dash-hero-panel {
+        border-radius: 28px;
+        border: 1px solid rgba(255,255,255,0.16);
+        background: rgba(255,255,255,0.08);
+        backdrop-filter: blur(16px);
+        padding: 22px;
+        box-shadow: 0 24px 60px rgba(0,0,0,0.34);
+    }
+
+    .dash-ring {
+        width: 210px;
+        height: 210px;
+        margin: 0 auto;
+        border-radius: 999px;
+        background:
+            conic-gradient(#fb7185 calc({{ pass_rate|default:0 }} * 1%), rgba(148,163,184,0.18) 0);
+        display: grid;
+        place-items: center;
+        box-shadow: 0 0 36px rgba(251, 113, 133, 0.16);
+    }
+
+    .dash-ring-inner {
+        width: 200px;
+        height: 200px;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        background: rgba(2,6,23,0.92);
+        border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .dash-ring-inner strong {
+        font-size: 42px;
+        line-height: 1;
+        font-weight: 1000;
+        color: #ffffff;
+    }
+
+    .dash-ring-inner span {
+        margin-top: 6px;
+        color: #94a3b8;
+        font-size: 12px;
+        font-weight: 850;
+    }
+
+    .dash-hero-mini {
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+
+    .dash-mini {
+        border-radius: 15px;
+        background: rgba(2,6,23,0.54);
+        border: 1px solid rgba(255,255,255,0.10);
+        padding: 12px;
+        text-align: center;
+    }
+
+    .dash-mini strong {
+        display: block;
+        font-size: 20px;
+        font-weight: 1000;
+    }
+
+    .dash-mini span {
+        color: #94a3b8;
+        font-size: 11px;
+        font-weight: 800;
+    }
+
+    .dash-quick-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .dash-quick {
+        min-height: 120px;
+        border-radius: 22px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        text-align: center;
+        color: #ffffff;
+        text-decoration: none;
+        transition: 0.24s ease;
+    }
+
+    .dash-quick:hover {
+        transform: translateY(-5px);
+        border-color: rgba(255,255,255,0.25);
+    }
+
+    .dash-quick-icon {
+        width: 52px;
+        height: 52px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        font-size: 24px;
+        border: 1px solid;
+    }
+
+    .dash-blue { color: #60a5fa; background: rgba(59,130,246,0.12); border-color: rgba(96,165,250,0.44); }
+    .dash-green { color: #4ade80; background: rgba(34,197,94,0.12); border-color: rgba(74,222,128,0.44); }
+    .dash-yellow { color: #facc15; background: rgba(234,179,8,0.12); border-color: rgba(250,204,21,0.44); }
+    .dash-red { color: #fb7185; background: rgba(244,63,94,0.12); border-color: rgba(251,113,133,0.44); }
+    .dash-purple { color: #a78bfa; background: rgba(168,85,247,0.12); border-color: rgba(167,139,250,0.44); }
+
+    .dash-quick strong {
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 1000;
+    }
+
+    .dash-stat-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .dash-stat {
+        min-height: 138px;
+        border-radius: 24px;
+        padding: 20px;
+        transition: 0.24s ease;
+    }
+
+    .dash-stat:hover {
+        transform: translateY(-4px);
+        border-color: rgba(255,255,255,0.25);
+    }
+
+    .dash-stat-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .dash-stat-icon {
+        width: 52px;
+        height: 52px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        font-size: 24px;
+        border: 1px solid;
+    }
+
+    .dash-stat-value {
+        margin: 20px 0 0;
+        font-size: 38px;
+        line-height: 1;
+        font-weight: 1000;
+    }
+
+    .dash-stat-label {
+        margin: 8px 0 0;
+        color: #94a3b8;
+        font-size: 13px;
+        font-weight: 850;
+    }
+
+    .dash-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 350px;
+        gap: 22px;
+        align-items: start;
+    }
+
+    .dash-section {
+        border-radius: 26px;
+        padding: 24px;
+    }
+
+    .dash-section-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 22px;
+    }
+
+    .dash-kicker {
+        margin: 0 0 7px;
+        color: #fb7185;
+        font-size: 13px;
+        font-weight: 1000;
+    }
+
+    .dash-section-title {
+        margin: 0;
+        color: #ffffff;
+        font-size: 28px;
+        line-height: 1.3;
+        font-weight: 1000;
+        letter-spacing: -0.03em;
+    }
+
+    .dash-section-desc {
+        margin: 8px 0 0;
+        color: #94a3b8;
+        line-height: 1.9;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .dash-progress-row {
+        margin-top: 18px;
+    }
+
+    .dash-progress-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 10px;
+        font-weight: 950;
+    }
+
+    .dash-progress-head span:last-child {
+        color: #60a5fa;
+    }
+
+    .dash-track {
+        height: 11px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(30,41,59,0.94);
+    }
+
+    .dash-fill {
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #dc0d19, #ff3545);
+        box-shadow: 0 0 18px rgba(255,53,69,0.48);
+    }
+
+    .dash-empty {
+        border-radius: 18px;
+        border: 1px dashed rgba(148,163,184,0.26);
+        background: rgba(2,6,23,0.48);
+        padding: 24px;
+        text-align: center;
+        color: #94a3b8;
+        line-height: 1.9;
+        font-weight: 750;
+    }
+
+    .dash-videos {
+        display: grid;
+        gap: 22px;
+    }
+
+    .dash-category-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+    }
+
+    .dash-category-title h3 {
+        margin: 0;
+        color: #ffffff;
+        font-size: 21px;
+        font-weight: 1000;
+    }
+
+    .dash-category-title p {
+        margin: 4px 0 0;
+        color: #94a3b8;
+        font-size: 13px;
+        font-weight: 750;
+    }
+
+    .dash-video-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .dash-video {
+        overflow: hidden;
+        border-radius: 22px;
+        border: 1px solid rgba(100,116,139,0.46);
+        background: rgba(2,6,23,0.52);
+        padding: 12px;
+        transition: 0.24s ease;
+    }
+
+    .dash-video:hover {
+        transform: translateY(-4px);
+        border-color: rgba(96,165,250,0.50);
+    }
+
+    .dash-thumb {
+        position: relative;
+        display: block;
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        border-radius: 17px;
+        background: #0f172a;
+    }
+
+    .dash-thumb img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        transition: 0.5s ease;
+    }
+
+    .dash-video:hover .dash-thumb img {
+        transform: scale(1.06);
+    }
+
+    .dash-thumb::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.72), rgba(0,0,0,0.08), transparent);
+        pointer-events: none;
+    }
+
+    .dash-play {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: grid;
+        place-items: center;
+    }
+
+    .dash-play span {
+        width: 54px;
+        height: 54px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        color: #ffffff;
+        background: rgba(255,255,255,0.18);
+        border: 1px solid rgba(255,255,255,0.26);
+        backdrop-filter: blur(10px);
+        transition: 0.22s ease;
+    }
+
+    .dash-video:hover .dash-play span {
+        background: #2563eb;
+        transform: scale(1.08);
+    }
+
+    .dash-video-body {
+        padding: 12px 4px 2px;
+    }
+
+    .dash-video-title-row {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .dash-video h4 {
+        margin: 0;
+        color: #ffffff;
+        line-height: 1.6;
+        font-size: 15px;
+        font-weight: 1000;
+    }
+
+    .dash-watched {
+        flex: 0 0 auto;
+        border-radius: 999px;
+        background: rgba(34,197,94,0.14);
+        color: #4ade80;
+        padding: 5px 9px;
+        font-size: 11px;
+        font-weight: 1000;
+    }
+
+    .dash-video p {
+        margin: 8px 0 0;
+        color: #94a3b8;
+        line-height: 1.8;
+        font-size: 13px;
+        font-weight: 650;
+    }
+
+    .dash-watch-btn {
+        margin-top: 12px;
+        min-height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 13px;
+        color: #93c5fd;
+        border: 1px solid rgba(96,165,250,0.42);
+        background: rgba(59,130,246,0.12);
+        text-decoration: none;
+        padding: 0 14px;
+        font-size: 13px;
+        font-weight: 1000;
+        transition: 0.2s ease;
+    }
+
+    .dash-watch-btn:hover {
+        background: rgba(59,130,246,0.20);
+        transform: translateY(-1px);
+    }
+
+    .dash-right {
+        display: grid;
+        gap: 18px;
+    }
+
+    .dash-today-card {
+        border-radius: 24px;
+        padding: 22px;
+    }
+
+    .dash-next {
+        margin-top: 16px;
+        display: block;
+        border-radius: 18px;
+        border: 1px solid rgba(96,165,250,0.38);
+        background: rgba(59,130,246,0.12);
+        padding: 16px;
+        color: #ffffff;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+    .dash-next:hover {
+        background: rgba(59,130,246,0.20);
+        transform: translateY(-2px);
+    }
+
+    .dash-next small {
+        display: block;
+        color: #93c5fd;
+        font-weight: 1000;
+        margin-bottom: 8px;
+    }
+
+    .dash-next strong {
+        display: block;
+        line-height: 1.7;
+        font-weight: 1000;
+    }
+
+    .dash-goal-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 16px;
+    }
+
+    .dash-goal {
+        border-radius: 15px;
+        background: rgba(2,6,23,0.50);
+        border: 1px solid rgba(100,116,139,0.30);
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        color: #cbd5e1;
+        font-size: 13px;
+        font-weight: 900;
+    }
+
+    .dash-achievements {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-top: 16px;
+    }
+
+    .dash-achievement {
+        min-height: 96px;
+        border-radius: 17px;
+        background: rgba(2,6,23,0.50);
+        border: 1px solid rgba(100,116,139,0.30);
+        display: grid;
+        place-items: center;
+        text-align: center;
+        padding: 12px;
+    }
+
+    .dash-achievement span {
+        font-size: 28px;
+    }
+
+    .dash-achievement strong {
+        margin-top: 6px;
+        display: block;
+        color: #ffffff;
+        font-size: 12px;
+        font-weight: 1000;
+    }
+
+    @media (max-width: 1280px) {
+        .dash-shell {
+            grid-template-columns: 1fr;
+        }
+
+        .dash-sidebar {
+            position: static;
+            grid-template-columns: repeat(2, minmax(0,1fr));
+        }
+
+        .dash-profile {
+            grid-column: 1 / -1;
+        }
+
+        .dash-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 900px) {
+        .dash-page {
+            padding: 14px 10px;
+        }
+
+        .dash-sidebar {
+            grid-template-columns: 1fr;
+        }
+
+        .dash-hero-inner {
+            grid-template-columns: 1fr;
+            padding: 32px 20px;
+        }
+
+        .dash-stat-grid,
+        .dash-quick-grid,
+        .dash-video-grid,
+        .dash-achievements {
+            grid-template-columns: 1fr;
+        }
+
+        .dash-hero-mini {
+            grid-template-columns: 1fr;
+        }
+
+        .dash-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<main class="dash-page" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}">
+    <div class="dash-shell">
+
+        <aside class="dash-sidebar">
+            <section class="dash-glass dash-profile">
+                <div class="dash-profile-head">
+                    <div class="dash-avatar">👤</div>
+                    <div>
+                        <p class="dash-name">{{ request.user.username }}</p>
+                        <p class="dash-sub">{% trans "آموزش گواهینامه آلمان" %}</p>
+                    </div>
+                </div>
+
+                <nav class="dash-nav">
+                    <a href="/dashboard/" class="dash-nav-link active">{% trans "داشبورد" %} <span>🏠</span></a>
+                    <a href="#progress" class="dash-nav-link">{% trans "پیشرفت من" %} <span>📊</span></a>
+                    <a href="#videos" class="dash-nav-link">{% trans "ویدیوها" %} <span>🎥</span></a>
+                    <a href="/quiz/history/" class="dash-nav-link">{% trans "تاریخچه آزمون‌ها" %} <span>📜</span></a>
+                    <a href="/quiz/my-mistakes/" class="dash-nav-link">{% trans "سوال‌های اشتباه" %} <span>❌</span></a>
+                    <a href="/quiz/favorites/" class="dash-nav-link">{% trans "علاقه‌مندی‌ها" %} <span>⭐</span></a>
+                    <a href="/quiz/categories/" class="dash-nav-link">{% trans "دسته‌بندی‌ها" %} <span>🧩</span></a>
+                </nav>
+            </section>
+
+            <section class="dash-glass dash-side-card">
+                <h3 class="dash-side-title">🔥 {% trans "تداوم روزانه" %}</h3>
+                <p class="dash-side-text">{% trans "هر روز کمی تمرین کن تا به قبولی نزدیک‌تر شوی." %}</p>
+
+                <div class="dash-streak">
+                    <span>{% trans "تداوم" %}</span>
+                    <strong>7</strong>
+                </div>
+            </section>
         </aside>
 
-        <!-- Main -->
-        <div class="flex-1 px-6 py-8">
+        <div class="dash-main">
 
-            <!-- Header -->
-            <header class="mb-8 rounded-[2rem] border border-white/10 bg-white/5 p-6">
-                <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <section class="dash-hero">
+                <svg class="dash-road" viewBox="0 0 560 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61" stroke="white" stroke-width="22" stroke-linecap="round" opacity="0.055"/>
+                    <path d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10" stroke="white" stroke-width="22" stroke-linecap="round" opacity="0.055"/>
+                    <path d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61" stroke="white" stroke-width="3.2" stroke-linecap="round" opacity="0.68"/>
+                    <path d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10" stroke="white" stroke-width="3.2" stroke-linecap="round" opacity="0.68"/>
+                    <path d="M76 294C125 265 166 232 177 197" stroke="white" stroke-width="3.1" stroke-linecap="round" stroke-dasharray="26 20" opacity="0.45"/>
+                    <path d="M181 172C176 132 145 103 100 82" stroke="white" stroke-width="3.1" stroke-linecap="round" stroke-dasharray="26 20" opacity="0.43"/>
+                </svg>
 
+                <div class="dash-hero-inner">
                     <div>
-                        <p class="mb-2 text-sm text-blue-300">داشبورد کاربری</p>
+                        <div class="dash-badge">
+                            <span>{% trans "داشبورد حرفه‌ای" %}</span>
+                            <span>🚗</span>
+                        </div>
 
-                        <h1 class="text-3xl font-black">
-                            سلام {{ request.user.username }} 👋
+                        <h1 class="dash-hero-title">
+                            {% blocktrans with username=request.user.username %}سلام {{ username }}{% endblocktrans %} <span>{% trans "آماده‌ای؟" %}</span>
                         </h1>
 
-                        <p class="mt-2 text-slate-400">
-                            آزمون‌ها، تمرین‌ها و پیشرفت خود را از اینجا مدیریت کن.
+                        <p class="dash-hero-text">
+                            {% trans "آزمون‌ها، تمرین‌ها، ویدیوها و پیشرفتت را از اینجا مدیریت کن. امروز فقط چند قدم تا بهتر شدن فاصله داری." %}
                         </p>
-                    </div>
 
-                    <div class="flex flex-wrap gap-3">
-                        <a href="/" class="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-center font-bold text-slate-200 hover:bg-white/10">
-                            صفحه اصلی
-                        </a>
-
-                        <a href="/accounts/logout/" class="rounded-2xl border border-red-400/30 bg-red-500/10 px-5 py-3 text-center font-bold text-red-300 hover:bg-red-500/20">
-                            خروج
-                        </a>
-                    </div>
-                </div>
-
-                <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-
-                    <a href="/quiz/official-exams/"
-                       class="rounded-2xl border border-green-400/30 bg-green-500/10 px-5 py-3 text-center font-bold text-green-300 transition hover:bg-green-500/20">
-                        🚀 ورود به آزمون‌ها
-                    </a>
-
-                    <a href="/quiz/categories/"
-                       class="rounded-2xl border border-indigo-400/30 bg-indigo-500/10 px-5 py-3 text-center font-bold text-indigo-300 transition hover:bg-indigo-500/20">
-                        📚 دسته‌بندی‌ها
-                    </a>
-
-                    <a href="/quiz/my-mistakes/"
-                       class="rounded-2xl border border-red-400/30 bg-red-500/10 px-5 py-3 text-center font-bold text-red-300 transition hover:bg-red-500/20">
-                        ❌ سوال‌های اشتباه
-                    </a>
-
-                    <a href="/quiz/favorites/"
-                       class="rounded-2xl border border-yellow-400/30 bg-yellow-500/10 px-5 py-3 text-center font-bold text-yellow-300 transition hover:bg-yellow-500/20">
-                        ⭐ علاقه‌مندی‌ها
-                    </a>
-
-                    <a href="/quiz/history/"
-                       class="rounded-2xl border border-purple-400/30 bg-purple-500/10 px-5 py-3 text-center font-bold text-purple-300 transition hover:bg-purple-500/20">
-                        📜 تاریخچه آزمون‌ها
-                    </a>
-
-                </div>
-
-                <div class="mt-5 flex flex-wrap items-center gap-2 text-sm">
-
-                    <span class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-slate-300">
-                        آزمون‌ها: <strong class="text-white">{{ total_exams }}</strong>
-                    </span>
-
-                    <span class="rounded-full border border-green-400/20 bg-green-500/10 px-4 py-2 text-green-300">
-                        قبولی: <strong>{{ passed_exams }}</strong>
-                    </span>
-
-                    <span class="rounded-full border border-red-400/20 bg-red-500/10 px-4 py-2 text-red-300">
-                        مردودی: <strong>{{ failed_exams }}</strong>
-                    </span>
-
-                    <span class="rounded-full border border-yellow-400/20 bg-yellow-500/10 px-4 py-2 text-yellow-300">
-                        اشتباهات: <strong>{{ mistakes_count }}</strong>
-                    </span>
-
-                    <span class="rounded-full border border-blue-400/20 bg-blue-500/10 px-4 py-2 text-blue-300">
-                        نرخ قبولی: <strong>{{ pass_rate }}٪</strong>
-                    </span>
-
-                </div>
-            </header>
-
-            <!-- Learning Stats -->
-            <section id="progress" class="grid gap-6 md:grid-cols-3">
-                <div class="rounded-[2rem] border border-white/10 bg-white/5 p-6">
-                    <p class="text-sm text-slate-400">پیشرفت ویدیوها</p>
-
-                    <p class="mt-3 text-4xl font-black">
-                        {{ progress_percent }}٪
-                    </p>
-
-                    <div class="mt-5 h-3 rounded-full bg-slate-800">
-                        <div
-                            class="h-3 rounded-full bg-blue-500"
-                            style="width: {{ progress_percent|stringformat:'s' }}%;"
-                        ></div>
-                    </div>
-                </div>
-
-                <div class="rounded-[2rem] border border-white/10 bg-white/5 p-6">
-                    <p class="text-sm text-slate-400">درس‌های دیده‌شده</p>
-
-                    <p class="mt-3 text-4xl font-black">
-                        {{ watched_count }} / {{ total_videos }}
-                    </p>
-                </div>
-
-                <div class="rounded-[2rem] border border-white/10 bg-white/5 p-6">
-                    <p class="text-sm text-slate-400">مرحله فعلی</p>
-
-                    <p class="mt-3 text-2xl font-black">
-                        {% if total_videos == 0 %}
-                            هنوز مسیری تعریف نشده
-                        {% elif next_video %}
-                            {{ next_video.category.name|default:"ادامه مسیر" }}
-                        {% else %}
-                            تکمیل شده ✅
-                        {% endif %}
-                    </p>
-                </div>
-            </section>
-
-            <!-- Category Performance -->
-            <section class="mt-8 rounded-[2rem] border border-white/10 bg-white/5 p-6">
-
-                <h2 class="text-2xl font-black">
-                    📊 عملکرد شما در دسته‌بندی‌ها
-                </h2>
-
-                <p class="mt-2 text-slate-400">
-                    میزان موفقیت شما در هر مبحث آموزشی
-                </p>
-
-                <div class="mt-6 space-y-4">
-
-                    {% for item in category_stats %}
-
-                        <div>
-                            <div class="mb-2 flex items-center justify-between">
-                                <span class="font-bold">
-                                    {{ item.category.name }}
-                                </span>
-
-                                <span class="text-blue-300">
-                                    {{ item.success_rate }}%
-                                </span>
-                            </div>
-
-                            <div class="h-3 rounded-full bg-slate-800">
-                                <div
-                                    class="h-3 rounded-full bg-blue-500"
-                                    style="width: {{ item.success_rate }}%;"
-                                ></div>
-                            </div>
+                        <div class="dash-hero-actions">
+                            <a href="/quiz/official-exams/" class="dash-btn dash-btn-red">{% trans "شروع آزمون" %}</a>
+                            {% if next_video %}
+                                <a href="/videos/{{ next_video.id }}/" class="dash-btn dash-btn-soft">{% trans "ادامه یادگیری" %}</a>
+                            {% else %}
+                                <a href="/quiz/categories/" class="dash-btn dash-btn-soft">{% trans "تمرین سوالات" %}</a>
+                            {% endif %}
+                            <a href="/" class="dash-btn dash-btn-soft">{% trans "صفحه اصلی" %}</a>
+                            <a href="/accounts/logout/" class="dash-btn dash-btn-soft">{% trans "خروج" %}</a>
                         </div>
-
-                    {% empty %}
-
-                        <div class="rounded-2xl border border-white/10 bg-slate-900 p-5 text-center">
-                            <p class="font-bold text-slate-300">
-                                هنوز عملکردی در دسته‌بندی‌ها ثبت نشده.
-                            </p>
-
-                            <p class="mt-2 text-sm text-slate-500">
-                                بعد از تمرین سوالات دسته‌بندی، آمار اینجا نمایش داده می‌شود.
-                            </p>
-                        </div>
-
-                    {% endfor %}
-
-                </div>
-
-            </section>
-
-            <!-- Videos -->
-            <section id="videos" class="mt-8 grid gap-6 lg:grid-cols-3">
-                <div class="rounded-[2rem] border border-white/10 bg-white/5 p-6 lg:col-span-2">
-                    <div class="mb-6">
-                        <h2 class="text-2xl font-black">مسیر ویدیوهای آموزشی</h2>
-                        <p class="mt-1 text-slate-400">
-                            ویدیوها بر اساس دسته‌بندی آموزشی نمایش داده می‌شوند.
-                        </p>
                     </div>
 
-                    <div class="space-y-10">
-                        {% if categories %}
-                            {% for category in categories %}
-                                <div id="category-{{ category.id }}">
-                                    <div class="mb-5">
-                                        <h3 class="text-2xl font-black">{{ category.name }}</h3>
-                                        <p class="mt-1 text-sm text-slate-400">
-                                            آموزش‌های مربوط به {{ category.name }}
-                                        </p>
-                                    </div>
-
-                                    <div class="grid gap-5 md:grid-cols-2">
-                                        {% for video in category.videos.all %}
-                                            {% if video.is_published %}
-                                                <article class="rounded-3xl bg-slate-900 p-4">
-                                                    <a href="/videos/{{ video.id }}/" class="group relative block aspect-video overflow-hidden rounded-2xl bg-slate-800">
-                                                        <img
-                                                            src="{{ video.youtube_thumbnail }}"
-                                                            alt="{{ video.title }}"
-                                                            class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                                                        />
-
-                                                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
-
-                                                        <div class="absolute inset-0 flex items-center justify-center">
-                                                            <div class="flex h-16 w-16 items-center justify-center rounded-full bg-white/20 backdrop-blur transition duration-300 group-hover:scale-110 group-hover:bg-blue-500">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16" class="h-6 w-6 text-white">
-                                                                    <path d="M11.596 8.697l-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692c.541.314.541 1.09 0 1.393z" />
-                                                                </svg>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-
-                                                    <div class="mt-4 flex items-center justify-between gap-3">
-                                                        <h4 class="font-bold">{{ video.title }}</h4>
-
-                                                        {% if video.id in watched_video_ids %}
-                                                            <span class="rounded-full bg-green-500/15 px-3 py-1 text-xs font-bold text-green-300">
-                                                                مشاهده شد
-                                                            </span>
-                                                        {% endif %}
-                                                    </div>
-
-                                                    <p class="mt-2 text-sm text-slate-400">
-                                                        {{ video.description }}
-                                                    </p>
-
-                                                    <a href="/videos/{{ video.id }}/" class="mt-4 inline-block rounded-xl bg-blue-500 px-4 py-2 text-sm font-bold hover:bg-blue-600">
-                                                        تماشای درس
-                                                    </a>
-                                                </article>
-                                            {% endif %}
-                                        {% empty %}
-                                            <p class="text-sm text-slate-500">
-                                                هنوز ویدیویی داخل این دسته‌بندی نیست.
-                                            </p>
-                                        {% endfor %}
-                                    </div>
+                    <div class="dash-hero-panel">
+                        <div class="dash-ring">
+                            <div class="dash-ring-inner">
+                                <div>
+                                    <strong>{{ pass_rate }}%</strong>
+                                    <span>{% trans "نرخ قبولی" %}</span>
                                 </div>
-                            {% endfor %}
-                        {% else %}
-                            <div class="rounded-[2rem] border border-dashed border-white/10 bg-white/5 p-10 text-center">
-                                <h3 class="text-2xl font-black">
-                                    هنوز دسته‌بندی‌ای ساخته نشده
-                                </h3>
-
-                                <p class="mx-auto mt-4 max-w-md leading-8 text-slate-400">
-                                    هنوز دسته‌بندی ویدیویی برای مسیر آموزشی ساخته نشده است.
-                                </p>
-
-                                {% if request.user.is_staff %}
-                                    <a href="/admin/" class="mt-6 inline-block rounded-2xl bg-blue-500 px-5 py-3 font-bold hover:bg-blue-600">
-                                        رفتن به پنل مدیریت
-                                    </a>
-                                {% endif %}
                             </div>
-                        {% endif %}
+                        </div>
+
+                        <div class="dash-hero-mini">
+                            <div class="dash-mini">
+                                <strong>{{ total_exams }}</strong>
+                                <span>{% trans "آزمون" %}</span>
+                            </div>
+
+                            <div class="dash-mini">
+                                <strong>{{ passed_exams }}</strong>
+                                <span>{% trans "قبولی" %}</span>
+                            </div>
+
+                            <div class="dash-mini">
+                                <strong>{{ mistakes_count }}</strong>
+                                <span>{% trans "اشتباه" %}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Today -->
-                <aside class="rounded-[2rem] border border-white/10 bg-white/5 p-6">
-                    <h2 class="text-xl font-black">مسیر امروز</h2>
-
-                    <div class="mt-5 space-y-4">
-                        {% if total_videos == 0 %}
-
-                            <div class="rounded-2xl border border-yellow-400/30 bg-yellow-500/10 p-4">
-                                <p class="font-bold text-yellow-300">
-                                    هنوز ویدیویی ثبت نشده
-                                </p>
-                            </div>
-
-                        {% elif next_video %}
-
-                            <a href="/videos/{{ next_video.id }}/" class="block rounded-2xl border border-blue-400/30 bg-blue-500/10 p-4 transition hover:bg-blue-500/20">
-                                <p class="text-sm text-blue-300">ادامه یادگیری</p>
-                                <p class="mt-2 font-bold">{{ next_video.title }}</p>
-                            </a>
-
-                        {% else %}
-
-                            <div class="rounded-2xl border border-green-400/30 bg-green-500/10 p-4">
-                                <p class="font-bold text-green-300">
-                                    همه ویدیوها دیده شده‌اند ✅
-                                </p>
-                            </div>
-
-                        {% endif %}
-                    </div>
-                </aside>
             </section>
 
+            <section class="dash-quick-grid">
+                <a href="/quiz/official-exams/" class="dash-glass dash-quick">
+                    <div class="dash-quick-icon dash-green">🚀</div>
+                    <strong>{% trans "ورود به آزمون‌ها" %}</strong>
+                </a>
+
+                <a href="/quiz/categories/" class="dash-glass dash-quick">
+                    <div class="dash-quick-icon dash-blue">📚</div>
+                    <strong>{% trans "دسته‌بندی‌ها" %}</strong>
+                </a>
+
+                <a href="/quiz/my-mistakes/" class="dash-glass dash-quick">
+                    <div class="dash-quick-icon dash-red">❌</div>
+                    <strong>{% trans "سوال‌های اشتباه" %}</strong>
+                </a>
+
+                <a href="/quiz/favorites/" class="dash-glass dash-quick">
+                    <div class="dash-quick-icon dash-yellow">⭐</div>
+                    <strong>{% trans "علاقه‌مندی‌ها" %}</strong>
+                </a>
+
+                <a href="/quiz/history/" class="dash-glass dash-quick">
+                    <div class="dash-quick-icon dash-purple">📜</div>
+                    <strong>{% trans "تاریخچه آزمون‌ها" %}</strong>
+                </a>
+            </section>
+
+            <section id="progress" class="dash-stat-grid">
+                <article class="dash-glass dash-stat">
+                    <div class="dash-stat-top">
+                        <span>{% trans "پیشرفت" %}</span>
+                        <div class="dash-stat-icon dash-blue">📈</div>
+                    </div>
+                    <p class="dash-stat-value" style="color:#60a5fa;">{{ progress_percent }}%</p>
+                    <p class="dash-stat-label">{% trans "پیشرفت ویدیوها" %}</p>
+                </article>
+
+                <article class="dash-glass dash-stat">
+                    <div class="dash-stat-top">
+                        <span>{% trans "ویدیوها" %}</span>
+                        <div class="dash-stat-icon dash-green">🎥</div>
+                    </div>
+                    <p class="dash-stat-value" style="color:#4ade80;">{{ watched_count }}/{{ total_videos }}</p>
+                    <p class="dash-stat-label">{% trans "درس‌های دیده‌شده" %}</p>
+                </article>
+
+                <article class="dash-glass dash-stat">
+                    <div class="dash-stat-top">
+                        <span>{% trans "قبولی‌ها" %}</span>
+                        <div class="dash-stat-icon dash-yellow">🏆</div>
+                    </div>
+                    <p class="dash-stat-value" style="color:#facc15;">{{ passed_exams }}</p>
+                    <p class="dash-stat-label">{% trans "آزمون‌های قبول‌شده" %}</p>
+                </article>
+
+                <article class="dash-glass dash-stat">
+                    <div class="dash-stat-top">
+                        <span>{% trans "اشتباهات" %}</span>
+                        <div class="dash-stat-icon dash-red">⚠️</div>
+                    </div>
+                    <p class="dash-stat-value" style="color:#fb7185;">{{ mistakes_count }}</p>
+                    <p class="dash-stat-label">{% trans "سوال‌های نیازمند مرور" %}</p>
+                </article>
+            </section>
+
+            <div class="dash-layout">
+
+                <div class="dash-main">
+                    <section class="dash-glass dash-section">
+                        <div class="dash-section-head">
+                            <div>
+                                <p class="dash-kicker">{% trans "عملکرد" %}</p>
+                                <h2 class="dash-section-title">{% trans "عملکرد شما در دسته‌بندی‌ها" %}</h2>
+                                <p class="dash-section-desc">{% trans "میزان موفقیت شما در هر مبحث آموزشی" %}</p>
+                            </div>
+                        </div>
+
+                        {% for item in category_stats %}
+                            <div class="dash-progress-row">
+                                <div class="dash-progress-head">
+                                    <span>{{ item.category.name }}</span>
+                                    <span>{{ item.success_rate }}%</span>
+                                </div>
+
+                                <div class="dash-track">
+                                    <div class="dash-fill" style="width: {{ item.success_rate }}%;"></div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="dash-empty">
+                                {% trans "هنوز عملکردی در دسته‌بندی‌ها ثبت نشده است." %}
+                                <br>
+                                {% trans "بعد از تمرین سوالات دسته‌بندی، آمار اینجا نمایش داده می‌شود." %}
+                            </div>
+                        {% endfor %}
+                    </section>
+
+                    <section id="videos" class="dash-glass dash-section">
+                        <div class="dash-section-head">
+                            <div>
+                                <p class="dash-kicker">{% trans "مسیر یادگیری" %}</p>
+                                <h2 class="dash-section-title">{% trans "مسیر ویدیوهای آموزشی" %}</h2>
+                                <p class="dash-section-desc">{% trans "ویدیوها بر اساس دسته‌بندی آموزشی نمایش داده می‌شوند." %}</p>
+                            </div>
+                        </div>
+
+                        <div class="dash-videos">
+                            {% if categories %}
+                                {% for category in categories %}
+                                    <div id="category-{{ category.id }}">
+                                        <div class="dash-category-title">
+                                            <div>
+                                                <h3>{{ category.name }}</h3>
+                                                <p>{% blocktrans with category_name=category.name %}آموزش‌های مربوط به {{ category_name }}{% endblocktrans %}</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="dash-video-grid">
+                                            {% for video in category.videos.all %}
+                                                {% if video.is_published %}
+                                                    <article class="dash-video">
+                                                        <a href="/videos/{{ video.id }}/" class="dash-thumb">
+                                                            <img src="{{ video.youtube_thumbnail }}" alt="{{ video.title }}">
+                                                            <div class="dash-play"><span>▶</span></div>
+                                                        </a>
+
+                                                        <div class="dash-video-body">
+                                                            <div class="dash-video-title-row">
+                                                                <h4>{{ video.title }}</h4>
+
+                                                                {% if video.id in watched_video_ids %}
+                                                                    <span class="dash-watched">{% trans "مشاهده شد" %}</span>
+                                                                {% endif %}
+                                                            </div>
+
+                                                            <p>{{ video.description }}</p>
+
+                                                            <a href="/videos/{{ video.id }}/" class="dash-watch-btn">{% trans "تماشای درس" %}</a>
+                                                        </div>
+                                                    </article>
+                                                {% endif %}
+                                            {% empty %}
+                                                <div class="dash-empty">
+                                                    {% trans "هنوز ویدیویی داخل این دسته‌بندی نیست." %}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="dash-empty">
+                                    {% trans "هنوز دسته‌بندی ویدیویی برای مسیر آموزشی ساخته نشده است." %}
+                                    {% if request.user.is_staff %}
+                                        <br><br>
+                                        <a href="/admin/" class="dash-watch-btn">{% trans "رفتن به پنل مدیریت" %}</a>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </section>
+                </div>
+
+                <aside class="dash-right">
+                    <section class="dash-glass dash-today-card">
+                        <p class="dash-kicker">{% trans "امروز" %}</p>
+                        <h2 class="dash-section-title">{% trans "مسیر امروز" %}</h2>
+                        <p class="dash-section-desc">{% trans "قدم بعدی برای ادامه یادگیری" %}</p>
+
+                        {% if total_videos == 0 %}
+                            <div class="dash-empty" style="margin-top:16px;">
+                                {% trans "هنوز ویدیویی ثبت نشده است." %}
+                            </div>
+                        {% elif next_video %}
+                            <a href="/videos/{{ next_video.id }}/" class="dash-next">
+                                <small>{% trans "ادامه یادگیری" %}</small>
+                                <strong>{{ next_video.title }}</strong>
+                            </a>
+                        {% else %}
+                            <div class="dash-next" style="border-color:rgba(74,222,128,0.38);background:rgba(34,197,94,0.12);">
+                                <small style="color:#4ade80;">{% trans "کامل شد" %}</small>
+                                <strong>{% trans "همه ویدیوها دیده شده‌اند" %} ✅</strong>
+                            </div>
+                        {% endif %}
+
+                        <div class="dash-goal-list">
+                            <div class="dash-goal">
+                                <span>{% trans "۳ ویدیو" %}</span>
+                                <span>🎥</span>
+                            </div>
+                            <div class="dash-goal">
+                                <span>{% trans "۴۰ سوال" %}</span>
+                                <span>📚</span>
+                            </div>
+                            <div class="dash-goal">
+                                <span>{% trans "۱ آزمون" %}</span>
+                                <span>📝</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="dash-glass dash-today-card">
+                        <p class="dash-kicker">{% trans "دستاوردها" %}</p>
+                        <h2 class="dash-section-title">{% trans "افتخارات" %}</h2>
+
+                        <div class="dash-achievements">
+                            <div class="dash-achievement">
+                                <div>
+                                    <span>🏆</span>
+                                    <strong>{% trans "اولین قبولی" %}</strong>
+                                </div>
+                            </div>
+
+                            <div class="dash-achievement">
+                                <div>
+                                    <span>🔥</span>
+                                    <strong>{% trans "تداوم هفت‌روزه" %}</strong>
+                                </div>
+                            </div>
+
+                            <div class="dash-achievement">
+                                <div>
+                                    <span>🎯</span>
+                                    <strong>{% trans "حالت تمرکز" %}</strong>
+                                </div>
+                            </div>
+
+                            <div class="dash-achievement">
+                                <div>
+                                    <span>⭐</span>
+                                    <strong>{% trans "سوال‌های ذخیره‌شده" %}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </aside>
+
+            </div>
         </div>
     </div>
 </main>

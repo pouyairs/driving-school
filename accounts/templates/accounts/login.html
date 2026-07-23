@@ -1,62 +1,362 @@
 {% extends "base/base.html" %}
+{% load i18n %}
+{% get_current_language as CURRENT_LANGUAGE %}
 
-{% block title %}ورود{% endblock %}
+
+{% block title %}{% trans "ورود" %}{% endblock %}
 
 {% block content %}
-<div class="flex min-h-screen items-center justify-center px-6 py-12">
+<section class="flex min-h-[calc(100vh-5rem)] items-center justify-center px-4 py-12 sm:px-6">
 
-    <div class="w-full max-w-md rounded-[2rem] border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur">
+    <div class="w-full max-w-md">
 
-        <div class="mb-8 text-center">
-            <h1 class="mb-2 text-3xl font-black">
-                ورود به حساب
-            </h1>
+        <div class="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-xl sm:p-8">
 
-            <p class="text-slate-400">
-                ادامه یادگیری گواهینامه آلمان
-            </p>
+            <!-- Header -->
+            <div class="mb-8 text-center">
+
+                <div
+                    class="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-500/15 text-blue-400"
+                    aria-hidden="true"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        class="h-8 w-8"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M15.75 6.75V5.625A3.375 3.375 0 0 0 12.375 2.25h-4.5A3.375 3.375 0 0 0 4.5 5.625v12.75a3.375 3.375 0 0 0 3.375 3.375h4.5a3.375 3.375 0 0 0 3.375-3.375V17.25m3-7.5 3 3m0 0-3 3m3-3H9"
+                        />
+                    </svg>
+                </div>
+
+                <h1 class="mb-2 text-3xl font-black text-white">
+                    {% trans "ورود به حساب" %}
+                </h1>
+
+                <p class="text-sm leading-7 text-slate-400">
+                    {% trans "برای ادامه یادگیری گواهینامه آلمان وارد حساب خود شوید." %}
+                </p>
+
+            </div>
+
+            <!-- Django messages -->
+            {% if messages %}
+                <div class="mb-6 space-y-3" role="status" aria-live="polite">
+
+                    {% for message in messages %}
+                        <div
+                            class="
+                                rounded-2xl border px-4 py-3 text-sm leading-6
+
+                                {% if message.tags == 'success' %}
+                                    border-emerald-500/20 bg-emerald-500/10 text-emerald-300
+                                {% elif message.tags == 'warning' %}
+                                    border-amber-500/20 bg-amber-500/10 text-amber-300
+                                {% elif message.tags == 'error' %}
+                                    border-red-500/20 bg-red-500/10 text-red-300
+                                {% else %}
+                                    border-blue-500/20 bg-blue-500/10 text-blue-300
+                                {% endif %}
+                            "
+                        >
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+
+                </div>
+            {% endif %}
+
+            <!-- Login errors -->
+            {% if form.non_field_errors %}
+                <div
+                    class="mb-6 rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm leading-6 text-red-300"
+                    role="alert"
+                >
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Login form -->
+            <form method="post" action="" class="space-y-5" novalidate>
+                {% csrf_token %}
+
+                {% if request.GET.next %}
+                    <input
+                        type="hidden"
+                        name="next"
+                        value="{{ request.GET.next }}"
+                    >
+                {% elif next %}
+                    <input
+                        type="hidden"
+                        name="next"
+                        value="{{ next }}"
+                    >
+                {% endif %}
+
+                <!-- Username -->
+                <div>
+                    <label
+                        for="id_username"
+                        class="mb-2 block text-sm font-medium text-slate-300"
+                    >
+                        {% trans "نام کاربری" %}
+                    </label>
+
+                    <input
+                        id="id_username"
+                        type="text"
+                        name="username"
+                        value="{{ form.username.value|default_if_none:'' }}"
+                        required
+                        autofocus
+                        autocomplete="username"
+                        inputmode="text"
+                        class="
+                            w-full rounded-2xl border bg-slate-900/80 px-4 py-3.5
+                            text-white outline-none transition
+                            placeholder:text-slate-500
+                            focus:border-blue-400 focus:ring-4 focus:ring-blue-500/10
+
+                            {% if form.username.errors %}
+                                border-red-500/60
+                            {% else %}
+                                border-white/10
+                            {% endif %}
+                        "
+                        placeholder="{% trans 'نام کاربری خود را وارد کنید' %}"
+                        aria-describedby="{% if form.username.errors %}username-errors{% endif %}"
+                        {% if form.username.errors %}aria-invalid="true"{% endif %}
+                    >
+
+                    {% if form.username.errors %}
+                        <div
+                            id="username-errors"
+                            class="mt-2 space-y-1 text-sm text-red-400"
+                            role="alert"
+                        >
+                            {% for error in form.username.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label
+                        for="id_password"
+                        class="mb-2 block text-sm font-medium text-slate-300"
+                    >
+                        {% trans "رمز عبور" %}
+                    </label>
+
+                    <div class="relative">
+                        <input
+                            id="id_password"
+                            type="password"
+                            name="password"
+                            required
+                            autocomplete="current-password"
+                            class="
+                                w-full rounded-2xl border bg-slate-900/80 py-3.5
+                                text-white outline-none transition
+                                placeholder:text-slate-500
+                                focus:border-blue-400 focus:ring-4 focus:ring-blue-500/10
+
+                                {% if CURRENT_LANGUAGE == 'fa' %}
+                                    pr-4 pl-12
+                                {% else %}
+                                    pl-4 pr-12
+                                {% endif %}
+
+                                {% if form.password.errors %}
+                                    border-red-500/60
+                                {% else %}
+                                    border-white/10
+                                {% endif %}
+                            "
+                            placeholder="{% trans 'رمز عبور خود را وارد کنید' %}"
+                            aria-describedby="{% if form.password.errors %}password-errors{% endif %}"
+                            {% if form.password.errors %}aria-invalid="true"{% endif %}
+                        >
+
+                        <button
+                            id="toggle-password"
+                            type="button"
+                            class="
+                                absolute top-1/2 -translate-y-1/2 rounded-lg p-2
+                                text-slate-400 transition
+                                hover:bg-white/5 hover:text-white
+                                focus:outline-none focus:ring-2 focus:ring-blue-400
+
+                                {% if CURRENT_LANGUAGE == 'fa' %}
+                                    left-2
+                                {% else %}
+                                    right-2
+                                {% endif %}
+                            "
+                            aria-label="{% trans 'نمایش رمز عبور' %}"
+                            aria-controls="id_password"
+                            aria-pressed="false"
+                        >
+                            <svg
+                                id="eye-open-icon"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                class="h-5 w-5"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M2.25 12s3.75-6.75 9.75-6.75S21.75 12 21.75 12 18 18.75 12 18.75 2.25 12 2.25 12Z"
+                                />
+                                <circle cx="12" cy="12" r="2.75" />
+                            </svg>
+
+                            <svg
+                                id="eye-closed-icon"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                class="hidden h-5 w-5"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="m3 3 18 18M10.6 10.7a2 2 0 0 0 2.7 2.7M9.9 4.4A10.8 10.8 0 0 1 12 4.2c6 0 9.75 7.8 9.75 7.8a17.4 17.4 0 0 1-2.3 3.3M6.4 6.4C3.8 8.2 2.25 12 2.25 12S6 19.8 12 19.8a9.8 9.8 0 0 0 3.2-.55"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+
+                    {% if form.password.errors %}
+                        <div
+                            id="password-errors"
+                            class="mt-2 space-y-1 text-sm text-red-400"
+                            role="alert"
+                        >
+                            {% for error in form.password.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Submit -->
+                <button
+                    type="submit"
+                    class="
+                        flex w-full items-center justify-center gap-2 rounded-2xl
+                        bg-blue-500 px-5 py-3.5 font-bold text-white
+                        shadow-lg shadow-blue-500/20 transition
+                        hover:bg-blue-600
+                        focus:outline-none focus:ring-4 focus:ring-blue-500/25
+                        active:scale-[0.99]
+                    "
+                >
+                    <span>{% trans "ورود" %}</span>
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        class="h-5 w-5"
+                        aria-hidden="true"
+                    >
+                        {% if CURRENT_LANGUAGE == 'fa' %}
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="m15 18-6-6 6-6"
+                            />
+                        {% else %}
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="m9 18 6-6-6-6"
+                            />
+                        {% endif %}
+                    </svg>
+                </button>
+
+            </form>
+
+            <!-- Register link -->
+            <div class="mt-7 border-t border-white/10 pt-6 text-center">
+
+                <p class="text-sm text-slate-400">
+                    {% trans "هنوز حساب کاربری ندارید؟" %}
+
+                    <a
+                        href="{% url 'accounts:register' %}"
+                        class="
+                            ms-1 font-bold text-blue-400 transition
+                            hover:text-blue-300 hover:underline
+                            focus:outline-none focus:ring-2 focus:ring-blue-400
+                        "
+                    >
+                        {% trans "ثبت‌نام کنید" %}
+                    </a>
+                </p>
+
+            </div>
+
         </div>
-
-        <form method="POST" class="space-y-5">
-            {% csrf_token %}
-
-            <div>
-                <label class="mb-2 block text-sm text-slate-300">
-                    نام کاربری
-                </label>
-
-                <input type="text" name="username" required
-       class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white outline-none ring-0 placeholder:text-slate-500 focus:border-blue-400"
-       placeholder="نام کاربری">
-            </div>
-
-            <div>
-                <label class="mb-2 block text-sm text-slate-300">
-                    رمز عبور
-                </label>
-
-                <input type="password" name="password" required
-       class="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white outline-none ring-0 placeholder:text-slate-500 focus:border-blue-400"
-       placeholder="رمز عبور">
-            </div>
-
-            <button
-                type="submit"
-                class="w-full rounded-2xl bg-blue-500 px-5 py-3 font-bold transition hover:bg-blue-600"
-            >
-                ورود
-            </button>
-        </form>
-
-        <p class="mt-6 text-center text-sm text-slate-400">
-            حساب ندارید؟
-
-            <a href="/accounts/register/" class="font-bold text-blue-400">
-                ثبت‌نام
-            </a>
-        </p>
 
     </div>
 
-</div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const passwordInput = document.getElementById("id_password");
+        const toggleButton = document.getElementById("toggle-password");
+        const eyeOpenIcon = document.getElementById("eye-open-icon");
+        const eyeClosedIcon = document.getElementById("eye-closed-icon");
+
+        if (!passwordInput || !toggleButton) {
+            return;
+        }
+
+        const showPasswordText = "{% trans 'نمایش رمز عبور' %}";
+        const hidePasswordText = "{% trans 'پنهان کردن رمز عبور' %}";
+
+        toggleButton.addEventListener("click", function () {
+            const passwordIsHidden = passwordInput.type === "password";
+
+            passwordInput.type = passwordIsHidden ? "text" : "password";
+            toggleButton.setAttribute(
+                "aria-label",
+                passwordIsHidden ? hidePasswordText : showPasswordText
+            );
+            toggleButton.setAttribute(
+                "aria-pressed",
+                passwordIsHidden ? "true" : "false"
+            );
+
+            eyeOpenIcon.classList.toggle("hidden", passwordIsHidden);
+            eyeClosedIcon.classList.toggle("hidden", !passwordIsHidden);
+
+            passwordInput.focus();
+        });
+    });
+</script>
 {% endblock %}

@@ -1,158 +1,512 @@
 {% extends "base/base.html" %}
+{% load i18n %}
+
+{% get_current_language_bidi as LANGUAGE_BIDI %}
 
 {% block title %}
-مرور آزمون
+{% trans "مرور آزمون" %}
 {% endblock %}
 
 {% block content %}
-<main class="min-h-screen bg-slate-950 px-6 py-10 text-white">
-    <div class="mx-auto max-w-5xl">
+<style>
+.dt-page[dir="rtl"]{direction:rtl}.dt-page[dir="ltr"]{direction:ltr}.dt-page[dir="ltr"] .dt-road{left:auto;right:0;transform:scaleX(-1)}.dt-page[dir="ltr"] .dt-hero-content{text-align:left}.dt-page[dir="rtl"] .dt-hero-content{text-align:right}.dt-page[dir="ltr"] .dt-hero::before{background:linear-gradient(270deg,rgba(7,17,31,.93)0%,rgba(7,17,31,.65)32%,transparent 58%)}
+    .dt-page {
+        min-height: 100vh;
+        background:
+            radial-gradient(circle at 50% -20%, rgba(30, 64, 175, 0.12), transparent 35%),
+            #020617;
+        color: #ffffff;
+        
+        padding: 28px 22px 48px;
+        font-family: inherit;
+    }
 
-        <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-                <h1 class="text-4xl font-black">
-                    مرور پاسخ‌های آزمون
-                </h1>
+    .dt-wrap {
+        max-width: 1180px;
+        margin: 0 auto;
+    }
 
-                <p class="mt-2 text-slate-400">
-                    پاسخ‌های درست و اشتباه این آزمون را بررسی کن.
-                </p>
+    .dt-hero {
+        position: relative;
+        overflow: hidden;
+        min-height: 300px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 34px;
+        background:
+            radial-gradient(circle at 74% 20%, rgba(127, 29, 29, 0.72), transparent 34%),
+            linear-gradient(135deg, #07111f 0%, #020617 44%, #3f030a 100%);
+        box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
+        margin-bottom: 30px;
+    }
+
+    .dt-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, rgba(7, 17, 31, 0.93) 0%, rgba(7, 17, 31, 0.65) 32%, transparent 58%);
+        pointer-events: none;
+    }
+
+    .dt-road {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 52%;
+        height: 100%;
+        opacity: 0.18;
+        pointer-events: none;
+    }
+
+    .dt-hero-content {
+        position: relative;
+        z-index: 2;
+        min-height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        text-align: right;
+        padding: 42px 66px;
+    }
+
+    .dt-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 22px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.34);
+        background: rgba(255, 255, 255, 0.055);
+        font-size: 14px;
+        font-weight: 900;
+        box-shadow: 0 16px 34px rgba(0,0,0,0.22);
+        margin-bottom: 22px;
+    }
+
+    .dt-title {
+        margin: 0;
+        font-size: clamp(34px, 4vw, 56px);
+        line-height: 1.18;
+        font-weight: 1000;
+        letter-spacing: -0.03em;
+        text-shadow: 0 4px 18px rgba(0,0,0,0.42);
+    }
+
+    .dt-subtitle {
+        margin: 22px 0 0;
+        max-width: 650px;
+        font-size: 18px;
+        line-height: 2;
+        font-weight: 650;
+        color: rgba(226, 232, 240, 0.95);
+    }
+
+    .dt-actions {
+        margin-top: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .dt-hero-btn {
+        min-width: 165px;
+        height: 58px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        border-radius: 18px;
+        font-size: 16px;
+        font-weight: 950;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+    .dt-hero-btn svg {
+        width: 23px;
+        height: 23px;
+    }
+
+    .dt-hero-btn-main {
+        color: #ffffff;
+        background: #dc0d19;
+        border: 1px solid rgba(255, 120, 130, 0.66);
+        box-shadow: 0 18px 34px rgba(127, 29, 29, 0.35);
+    }
+
+    .dt-hero-btn-main:hover {
+        background: #ef1723;
+        transform: translateY(-1px);
+    }
+
+    .dt-hero-btn-soft {
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.055);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        box-shadow: 0 18px 34px rgba(0, 0, 0, 0.18);
+    }
+
+    .dt-hero-btn-soft:hover {
+        background: rgba(255, 255, 255, 0.095);
+        transform: translateY(-1px);
+    }
+
+    .dt-review-list {
+        display: grid;
+        gap: 22px;
+    }
+
+    .dt-review-card {
+        border-radius: 28px;
+        border: 1px solid rgba(100, 116, 139, 0.55);
+        background:
+            radial-gradient(circle at 12% 8%, rgba(37, 99, 235, 0.13), transparent 34%),
+            linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.985));
+        box-shadow: 0 18px 44px rgba(0,0,0,0.26);
+        padding: 24px;
+        transition: 0.25s ease;
+    }
+
+    .dt-review-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(148, 163, 184, 0.7);
+    }
+
+    .dt-question-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 20px;
+    }
+
+    .dt-question-meta {
+        margin: 0;
+        color: #60a5fa;
+        font-size: 14px;
+        font-weight: 1000;
+    }
+
+    .dt-question-title {
+        margin: 10px 0 0;
+        font-size: 24px;
+        line-height: 1.65;
+        font-weight: 1000;
+        color: #ffffff;
+    }
+
+    .dt-status {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 112px;
+        height: 44px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 1000;
+    }
+
+    .dt-status-correct {
+        color: #4ade80;
+        border: 1px solid rgba(74, 222, 128, 0.32);
+        background: rgba(34, 197, 94, 0.12);
+    }
+
+    .dt-status-wrong {
+        color: #fb7185;
+        border: 1px solid rgba(251, 113, 133, 0.32);
+        background: rgba(244, 63, 94, 0.12);
+    }
+
+    .dt-image-box {
+        overflow: hidden;
+        border-radius: 24px;
+        border: 1px solid rgba(100, 116, 139, 0.42);
+        background: rgba(2, 6, 23, 0.75);
+        margin-bottom: 20px;
+    }
+
+    .dt-image-box img {
+        display: block;
+        width: 100%;
+        max-height: 420px;
+        object-fit: cover;
+    }
+
+    .dt-options-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .dt-option {
+        border-radius: 20px;
+        border: 1px solid rgba(100, 116, 139, 0.42);
+        background: rgba(2, 6, 23, 0.72);
+        padding: 16px;
+        min-height: 74px;
+        display: flex;
+        align-items: center;
+        line-height: 1.8;
+        font-weight: 850;
+        color: #e2e8f0;
+    }
+
+    .dt-option-correct {
+        border-color: rgba(74, 222, 128, 0.48);
+        background: rgba(34, 197, 94, 0.12);
+        color: #bbf7d0;
+    }
+
+    .dt-option-wrong {
+        border-color: rgba(251, 113, 133, 0.48);
+        background: rgba(244, 63, 94, 0.12);
+        color: #fecdd3;
+    }
+
+    .dt-answer-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 20px;
+    }
+
+    .dt-answer-box {
+        border-radius: 20px;
+        border: 1px solid rgba(100, 116, 139, 0.40);
+        background: rgba(2, 6, 23, 0.75);
+        padding: 16px;
+    }
+
+    .dt-answer-label {
+        margin: 0;
+        font-size: 13px;
+        color: #94a3b8;
+        font-weight: 850;
+    }
+
+    .dt-answer-value {
+        margin: 9px 0 0;
+        font-size: 16px;
+        font-weight: 1000;
+    }
+
+    .dt-answer-wrong { color: #fb7185; }
+    .dt-answer-correct { color: #4ade80; }
+
+    .dt-explanation {
+        margin-top: 18px;
+        border-radius: 20px;
+        border: 1px solid rgba(96, 165, 250, 0.22);
+        background: rgba(59, 130, 246, 0.08);
+        padding: 18px;
+    }
+
+    .dt-explanation-title {
+        margin: 0;
+        color: #60a5fa;
+        font-size: 15px;
+        font-weight: 1000;
+    }
+
+    .dt-explanation-text {
+        margin: 9px 0 0;
+        color: #cbd5e1;
+        line-height: 1.95;
+        font-weight: 650;
+    }
+
+    .dt-empty {
+        border-radius: 28px;
+        border: 1px solid rgba(100, 116, 139, 0.55);
+        background:
+            radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.13), transparent 40%),
+            linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.985));
+        box-shadow: 0 18px 44px rgba(0,0,0,0.26);
+        padding: 42px 24px;
+        text-align: center;
+        color: #94a3b8;
+        font-weight: 800;
+    }
+
+    @media (max-width: 1024px) {
+        .dt-road { display: none; }
+        .dt-hero-content { padding: 34px 28px; justify-content: center; }
+    }
+
+    @media (max-width: 720px) {
+        .dt-page { padding: 18px 14px 34px; }
+        .dt-hero { min-height: auto; }
+        .dt-hero-content { min-height: auto; padding: 30px 20px; }
+        .dt-title { font-size: 34px; }
+        .dt-subtitle { font-size: 15px; }
+        .dt-actions { justify-content: stretch; }
+        .dt-hero-btn { width: 100%; }
+        .dt-question-head { flex-direction: column; }
+        .dt-status { width: 100%; }
+        .dt-options-grid,
+        .dt-answer-grid {
+            grid-template-columns: 1fr;
+        }
+        .dt-review-card { padding: 20px; }
+    }
+</style>
+
+<main class="dt-page" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}">
+    <section class="dt-wrap">
+
+        <div class="dt-hero">
+            <svg class="dt-road" viewBox="0 0 560 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61" stroke="white" stroke-width="22" stroke-linecap="round" opacity="0.055"/>
+                <path d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10" stroke="white" stroke-width="22" stroke-linecap="round" opacity="0.055"/>
+                <path d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61" stroke="white" stroke-width="3.2" stroke-linecap="round" opacity="0.68"/>
+                <path d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10" stroke="white" stroke-width="3.2" stroke-linecap="round" opacity="0.68"/>
+                <path d="M76 294C125 265 166 232 177 197" stroke="white" stroke-width="3.1" stroke-linecap="round" stroke-dasharray="26 20" opacity="0.45"/>
+                <path d="M181 172C176 132 145 103 100 82" stroke="white" stroke-width="3.1" stroke-linecap="round" stroke-dasharray="26 20" opacity="0.43"/>
+                <path d="M323 32L450 159L323 286L196 159L323 32Z" stroke="white" stroke-width="8" opacity="0.09"/>
+                <path d="M323 99V168" stroke="white" stroke-width="14" stroke-linecap="round" opacity="0.09"/>
+                <circle cx="323" cy="211" r="8" fill="white" opacity="0.09"/>
+            </svg>
+
+            <div class="dt-hero-content">
+                <div>
+                    <div class="dt-badge">
+                        <span>{% trans "Exam Review" %}</span>
+                        <span>📖</span>
+                    </div>
+
+                    <h1 class="dt-title">{% trans "مرور پاسخ‌های آزمون" %}</h1>
+
+                    <p class="dt-subtitle">
+                        {% trans "پاسخ‌های درست و اشتباه این آزمون را با جزئیات بررسی کن و سوال‌هایی که نیاز به مرور دارند را بهتر یاد بگیر." %}
+                    </p>
+
+                    <div class="dt-actions">
+                        <a href="{% url 'exam_result' exam.id %}" class="dt-hero-btn dt-hero-btn-main">
+                            <span>{% trans "برگشت به نتیجه" %}</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 12H5"></path>
+                                <path d="M12 19l-7-7 7-7"></path>
+                            </svg>
+                        </a>
+
+                        <a href="{% url 'dashboard' %}" class="dt-hero-btn dt-hero-btn-soft">
+                            <span>{% trans "داشبورد" %}</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
             </div>
-
-            <a
-                href="/quiz/exam/{{ exam.id }}/result/"
-                class="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 font-bold hover:bg-white/10"
-            >
-                برگشت به نتیجه
-            </a>
         </div>
 
-        <div class="space-y-5">
+        <div class="dt-review-list">
             {% for item in review_items %}
-                <section class="rounded-[2rem] border border-white/10 bg-white/5 p-6">
+                <section class="dt-review-card">
 
-                    <div class="mb-4 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                    <div class="dt-question-head">
                         <div>
-                            <p class="text-sm font-bold text-blue-300">
-                                سوال {{ forloop.counter }} — {{ item.question.category.name }}
+                            <p class="dt-question-meta">
+                                {% blocktrans with number=forloop.counter category=item.question.category.name %}سوال {{ number }} — {{ category }}{% endblocktrans %}
                             </p>
 
-                            <h2 class="mt-2 text-2xl font-black leading-9">
+                            <h2 class="dt-question-title">
                                 {{ item.question.title }}
                             </h2>
                         </div>
 
                         {% if item.answer.is_correct %}
-                            <span class="w-fit rounded-full border border-green-400/20 bg-green-500/10 px-4 py-2 text-sm font-black text-green-300">
-                                درست ✅
-                            </span>
+                            <span class="dt-status dt-status-correct">{% trans "درست ✅" %}</span>
                         {% else %}
-                            <span class="w-fit rounded-full border border-red-400/20 bg-red-500/10 px-4 py-2 text-sm font-black text-red-300">
-                                اشتباه ❌
-                            </span>
+                            <span class="dt-status dt-status-wrong">{% trans "اشتباه ❌" %}</span>
                         {% endif %}
                     </div>
 
                     {% if item.question.image %}
-                        <div class="mb-5 overflow-hidden rounded-2xl bg-slate-900">
-                            <img
-                                src="{{ item.question.image.url }}"
-                                alt="{{ item.question.title }}"
-                                class="w-full object-cover"
-                                style="max-height: 420px;"
-                            >
+                        <div class="dt-image-box">
+                            <img src="{{ item.question.image.url }}" alt="{{ item.question.title }}">
                         </div>
                     {% endif %}
 
-                    <div class="grid gap-3 md:grid-cols-2">
+                    <div class="dt-options-grid">
 
-                        <div class="rounded-2xl border
+                        <div class="dt-option
                             {% if 1 in item.correct_answers %}
-                                border-green-400/40 bg-green-500/10
+                                dt-option-correct
                             {% elif 1 in item.selected_answers %}
-                                border-red-400/40 bg-red-500/10
-                            {% else %}
-                                border-white/10 bg-slate-900
+                                dt-option-wrong
                             {% endif %}
-                            p-4"
-                        >
-                            <p class="font-bold">1. {{ item.question.option_1 }}</p>
+                        ">
+                            1. {{ item.question.option_1 }}
                         </div>
 
-                        <div class="rounded-2xl border
+                        <div class="dt-option
                             {% if 2 in item.correct_answers %}
-                                border-green-400/40 bg-green-500/10
+                                dt-option-correct
                             {% elif 2 in item.selected_answers %}
-                                border-red-400/40 bg-red-500/10
-                            {% else %}
-                                border-white/10 bg-slate-900
+                                dt-option-wrong
                             {% endif %}
-                            p-4"
-                        >
-                            <p class="font-bold">2. {{ item.question.option_2 }}</p>
+                        ">
+                            2. {{ item.question.option_2 }}
                         </div>
 
-                        <div class="rounded-2xl border
+                        <div class="dt-option
                             {% if 3 in item.correct_answers %}
-                                border-green-400/40 bg-green-500/10
+                                dt-option-correct
                             {% elif 3 in item.selected_answers %}
-                                border-red-400/40 bg-red-500/10
-                            {% else %}
-                                border-white/10 bg-slate-900
+                                dt-option-wrong
                             {% endif %}
-                            p-4"
-                        >
-                            <p class="font-bold">3. {{ item.question.option_3 }}</p>
+                        ">
+                            3. {{ item.question.option_3 }}
                         </div>
 
                         {% if item.question.option_4 %}
-                            <div class="rounded-2xl border
+                            <div class="dt-option
                                 {% if 4 in item.correct_answers %}
-                                    border-green-400/40 bg-green-500/10
+                                    dt-option-correct
                                 {% elif 4 in item.selected_answers %}
-                                    border-red-400/40 bg-red-500/10
-                                {% else %}
-                                    border-white/10 bg-slate-900
+                                    dt-option-wrong
                                 {% endif %}
-                                p-4"
-                            >
-                                <p class="font-bold">4. {{ item.question.option_4 }}</p>
+                            ">
+                                4. {{ item.question.option_4 }}
                             </div>
                         {% endif %}
 
                     </div>
 
-                    <div class="mt-5 grid gap-4 md:grid-cols-2">
-                        <div class="rounded-2xl border border-red-400/20 bg-red-500/10 p-4">
-                            <p class="text-sm text-red-300">جواب شما</p>
+                    <div class="dt-answer-grid">
+                        <div class="dt-answer-box">
+                            <p class="dt-answer-label">{% trans "جواب شما" %}</p>
 
-                            <p class="mt-2 font-black text-red-300">
+                            <p class="dt-answer-value dt-answer-wrong">
                                 {% for selected in item.selected_answers %}
-                                    گزینه {{ selected }}{% if not forloop.last %}، {% endif %}
+                                    {% blocktrans with option=selected %}گزینه {{ option }}{% endblocktrans %}{% if not forloop.last %}، {% endif %}
                                 {% empty %}
-                                    پاسخی ثبت نشده
+                                    {% trans "پاسخی ثبت نشده" %}
                                 {% endfor %}
                             </p>
                         </div>
 
-                        <div class="rounded-2xl border border-green-400/20 bg-green-500/10 p-4">
-                            <p class="text-sm text-green-300">جواب صحیح</p>
+                        <div class="dt-answer-box">
+                            <p class="dt-answer-label">{% trans "جواب صحیح" %}</p>
 
-                            <p class="mt-2 font-black text-green-300">
+                            <p class="dt-answer-value dt-answer-correct">
                                 {% for correct in item.correct_answers %}
-                                    گزینه {{ correct }}{% if not forloop.last %}، {% endif %}
+                                    {% blocktrans with option=correct %}گزینه {{ option }}{% endblocktrans %}{% if not forloop.last %}، {% endif %}
                                 {% endfor %}
                             </p>
                         </div>
                     </div>
 
                     {% if item.question.explanation %}
-                        <div class="mt-5 rounded-2xl border border-blue-400/20 bg-blue-500/10 p-5">
-                            <p class="font-black text-blue-300">
-                                توضیح
-                            </p>
+                        <div class="dt-explanation">
+                            <p class="dt-explanation-title">{% trans "توضیح" %}</p>
 
-                            <p class="mt-2 leading-8 text-slate-300">
+                            <p class="dt-explanation-text">
                                 {{ item.question.explanation }}
                             </p>
                         </div>
@@ -160,12 +514,12 @@
 
                 </section>
             {% empty %}
-                <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-center text-slate-400">
-                    هنوز پاسخی برای این آزمون ثبت نشده است.
+                <div class="dt-empty">
+                    {% trans "هنوز پاسخی برای این آزمون ثبت نشده است." %}
                 </div>
             {% endfor %}
         </div>
 
-    </div>
+    </section>
 </main>
 {% endblock %}

@@ -1,109 +1,469 @@
 {% extends "base/base.html" %}
+{% load i18n %}
+
+{% get_current_language_bidi as LANGUAGE_BIDI %}
 
 {% block title %}
-تاریخچه آزمون‌ها
+{% trans "تاریخچه آزمون‌ها" %}
 {% endblock %}
 
 {% block content %}
-<main class="min-h-screen bg-slate-950 px-6 py-10 text-white">
-    <div class="mx-auto max-w-5xl">
+<style>
+.dt-page[dir="rtl"]{direction:rtl}.dt-page[dir="ltr"]{direction:ltr}.dt-page[dir="ltr"] .dt-road{left:auto;right:0;transform:scaleX(-1)}.dt-page[dir="ltr"] .dt-hero-content{text-align:left}.dt-page[dir="rtl"] .dt-hero-content{text-align:right}.dt-page[dir="ltr"] .dt-hero::before{background:linear-gradient(270deg,rgba(7,17,31,.93)0%,rgba(7,17,31,.65)32%,transparent 58%)}
+    .dt-page {
+        min-height: 100vh;
+        background:
+            radial-gradient(circle at 50% -20%, rgba(30, 64, 175, 0.12), transparent 35%),
+            #020617;
+        color: #ffffff;
+        padding: 28px 22px 48px;
+        font-family: inherit;
+    }
 
-        <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-                <h1 class="text-4xl font-black">
-                    📜 تاریخچه آزمون‌ها
-                </h1>
+    .dt-wrap {
+        max-width: 1180px;
+        margin: 0 auto;
+    }
 
-                <p class="mt-2 text-slate-400">
-                    نتیجه آزمون‌هایی که قبلاً انجام داده‌ای.
-                </p>
+    .dt-hero {
+        position: relative;
+        overflow: hidden;
+        min-height: 300px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 34px;
+        background:
+            radial-gradient(circle at 74% 20%, rgba(127, 29, 29, 0.72), transparent 34%),
+            linear-gradient(135deg, #07111f 0%, #020617 44%, #3f030a 100%);
+        box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
+        margin-bottom: 30px;
+    }
+
+    .dt-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, rgba(7, 17, 31, 0.93) 0%, rgba(7, 17, 31, 0.65) 32%, transparent 58%);
+        pointer-events: none;
+    }
+
+    .dt-road {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 52%;
+        height: 100%;
+        opacity: 0.18;
+        pointer-events: none;
+    }
+
+    .dt-hero-content {
+        position: relative;
+        z-index: 2;
+        min-height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        text-align: right;
+        padding: 42px 66px;
+    }
+
+    .dt-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 22px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.34);
+        background: rgba(255, 255, 255, 0.055);
+        font-size: 14px;
+        font-weight: 900;
+        box-shadow: 0 16px 34px rgba(0,0,0,0.22);
+        margin-bottom: 22px;
+    }
+
+    .dt-title {
+        margin: 0;
+        font-size: clamp(34px, 4vw, 56px);
+        line-height: 1.18;
+        font-weight: 1000;
+        letter-spacing: -0.03em;
+        text-shadow: 0 4px 18px rgba(0,0,0,0.42);
+    }
+
+    .dt-subtitle {
+        margin: 22px 0 0;
+        max-width: 650px;
+        font-size: 18px;
+        line-height: 2;
+        font-weight: 650;
+        color: rgba(226, 232, 240, 0.95);
+    }
+
+    .dt-actions {
+        margin-top: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .dt-hero-btn {
+        min-width: 165px;
+        height: 58px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        border-radius: 18px;
+        font-size: 16px;
+        font-weight: 950;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+    .dt-hero-btn svg { width: 23px; height: 23px; }
+
+    .dt-hero-btn-main {
+        color: #ffffff;
+        background: #dc0d19;
+        border: 1px solid rgba(255, 120, 130, 0.66);
+        box-shadow: 0 18px 34px rgba(127, 29, 29, 0.35);
+    }
+
+    .dt-hero-btn-main:hover {
+        background: #ef1723;
+        transform: translateY(-1px);
+    }
+
+    .dt-hero-btn-soft {
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.055);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        box-shadow: 0 18px 34px rgba(0, 0, 0, 0.18);
+    }
+
+    .dt-hero-btn-soft:hover {
+        background: rgba(255, 255, 255, 0.095);
+        transform: translateY(-1px);
+    }
+
+    .dt-list {
+        display: grid;
+        gap: 18px;
+    }
+
+    .dt-history-card {
+        border-radius: 26px;
+        border: 1px solid rgba(100, 116, 139, 0.55);
+        background:
+            radial-gradient(circle at 10% 5%, rgba(37, 99, 235, 0.13), transparent 30%),
+            linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.985));
+        box-shadow: 0 18px 44px rgba(0,0,0,0.26);
+        padding: 22px;
+        transition: 0.25s ease;
+    }
+
+    .dt-history-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(148, 163, 184, 0.7);
+    }
+
+    .dt-history-inner {
+        display: grid;
+        grid-template-columns: 1.2fr 1.4fr auto;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .dt-exam-title {
+        margin: 0;
+        font-size: 23px;
+        font-weight: 1000;
+        color: #ffffff;
+    }
+
+    .dt-date {
+        margin: 10px 0 0;
+        color: #94a3b8;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.8;
+    }
+
+    .dt-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .dt-stat {
+        min-width: 120px;
+        border-radius: 18px;
+        border: 1px solid rgba(100, 116, 139, 0.42);
+        background: rgba(15, 23, 42, 0.74);
+        padding: 14px 16px;
+        text-align: center;
+    }
+
+    .dt-stat-label {
+        margin: 0;
+        color: #94a3b8;
+        font-size: 12px;
+        font-weight: 850;
+    }
+
+    .dt-stat-value {
+        margin: 7px 0 0;
+        color: #ffffff;
+        font-size: 18px;
+        font-weight: 1000;
+    }
+
+    .dt-status-pass {
+        color: #4ade80;
+        border-color: rgba(74, 222, 128, 0.34);
+        background: rgba(34, 197, 94, 0.12);
+    }
+
+    .dt-status-fail {
+        color: #fb7185;
+        border-color: rgba(251, 113, 133, 0.34);
+        background: rgba(244, 63, 94, 0.12);
+    }
+
+    .dt-card-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        min-width: 150px;
+    }
+
+    .dt-card-btn {
+        height: 46px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border-radius: 14px;
+        font-size: 14px;
+        font-weight: 950;
+        text-decoration: none;
+        transition: 0.2s ease;
+        padding: 0 16px;
+    }
+
+    .dt-card-btn svg { width: 18px; height: 18px; }
+
+    .dt-btn-result {
+        color: #60a5fa;
+        background: rgba(59, 130, 246, 0.12);
+        border: 1px solid rgba(59, 130, 246, 0.58);
+    }
+
+    .dt-btn-result:hover { background: rgba(59, 130, 246, 0.2); }
+
+    .dt-btn-review {
+        color: #facc15;
+        background: rgba(234, 179, 8, 0.11);
+        border: 1px solid rgba(234, 179, 8, 0.58);
+    }
+
+    .dt-btn-review:hover { background: rgba(234, 179, 8, 0.19); }
+
+    .dt-empty {
+        border-radius: 28px;
+        border: 1px solid rgba(100, 116, 139, 0.55);
+        background:
+            radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.13), transparent 40%),
+            linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.985));
+        box-shadow: 0 18px 44px rgba(0,0,0,0.26);
+        padding: 42px 24px;
+        text-align: center;
+    }
+
+    .dt-empty-icon {
+        width: 82px;
+        height: 82px;
+        margin: 0 auto 18px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        border: 1px solid rgba(96, 165, 250, 0.36);
+        background: rgba(59, 130, 246, 0.12);
+        color: #60a5fa;
+    }
+
+    .dt-empty-icon svg { width: 44px; height: 44px; }
+
+    .dt-empty h2 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 1000;
+        color: #e2e8f0;
+    }
+
+    .dt-empty p {
+        margin: 12px 0 0;
+        color: #94a3b8;
+        font-weight: 650;
+    }
+
+    @media (max-width: 1024px) {
+        .dt-road { display: none; }
+        .dt-hero-content { padding: 34px 28px; justify-content: center; }
+        .dt-history-inner { grid-template-columns: 1fr; }
+        .dt-card-actions { flex-direction: row; flex-wrap: wrap; }
+    }
+
+    @media (max-width: 720px) {
+        .dt-page { padding: 18px 14px 34px; }
+        .dt-hero { min-height: auto; }
+        .dt-hero-content { min-height: auto; padding: 30px 20px; }
+        .dt-title { font-size: 34px; }
+        .dt-subtitle { font-size: 15px; }
+        .dt-actions { justify-content: stretch; }
+        .dt-hero-btn { width: 100%; }
+        .dt-stats { grid-template-columns: 1fr; }
+        .dt-card-actions { flex-direction: column; }
+        .dt-card-btn { width: 100%; }
+    }
+</style>
+
+<main class="dt-page" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}">
+    <section class="dt-wrap">
+
+        <div class="dt-hero">
+            <svg class="dt-road" viewBox="0 0 560 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61" stroke="white" stroke-width="22" stroke-linecap="round" opacity="0.055"/>
+                <path d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10" stroke="white" stroke-width="22" stroke-linecap="round" opacity="0.055"/>
+                <path d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61" stroke="white" stroke-width="3.2" stroke-linecap="round" opacity="0.68"/>
+                <path d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10" stroke="white" stroke-width="3.2" stroke-linecap="round" opacity="0.68"/>
+                <path d="M76 294C125 265 166 232 177 197" stroke="white" stroke-width="3.1" stroke-linecap="round" stroke-dasharray="26 20" opacity="0.45"/>
+                <path d="M181 172C176 132 145 103 100 82" stroke="white" stroke-width="3.1" stroke-linecap="round" stroke-dasharray="26 20" opacity="0.43"/>
+                <path d="M323 32L450 159L323 286L196 159L323 32Z" stroke="white" stroke-width="8" opacity="0.09"/>
+                <path d="M323 99V168" stroke="white" stroke-width="14" stroke-linecap="round" opacity="0.09"/>
+                <circle cx="323" cy="211" r="8" fill="white" opacity="0.09"/>
+            </svg>
+
+            <div class="dt-hero-content">
+                <div>
+                    <div class="dt-badge">
+                        <span>{% trans "Exam History" %}</span>
+                        <span>📜</span>
+                    </div>
+
+                    <h1 class="dt-title">{% trans "تاریخچه آزمون‌ها" %}</h1>
+
+                    <p class="dt-subtitle">
+                        {% trans "نتیجه آزمون‌هایی که قبلاً انجام داده‌ای را اینجا ببین، پاسخ‌ها را مرور کن و پیشرفتت را مرحله‌به‌مرحله دنبال کن." %}
+                    </p>
+
+                    <div class="dt-actions">
+                        <a href="{% url 'dashboard' %}" class="dt-hero-btn dt-hero-btn-main">
+                            <span>{% trans "داشبورد" %}</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                            </svg>
+                        </a>
+
+                        <a href="{% url 'start_exam' %}" class="dt-hero-btn dt-hero-btn-soft">
+                            <span>{% trans "شروع آزمون" %}</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 11l2 2 4-4"></path>
+                                <path d="M7 4h10v16H7z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
             </div>
-
-            <a
-                href="/dashboard/"
-                class="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 font-bold hover:bg-white/10"
-            >
-                برگشت به داشبورد
-            </a>
         </div>
 
-        <div class="space-y-4">
+        <div class="dt-list">
             {% for item in history_items %}
-                <section class="rounded-2xl border border-white/10 bg-white/5 p-5">
-                    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <section class="dt-history-card">
+                    <div class="dt-history-inner">
 
                         <div>
-                            <h2 class="text-xl font-black">
-                                آزمون شماره {{ item.exam.id }}
+                            <h2 class="dt-exam-title">
+                                {% blocktrans with exam_id=item.exam.id %}آزمون شماره {{ exam_id }}{% endblocktrans %}
                             </h2>
 
-                            <p class="mt-2 text-sm text-slate-400">
-                                تاریخ شروع: {{ item.exam.started_at }}
+                            <p class="dt-date">
+                                {% trans "تاریخ شروع:" %} {{ item.exam.started_at }}
                             </p>
                         </div>
 
-                        <div class="grid gap-3 text-center sm:grid-cols-3">
-                            <div class="rounded-xl bg-slate-900 px-5 py-3">
-                                <p class="text-xs text-slate-400">پاسخ داده‌شده</p>
-                                <p class="font-black">
+                        <div class="dt-stats">
+                            <div class="dt-stat">
+                                <p class="dt-stat-label">{% trans "پاسخ داده‌شده" %}</p>
+                                <p class="dt-stat-value">
                                     {{ item.answered_count }} / {{ item.total_questions }}
                                 </p>
                             </div>
 
-                            <div class="rounded-xl bg-slate-900 px-5 py-3">
-                                <p class="text-xs text-slate-400">امتیاز خطا</p>
-                                <p class="font-black">
+                            <div class="dt-stat">
+                                <p class="dt-stat-label">{% trans "امتیاز خطا" %}</p>
+                                <p class="dt-stat-value">
                                     {{ item.error_points }}
                                 </p>
                             </div>
 
                             {% if item.is_passed %}
-                                <div class="rounded-xl border border-green-400/20 bg-green-500/10 px-5 py-3 text-green-300">
-                                    <p class="text-xs">وضعیت</p>
-                                    <p class="font-black">قبول ✅</p>
+                                <div class="dt-stat dt-status-pass">
+                                    <p class="dt-stat-label">{% trans "وضعیت" %}</p>
+                                    <p class="dt-stat-value">{% trans "قبول ✅" %}</p>
                                 </div>
                             {% else %}
-                                <div class="rounded-xl border border-red-400/20 bg-red-500/10 px-5 py-3 text-red-300">
-                                    <p class="text-xs">وضعیت</p>
-                                    <p class="font-black">رد ❌</p>
+                                <div class="dt-stat dt-status-fail">
+                                    <p class="dt-stat-label">{% trans "وضعیت" %}</p>
+                                    <p class="dt-stat-value">{% trans "رد ❌" %}</p>
                                 </div>
                             {% endif %}
                         </div>
 
-                        <div class="flex flex-wrap gap-2">
-                            <a
-                                href="/quiz/exam/{{ item.exam.id }}/result/"
-                                class="rounded-xl border border-blue-400/30 bg-blue-500/10 px-4 py-2 font-bold text-blue-300 hover:bg-blue-500/20"
-                            >
-                                مشاهده نتیجه
+                        <div class="dt-card-actions">
+                            <a href="{% url 'exam_result' item.exam.id %}" class="dt-card-btn dt-btn-result">
+                                {% trans "مشاهده نتیجه" %}
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 3v18h18"></path>
+                                    <path d="M7 15l4-4 3 3 5-6"></path>
+                                </svg>
                             </a>
 
-                            <a
-                                href="/quiz/exam/{{ item.exam.id }}/review/"
-                                class="rounded-xl border border-yellow-400/30 bg-yellow-500/10 px-4 py-2 font-bold text-yellow-300 hover:bg-yellow-500/20"
-                            >
-                                مرور پاسخ‌ها
+                            <a href="{% url 'exam_review' item.exam.id %}" class="dt-card-btn dt-btn-review">
+                                {% trans "مرور پاسخ‌ها" %}
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                    <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"></path>
+                                </svg>
                             </a>
                         </div>
 
                     </div>
                 </section>
             {% empty %}
-                <div class="rounded-2xl border border-white/10 bg-white/5 p-8 text-center">
-                    <h2 class="text-2xl font-black text-slate-300">
-                        هنوز آزمونی انجام نداده‌ای.
-                    </h2>
+                <div class="dt-empty">
+                    <div class="dt-empty-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 11l2 2 4-4"></path>
+                            <path d="M7 4h10v16H7z"></path>
+                        </svg>
+                    </div>
 
-                    <a
-                        href="/quiz/exam/start/"
-                        class="mt-5 inline-block rounded-2xl bg-blue-500 px-5 py-3 font-bold hover:bg-blue-600"
-                    >
-                        شروع اولین آزمون
-                    </a>
+                    <h2>{% trans "هنوز آزمونی انجام نداده‌ای." %}</h2>
+                    <p>{% trans "از اینجا اولین آزمونت را شروع کن و نتیجه‌اش در تاریخچه ذخیره می‌شود." %}</p>
+
+                    <div class="dt-actions" style="justify-content:center;">
+                        <a href="{% url 'start_exam' %}" class="dt-hero-btn dt-hero-btn-main">
+                            <span>{% trans "شروع اولین آزمون" %}</span>
+                        </a>
+                    </div>
                 </div>
             {% endfor %}
         </div>
 
-    </div>
+    </section>
 </main>
 {% endblock %}

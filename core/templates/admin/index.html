@@ -1,24 +1,955 @@
-{% extends "admin/index.html" %}
+{% extends "admin/base_site.html" %}
+{% load i18n log %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
 
 {% block content %}
+<style>
+    .dt-admin-home {
+        color: #e5e7eb;
+        margin-bottom: 28px;
+    }
 
-<div style="margin-bottom:20px;">
-    <a
-        href="/admin/reports/"
-        style="
-            background:#2563eb;
-            color:white;
-            padding:12px 20px;
-            border-radius:10px;
-            text-decoration:none;
-            font-weight:bold;
-            display:inline-block;
-        "
-    >
-        📊 Project Reports
-    </a>
+    .dt-admin-home * {
+        box-sizing: border-box;
+    }
+
+    .dt-hero {
+        position: relative;
+        overflow: hidden;
+        border-radius: 24px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        background:
+            radial-gradient(circle at 78% 0%, rgba(37, 99, 235, 0.38), transparent 34%),
+            linear-gradient(135deg, #07111f 0%, #020617 48%, #111827 100%);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+        padding: 24px;
+        margin-bottom: 18px;
+    }
+
+    .dt-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(
+                90deg,
+                rgba(7, 17, 31, 0.92) 0%,
+                rgba(7, 17, 31, 0.48) 48%,
+                transparent 75%
+            ),
+            radial-gradient(
+                circle at 20% 90%,
+                rgba(244, 63, 94, 0.10),
+                transparent 32%
+            );
+        pointer-events: none;
+    }
+
+    .dt-admin-home[dir="rtl"] .dt-hero::before {
+        background:
+            linear-gradient(
+                270deg,
+                rgba(7, 17, 31, 0.92) 0%,
+                rgba(7, 17, 31, 0.48) 48%,
+                transparent 75%
+            ),
+            radial-gradient(
+                circle at 80% 90%,
+                rgba(244, 63, 94, 0.10),
+                transparent 32%
+            );
+    }
+
+    .dt-hero-inner {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+    }
+
+    .dt-badge {
+        width: fit-content;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(96, 165, 250, 0.34);
+        background: rgba(59, 130, 246, 0.10);
+        color: #93c5fd;
+        padding: 8px 14px;
+        font-size: 12px;
+        font-weight: 1000;
+        margin-bottom: 12px;
+    }
+
+    .dt-title {
+        margin: 0;
+        color: #ffffff;
+        font-size: clamp(28px, 3vw, 42px);
+        line-height: 1.2;
+        letter-spacing: -0.04em;
+        font-weight: 1000;
+    }
+
+    .dt-title span {
+        color: #fb7185;
+    }
+
+    .dt-text {
+        margin: 12px 0 0;
+        max-width: 760px;
+        color: #cbd5e1;
+        line-height: 1.9;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .dt-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        min-width: 360px;
+        justify-content: flex-end;
+    }
+
+    .dt-admin-home[dir="rtl"] .dt-actions {
+        justify-content: flex-start;
+    }
+
+    .dt-btn {
+        min-height: 42px;
+        min-width: 132px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border-radius: 13px;
+        border: 1px solid rgba(148, 163, 184, 0.20);
+        background: rgba(255, 255, 255, 0.055);
+        color: #ffffff !important;
+        text-decoration: none !important;
+        padding: 0 14px;
+        font-size: 12px;
+        line-height: 1;
+        font-weight: 1000;
+        white-space: nowrap;
+        transition: 0.2s ease;
+    }
+
+    .dt-btn:hover {
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.095);
+    }
+
+    .dt-btn-red {
+        background: #dc0d19;
+        border-color: rgba(255, 120, 130, 0.66);
+        box-shadow: 0 14px 26px rgba(127, 29, 29, 0.26);
+    }
+
+    .dt-btn-red:hover {
+        background: #ef1723;
+    }
+
+    .dt-btn-blue {
+        background: #2563eb;
+        border-color: rgba(96, 165, 250, 0.58);
+        box-shadow: 0 14px 26px rgba(37, 99, 235, 0.20);
+    }
+
+    .dt-btn-blue:hover {
+        background: #3b82f6;
+    }
+
+    .dt-stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        margin-bottom: 18px;
+    }
+
+    .dt-stat {
+        min-height: 108px;
+        border-radius: 22px;
+        border: 1px solid rgba(100, 116, 139, 0.46);
+        background:
+            radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.13), transparent 35%),
+            linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.985));
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.20);
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .dt-icon {
+        width: 54px;
+        height: 54px;
+        flex: 0 0 54px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        border: 1px solid;
+        font-size: 25px;
+    }
+
+    .dt-stat strong {
+        display: block;
+        color: #ffffff;
+        font-size: 25px;
+        line-height: 1;
+        font-weight: 1000;
+    }
+
+    .dt-stat span {
+        display: block;
+        margin-top: 8px;
+        color: #94a3b8;
+        font-size: 12px;
+        font-weight: 850;
+    }
+
+    .dt-blue {
+        color: #60a5fa;
+        background: rgba(59, 130, 246, 0.12);
+        border-color: rgba(96, 165, 250, 0.44);
+    }
+
+    .dt-green {
+        color: #4ade80;
+        background: rgba(34, 197, 94, 0.12);
+        border-color: rgba(74, 222, 128, 0.44);
+    }
+
+    .dt-red {
+        color: #fb7185;
+        background: rgba(244, 63, 94, 0.12);
+        border-color: rgba(251, 113, 133, 0.44);
+    }
+
+    .dt-yellow {
+        color: #facc15;
+        background: rgba(234, 179, 8, 0.12);
+        border-color: rgba(250, 204, 21, 0.44);
+    }
+
+    .dt-purple {
+        color: #a78bfa;
+        background: rgba(168, 85, 247, 0.12);
+        border-color: rgba(167, 139, 250, 0.44);
+    }
+
+    .dt-teal {
+        color: #2dd4bf;
+        background: rgba(20, 184, 166, 0.12);
+        border-color: rgba(45, 212, 191, 0.44);
+    }
+
+    .dt-shortcuts {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        margin-bottom: 20px;
+    }
+
+    .dt-shortcut {
+        min-height: 112px;
+        border-radius: 22px;
+        border: 1px solid rgba(100, 116, 139, 0.46);
+        background:
+            radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.13), transparent 35%),
+            linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.985));
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.20);
+        padding: 16px;
+        color: #ffffff !important;
+        text-decoration: none !important;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        transition: 0.22s ease;
+    }
+
+    .dt-shortcut:hover {
+        transform: translateY(-4px);
+        border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .dt-shortcut h3 {
+        margin: 0;
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 1000;
+    }
+
+    .dt-shortcut p {
+        margin: 7px 0 0;
+        color: #94a3b8;
+        line-height: 1.6;
+        font-size: 12px;
+        font-weight: 750;
+    }
+
+    .dt-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 340px;
+        gap: 20px;
+        align-items: start;
+    }
+
+    .dt-admin-home[dir="rtl"] .dt-layout {
+        grid-template-columns: 340px minmax(0, 1fr);
+    }
+
+    .dt-admin-home[dir="rtl"] .dt-layout > main {
+        order: 2;
+    }
+
+    .dt-admin-home[dir="rtl"] .dt-layout > aside {
+        order: 1;
+    }
+
+    .dt-panel {
+        border-radius: 24px;
+        border: 1px solid rgba(100, 116, 139, 0.46);
+        background:
+            radial-gradient(circle at 14% 8%, rgba(37, 99, 235, 0.10), transparent 32%),
+            linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.985));
+        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+        padding: 18px;
+        margin-bottom: 20px;
+    }
+
+    .dt-panel-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 16px;
+    }
+
+    .dt-panel-title {
+        margin: 0;
+        color: #ffffff;
+        font-size: 20px;
+        font-weight: 1000;
+    }
+
+    .dt-panel-text {
+        color: #94a3b8;
+        line-height: 1.8;
+        font-size: 13px;
+        font-weight: 750;
+        margin: 0;
+    }
+
+    .dt-app-grid {
+        display: grid;
+        gap: 14px;
+    }
+
+    .dt-app {
+        overflow: hidden;
+        border-radius: 20px;
+        border: 1px solid rgba(100, 116, 139, 0.38);
+        background: rgba(2, 6, 23, 0.50);
+    }
+
+    .dt-app-header {
+        padding: 14px 16px;
+        background: rgba(15, 23, 42, 0.86);
+        border-bottom: 1px solid rgba(148, 163, 184, 0.13);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .dt-app-header h3 {
+        margin: 0;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 1000;
+    }
+
+    .dt-model-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        padding: 12px;
+    }
+
+    .dt-model {
+        border-radius: 15px;
+        border: 1px solid rgba(100, 116, 139, 0.30);
+        background: rgba(15, 23, 42, 0.58);
+        padding: 12px;
+        display: grid;
+        gap: 10px;
+    }
+
+    .dt-model-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        color: #ffffff;
+        font-weight: 1000;
+        font-size: 13px;
+    }
+
+    .dt-model-title a {
+        color: #ffffff !important;
+        text-decoration: none !important;
+    }
+
+    .dt-model-title a:hover {
+        color: #93c5fd !important;
+    }
+
+    .dt-model-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .dt-small-btn {
+        min-height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        text-decoration: none !important;
+        padding: 0 10px;
+        font-size: 11px;
+        font-weight: 1000;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        color: #cbd5e1 !important;
+        background: rgba(255, 255, 255, 0.045);
+        transition: 0.18s ease;
+    }
+
+    .dt-small-btn:hover {
+        transform: translateY(-1px);
+        color: #ffffff !important;
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .dt-small-add {
+        color: #4ade80 !important;
+        border-color: rgba(74, 222, 128, 0.30);
+        background: rgba(34, 197, 94, 0.10);
+    }
+
+    .dt-small-change {
+        color: #60a5fa !important;
+        border-color: rgba(96, 165, 250, 0.30);
+        background: rgba(59, 130, 246, 0.10);
+    }
+
+    .dt-right {
+        position: sticky;
+        top: 92px;
+        display: grid;
+        gap: 20px;
+    }
+
+    .dt-recent h2 {
+        margin: 0 0 14px;
+        color: #ffffff;
+        font-size: 20px;
+        font-weight: 1000;
+    }
+
+    .dt-action-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 10px;
+    }
+
+    .dt-action {
+        border-radius: 14px;
+        border: 1px solid rgba(100, 116, 139, 0.34);
+        background: rgba(2, 6, 23, 0.52);
+        padding: 12px;
+        color: #cbd5e1;
+        font-size: 12px;
+        line-height: 1.7;
+        display: grid;
+        gap: 4px;
+    }
+
+    .dt-action-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .dt-action a {
+        color: #60a5fa !important;
+        font-weight: 900;
+        text-decoration: none !important;
+    }
+
+    .dt-action a:hover {
+        color: #93c5fd !important;
+    }
+
+    .dt-action-type {
+        color: #94a3b8;
+        font-size: 11px;
+        font-weight: 800;
+    }
+
+    .dt-action-mark {
+        font-size: 16px;
+        font-weight: 1000;
+    }
+
+    .dt-add {
+        color: #4ade80;
+    }
+
+    .dt-change {
+        color: #facc15;
+    }
+
+    .dt-delete {
+        color: #fb7185;
+    }
+
+    .dt-checklist {
+        display: grid;
+        gap: 10px;
+        margin-top: 16px;
+    }
+
+    .dt-check {
+        border-radius: 14px;
+        border: 1px solid rgba(100, 116, 139, 0.34);
+        background: rgba(2, 6, 23, 0.52);
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        color: #cbd5e1;
+        font-size: 13px;
+        font-weight: 850;
+    }
+
+    .dt-check span:last-child {
+        color: #4ade80;
+    }
+
+    .dt-empty {
+        border-radius: 16px;
+        border: 1px dashed rgba(148, 163, 184, 0.25);
+        background: rgba(2, 6, 23, 0.45);
+        padding: 18px;
+        color: #94a3b8;
+        line-height: 1.8;
+        font-weight: 750;
+        text-align: center;
+    }
+
+    @media (max-width: 1200px) {
+        .dt-stats,
+        .dt-shortcuts {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .dt-layout,
+        .dt-admin-home[dir="rtl"] .dt-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .dt-admin-home[dir="rtl"] .dt-layout > main,
+        .dt-admin-home[dir="rtl"] .dt-layout > aside {
+            order: initial;
+        }
+
+        .dt-right {
+            position: static;
+        }
+
+        .dt-hero-inner {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .dt-actions,
+        .dt-admin-home[dir="rtl"] .dt-actions {
+            min-width: 0;
+            justify-content: flex-start;
+        }
+    }
+
+    @media (max-width: 760px) {
+        .dt-stats,
+        .dt-shortcuts,
+        .dt-model-list {
+            grid-template-columns: 1fr;
+        }
+
+        .dt-hero {
+            padding: 22px 16px;
+        }
+
+        .dt-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<div
+    class="dt-admin-home"
+    dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}"
+>
+    <section class="dt-hero">
+        <div class="dt-hero-inner">
+            <div>
+                <div class="dt-badge">
+                    <span>{% trans "مرکز کنترل مدیریت" %}</span>
+                    <span aria-hidden="true">⚙️</span>
+                </div>
+
+                <h1 class="dt-title">
+                    {% trans "مدیریت سایت" %}
+                    <span>Driving Theory</span>
+                </h1>
+
+                <p class="dt-text">
+                    {% trans "اسلایدر، ویدیوها، دسته‌بندی‌ها، سوالات، کاربران و گزارش‌های پروژه را از همین صفحه مدیریت کنید." %}
+                </p>
+            </div>
+
+            <div class="dt-actions">
+                <a href="/admin/reports/" class="dt-btn dt-btn-red">
+                    📊 {% trans "گزارش‌ها" %}
+                </a>
+
+                <a href="/admin/core/heroslide/add/" class="dt-btn dt-btn-blue">
+                    🎞 {% trans "افزودن اسلاید" %}
+                </a>
+
+                <a href="/admin/videos/video/add/" class="dt-btn">
+                    🎥 {% trans "افزودن ویدیو" %}
+                </a>
+
+                <a
+                    href="/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="dt-btn"
+                >
+                    🌐 {% trans "مشاهده سایت" %}
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="dt-stats">
+        <a
+            href="/admin/auth/user/"
+            class="dt-stat"
+            style="text-decoration: none;"
+        >
+            <div class="dt-icon dt-blue" aria-hidden="true">👥</div>
+
+            <div>
+                <strong>{% trans "کاربران" %}</strong>
+                <span>{% trans "مدیریت کاربران" %}</span>
+            </div>
+        </a>
+
+        <a
+            href="/admin/videos/video/"
+            class="dt-stat"
+            style="text-decoration: none;"
+        >
+            <div class="dt-icon dt-teal" aria-hidden="true">🎥</div>
+
+            <div>
+                <strong>{% trans "ویدیوها" %}</strong>
+                <span>{% trans "ویدیوهای آموزشی" %}</span>
+            </div>
+        </a>
+
+        <a
+            href="/admin/quiz/question/"
+            class="dt-stat"
+            style="text-decoration: none;"
+        >
+            <div class="dt-icon dt-yellow" aria-hidden="true">❓</div>
+
+            <div>
+                <strong>{% trans "سوالات" %}</strong>
+                <span>{% trans "بانک سوالات" %}</span>
+            </div>
+        </a>
+
+        <a
+            href="/admin/reports/"
+            class="dt-stat"
+            style="text-decoration: none;"
+        >
+            <div class="dt-icon dt-red" aria-hidden="true">📊</div>
+
+            <div>
+                <strong>{% trans "گزارش‌ها" %}</strong>
+                <span>{% trans "گزارش پروژه" %}</span>
+            </div>
+        </a>
+    </section>
+
+    <section class="dt-shortcuts">
+        <a href="/admin/core/heroslide/" class="dt-shortcut">
+            <div class="dt-icon dt-red" aria-hidden="true">🎞</div>
+
+            <div>
+                <h3>{% trans "اسلایدر صفحه اصلی" %}</h3>
+                <p>{% trans "مدیریت تصویر، متن و لینک بنرها" %}</p>
+            </div>
+        </a>
+
+        <a href="/admin/videos/video/" class="dt-shortcut">
+            <div class="dt-icon dt-blue" aria-hidden="true">🎥</div>
+
+            <div>
+                <h3>{% trans "ویدیوها" %}</h3>
+                <p>{% trans "افزودن و مدیریت درس‌های آموزشی" %}</p>
+            </div>
+        </a>
+
+        <a href="/admin/videos/category/" class="dt-shortcut">
+            <div class="dt-icon dt-teal" aria-hidden="true">📚</div>
+
+            <div>
+                <h3>{% trans "دسته‌بندی ویدیوها" %}</h3>
+                <p>{% trans "مرتب‌سازی مسیر یادگیری" %}</p>
+            </div>
+        </a>
+
+        <a href="/admin/quiz/question/" class="dt-shortcut">
+            <div class="dt-icon dt-yellow" aria-hidden="true">❓</div>
+
+            <div>
+                <h3>{% trans "سوالات آزمون" %}</h3>
+                <p>{% trans "مدیریت سوال، گزینه‌ها و پاسخ صحیح" %}</p>
+            </div>
+        </a>
+
+        <a href="{% url 'admin:quiz_maincategory_changelist' %}" class="dt-shortcut">
+            <div class="dt-icon dt-purple" aria-hidden="true">🧩</div>
+
+            <div>
+                <h3>{% trans "دسته‌بندی سوالات" %}</h3>
+                <p>{% trans "ساخت موضوعات و زیرمجموعه‌ها" %}</p>
+            </div>
+        </a>
+
+        <a href="/admin/auth/user/" class="dt-shortcut">
+            <div class="dt-icon dt-green" aria-hidden="true">👥</div>
+
+            <div>
+                <h3>{% trans "کاربران" %}</h3>
+                <p>{% trans "مشاهده و مدیریت کاربران سایت" %}</p>
+            </div>
+        </a>
+
+        <a href="/admin/reports/" class="dt-shortcut">
+            <div class="dt-icon dt-blue" aria-hidden="true">📊</div>
+
+            <div>
+                <h3>{% trans "گزارش‌ها" %}</h3>
+                <p>{% trans "آمار آزمون‌ها، کاربران و ویدیوها" %}</p>
+            </div>
+        </a>
+
+        <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="dt-shortcut"
+        >
+            <div class="dt-icon dt-red" aria-hidden="true">🌐</div>
+
+            <div>
+                <h3>{% trans "مشاهده سایت" %}</h3>
+                <p>{% trans "باز کردن نسخه کاربری سایت" %}</p>
+            </div>
+        </a>
+    </section>
+
+    <div class="dt-layout">
+        <main class="dt-panel">
+            <div class="dt-panel-head">
+                <h2 class="dt-panel-title">
+                    {% trans "مدیریت مدل‌ها" %}
+                </h2>
+            </div>
+
+            {% if app_list %}
+                <div class="dt-app-grid">
+                    {% for app in app_list %}
+                        <section class="dt-app">
+                            <div class="dt-app-header">
+                                <h3>{{ app.name }}</h3>
+                            </div>
+
+                            <div class="dt-model-list">
+                                {% for model in app.models %}
+                                    <div class="dt-model">
+                                        <div class="dt-model-title">
+                                            {% if model.admin_url %}
+                                                <a href="{{ model.admin_url }}">
+                                                    {{ model.name }}
+                                                </a>
+                                            {% else %}
+                                                <span>{{ model.name }}</span>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="dt-model-actions">
+                                            {% if model.add_url %}
+                                                <a
+                                                    href="{{ model.add_url }}"
+                                                    class="dt-small-btn dt-small-add"
+                                                >
+                                                    + {% trans "افزودن" %}
+                                                </a>
+                                            {% endif %}
+
+                                            {% if model.admin_url and model.view_only %}
+                                                <a
+                                                    href="{{ model.admin_url }}"
+                                                    class="dt-small-btn dt-small-change"
+                                                >
+                                                    {% trans "مشاهده" %}
+                                                </a>
+                                            {% elif model.admin_url %}
+                                                <a
+                                                    href="{{ model.admin_url }}"
+                                                    class="dt-small-btn dt-small-change"
+                                                >
+                                                    {% trans "مدیریت" %}
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </section>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="dt-empty">
+                    {% trans "هیچ مدلی برای مدیریت وجود ندارد." %}
+                </div>
+            {% endif %}
+        </main>
+
+        <aside class="dt-right">
+            <section class="dt-panel dt-recent">
+                <h2>{% trans "فعالیت‌های اخیر" %}</h2>
+
+                {% get_admin_log 10 as admin_log for_user user %}
+
+                {% if not admin_log %}
+                    <div class="dt-empty">
+                        {% trans "هیچ فعالیت جدیدی ثبت نشده است." %}
+                    </div>
+                {% else %}
+                    <ul class="dt-action-list">
+                        {% for entry in admin_log %}
+                            <li class="dt-action">
+                                <div class="dt-action-top">
+                                    <div>
+                                        {% if entry.is_deletion or not entry.get_admin_url %}
+                                            {{ entry.object_repr }}
+                                        {% else %}
+                                            <a href="{{ entry.get_admin_url }}">
+                                                {{ entry.object_repr }}
+                                            </a>
+                                        {% endif %}
+                                    </div>
+
+                                    {% if entry.is_addition %}
+                                        <span class="dt-action-mark dt-add">+</span>
+                                    {% elif entry.is_change %}
+                                        <span class="dt-action-mark dt-change">✎</span>
+                                    {% elif entry.is_deletion %}
+                                        <span class="dt-action-mark dt-delete">×</span>
+                                    {% endif %}
+                                </div>
+
+                                {% if entry.content_type %}
+                                    <span class="dt-action-type">
+                                        {{ entry.content_type.name|capfirst }}
+                                    </span>
+                                {% else %}
+                                    <span class="dt-action-type">
+                                        {% trans "محتوای ناشناخته" %}
+                                    </span>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </section>
+
+            <section class="dt-panel">
+                <h2 class="dt-panel-title">
+                    {% trans "مسیر پیشنهادی مدیریت" %}
+                </h2>
+
+                <p class="dt-panel-text">
+                    {% trans "برای مدیریت آسان‌تر سایت، مراحل زیر را به‌ترتیب انجام دهید." %}
+                </p>
+
+                <div class="dt-checklist">
+                    <div class="dt-check">
+                        <span>{% trans "۱. ساخت اسلاید صفحه اصلی" %}</span>
+                        <span>✓</span>
+                    </div>
+
+                    <div class="dt-check">
+                        <span>{% trans "۲. افزودن دسته‌بندی ویدیوها" %}</span>
+                        <span>✓</span>
+                    </div>
+
+                    <div class="dt-check">
+                        <span>{% trans "۳. افزودن ویدیوهای آموزشی" %}</span>
+                        <span>✓</span>
+                    </div>
+
+                    <div class="dt-check">
+                        <span>{% trans "۴. وارد کردن سوالات آزمون" %}</span>
+                        <span>✓</span>
+                    </div>
+
+                    <div class="dt-check">
+                        <span>{% trans "۵. بررسی گزارش‌ها" %}</span>
+                        <span>✓</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dt-panel">
+                <h2 class="dt-panel-title">
+                    {% trans "نکته فروش پروژه" %}
+                </h2>
+
+                <p class="dt-panel-text">
+                    {% trans "این پنل طوری طراحی شده است که مشتری غیرتکنیکال نیز بتواند محتوای اصلی سایت را بدون تغییر کد مدیریت کند." %}
+                </p>
+            </section>
+        </aside>
+    </div>
 </div>
-
-{{ block.super }}
-
 {% endblock %}

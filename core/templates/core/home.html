@@ -1,385 +1,1510 @@
 {% extends "base/base.html" %}
+{% load i18n %}
+
+{% get_current_language as CURRENT_LANGUAGE %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
 
 {% block title %}
-آموزش گواهینامه آلمان به زبان فارسی
+{% trans "آموزش گواهینامه آلمان به زبان فارسی" %}
 {% endblock %}
 
 {% block meta_description %}
-آموزش گواهینامه آلمان به زبان فارسی همراه با ویدیو، دسته‌بندی آموزشی، آزمون شبیه‌ساز، سوالات تئوری و مسیر یادگیری.
+{% trans "آموزش گواهینامه آلمان به زبان فارسی همراه با ویدیو، دسته‌بندی آموزشی، آزمون شبیه‌ساز، سوالات تئوری و مسیر یادگیری." %}
 {% endblock %}
 
 {% block content %}
 
-<header class="sticky top-0 z-50 border-b border-slate-800 bg-slate-950 text-white">
-    <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <a href="/" class="flex items-center gap-3">
-            <div class="flex h-11 w-11 items-center justify-center rounded-full border border-white/30 text-xl">
-                🚘
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+
+<style>
+    html[dir="rtl"] .home-full { direction: rtl; }
+    html[dir="ltr"] .home-full { direction: ltr; }
+    html[dir="ltr"] .section-kicker,
+    html[dir="ltr"] .stat-body { text-align: left; }
+    html[dir="rtl"] .section-kicker,
+    html[dir="rtl"] .stat-body { text-align: right; }
+
+    .home-full {
+        color: #ffffff;
+        background:
+            radial-gradient(circle at 50% -20%, rgba(30, 64, 175, 0.13), transparent 32%),
+            radial-gradient(circle at 10% 8%, rgba(127, 29, 29, 0.16), transparent 28%),
+            #020617;
+        font-family: inherit;
+        min-height: 100vh;
+    }
+
+    .home-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+        background: rgba(2, 6, 23, 0.88);
+        backdrop-filter: blur(18px);
+    }
+
+    .home-header-inner {
+        max-width: 1560px;
+        margin: 0 auto;
+        padding: 14px 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+    }
+
+    .home-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 19px;
+        font-weight: 1000;
+    }
+
+    .home-logo-icon {
+        width: 46px;
+        height: 46px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        border: 1px solid rgba(248, 113, 113, 0.45);
+        background: rgba(244, 63, 94, 0.13);
+        color: #fb7185;
+        font-size: 22px;
+    }
+
+    .home-menu {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .home-menu a {
+        color: #cbd5e1;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 900;
+        transition: 0.2s ease;
+    }
+
+    .home-menu a:hover,
+    .home-menu .active {
+        color: #fb7185;
+    }
+
+    .home-header-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .home-top-btn {
+        min-height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 13px;
+        border: 1px solid rgba(148, 163, 184, 0.20);
+        background: rgba(255,255,255,0.055);
+        color: #ffffff;
+        text-decoration: none;
+        padding: 0 15px;
+        font-size: 13px;
+        font-weight: 950;
+        transition: 0.2s ease;
+    }
+
+    .home-top-btn:hover {
+        transform: translateY(-1px);
+        background: rgba(255,255,255,0.095);
+    }
+
+    .home-top-btn-red {
+        background: #dc0d19;
+        border-color: rgba(255,120,130,0.66);
+    }
+
+    .home-top-btn-red:hover {
+        background: #ef1723;
+    }
+
+    .home-body {
+        padding: 22px;
+    }
+
+    .home-container {
+        max-width: 1560px;
+        margin: 0 auto;
+    }
+
+    .hero-slider-wrap {
+        position: relative;
+        overflow: hidden;
+        border-radius: 28px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.36);
+        margin-bottom: 28px;
+    }
+
+    .hero-swiper {
+        width: 100%;
+        min-height: 380px;
+    }
+
+    .hero-slide {
+        position: relative;
+        overflow: hidden;
+        min-height: 380px;
+        background:
+            radial-gradient(circle at 78% 10%, rgba(127, 29, 29, 0.65), transparent 32%),
+            linear-gradient(135deg, #07111f 0%, #020617 48%, #3b0208 100%);
+    }
+
+    .hero-slide.slide-blue {
+        background:
+            radial-gradient(circle at 78% 10%, rgba(37, 99, 235, 0.58), transparent 32%),
+            linear-gradient(135deg, #07111f 0%, #020617 48%, #0b2457 100%);
+    }
+
+    .hero-slide.slide-green {
+        background:
+            radial-gradient(circle at 78% 10%, rgba(34, 197, 94, 0.38), transparent 32%),
+            linear-gradient(135deg, #07111f 0%, #020617 48%, #052e16 100%);
+    }
+
+    .hero-slide.slide-purple {
+        background:
+            radial-gradient(circle at 78% 10%, rgba(168, 85, 247, 0.48), transparent 32%),
+            linear-gradient(135deg, #07111f 0%, #020617 48%, #2e1065 100%);
+    }
+
+    .hero-slide::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(90deg, rgba(7, 17, 31, 0.90) 0%, rgba(7, 17, 31, 0.42) 42%, transparent 70%),
+            radial-gradient(circle at 24% 84%, rgba(59,130,246,0.12), transparent 30%);
+        pointer-events: none;
+    }
+
+    .hero-slide-image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.34;
+        filter: saturate(1.05) contrast(1.05);
+    }
+
+    .hero-road {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 50%;
+        height: 100%;
+        opacity: 0.18;
+        pointer-events: none;
+    }
+
+    .hero-inner {
+        position: relative;
+        z-index: 2;
+        min-height: 380px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 430px;
+        gap: 36px;
+        align-items: center;
+        padding: 44px 54px;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 10px 22px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.30);
+        background: rgba(255,255,255,0.055);
+        font-size: 14px;
+        font-weight: 1000;
+        margin-bottom: 20px;
+    }
+
+    .hero-title {
+        margin: 0;
+        font-size: clamp(42px, 5vw, 70px);
+        line-height: 1.12;
+        font-weight: 1000;
+        letter-spacing: -0.045em;
+        text-shadow: 0 8px 26px rgba(0,0,0,0.45);
+    }
+
+    .hero-title span {
+        color: #fb7185;
+    }
+
+    .slide-blue .hero-title span { color: #60a5fa; }
+    .slide-green .hero-title span { color: #4ade80; }
+    .slide-purple .hero-title span { color: #c084fc; }
+
+    .hero-text {
+        margin: 22px 0 0;
+        max-width: 720px;
+        color: rgba(226, 232, 240, 0.92);
+        font-size: 19px;
+        line-height: 2;
+        font-weight: 650;
+    }
+
+    .hero-actions {
+        margin-top: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+    }
+
+    .hero-btn {
+        min-height: 58px;
+        min-width: 170px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border-radius: 18px;
+        text-decoration: none;
+        padding: 0 22px;
+        font-size: 15px;
+        font-weight: 1000;
+        transition: 0.2s ease;
+    }
+
+    .hero-btn:hover { transform: translateY(-2px); }
+
+    .hero-btn-red {
+        color: #ffffff;
+        background: #dc0d19;
+        border: 1px solid rgba(255,120,130,0.66);
+        box-shadow: 0 18px 34px rgba(127, 29, 29, 0.35);
+    }
+
+    .hero-btn-red:hover { background: #ef1723; }
+
+    .hero-btn-blue {
+        color: #ffffff;
+        background: #2563eb;
+        border: 1px solid rgba(96,165,250,0.66);
+        box-shadow: 0 18px 34px rgba(37,99,235,0.30);
+    }
+
+    .hero-btn-blue:hover { background: #3b82f6; }
+
+    .hero-btn-green {
+        color: #052e16;
+        background: #4ade80;
+        border: 1px solid rgba(134,239,172,0.66);
+        box-shadow: 0 18px 34px rgba(34,197,94,0.24);
+    }
+
+    .hero-btn-green:hover { background: #86efac; }
+
+    .hero-btn-soft {
+        color: #ffffff;
+        border: 1px solid rgba(255,255,255,0.16);
+        background: rgba(255,255,255,0.055);
+    }
+
+    .hero-preview {
+        border-radius: 30px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255,255,255,0.16);
+        padding: 26px;
+        box-shadow: 0 24px 60px rgba(0,0,0,0.36);
+        backdrop-filter: blur(18px);
+    }
+
+    .hero-preview-inner {
+        min-height: 200px;
+        border-radius: 20px;
+        background: rgba(255,255,255,0.90);
+        color: #0f172a;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        text-align: center;
+        box-shadow: 0 18px 40px rgba(0,0,0,0.25);
+    }
+
+    .hero-preview-car {
+        font-size: 58px;
+        margin-bottom: 18px;
+    }
+
+    .hero-preview-inner h3 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 1000;
+    }
+
+    .hero-preview-inner p {
+        margin: 14px 0 0;
+        color: #475569;
+        line-height: 1.9;
+        font-weight: 700;
+    }
+
+    .hero-swiper .swiper-pagination { bottom: 18px !important; }
+
+    .hero-swiper .swiper-pagination-bullet {
+        width: 10px;
+        height: 10px;
+        background: rgba(255,255,255,0.55);
+        opacity: 1;
+    }
+
+    .hero-swiper .swiper-pagination-bullet-active {
+        width: 30px;
+        border-radius: 999px;
+        background: #fb7185;
+    }
+
+    .hero-slider-button {
+        width: 44px;
+        height: 44px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.10);
+        border: 1px solid rgba(255,255,255,0.18);
+        color: #ffffff;
+        backdrop-filter: blur(10px);
+    }
+
+    .hero-slider-button::after {
+        font-size: 16px;
+        font-weight: 1000;
+    }
+
+    .home-shell {
+        display: grid;
+        grid-template-columns: 290px minmax(0, 1fr);
+        gap: 28px;
+        align-items: start;
+    }
+
+    .glass {
+        border: 1px solid rgba(100, 116, 139, 0.52);
+        background:
+            radial-gradient(circle at 14% 8%, rgba(37, 99, 235, 0.12), transparent 32%),
+            linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.985));
+        box-shadow: 0 18px 44px rgba(0,0,0,0.26);
+    }
+
+    .side {
+        position: sticky;
+        top: 92px;
+        display: grid;
+        gap: 18px;
+    }
+
+    .profile-card {
+        border-radius: 26px;
+        padding: 20px;
+    }
+
+    .profile-head {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 20px;
+    }
+
+    .avatar {
+        width: 62px;
+        height: 62px;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(168, 85, 247, 0.48);
+        background: rgba(168, 85, 247, 0.13);
+        color: #c084fc;
+        font-size: 28px;
+        font-weight: 1000;
+    }
+
+    .profile-name {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 1000;
+        color: #ffffff;
+    }
+
+    .profile-sub {
+        margin: 6px 0 0;
+        color: #94a3b8;
+        font-size: 13px;
+        font-weight: 750;
+    }
+
+    .side-link {
+        min-height: 52px;
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-radius: 14px;
+        border: 1px solid rgba(100, 116, 139, 0.30);
+        background: rgba(2, 6, 23, 0.48);
+        padding: 0 16px;
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 950;
+        transition: 0.2s ease;
+    }
+
+    .side-link:hover,
+    .side-link.active {
+        border-color: rgba(248, 113, 113, 0.52);
+        background: rgba(244, 63, 94, 0.12);
+        color: #fb7185;
+        transform: translateY(-1px);
+    }
+
+    .social {
+        overflow: hidden;
+        border-radius: 22px;
+        padding: 20px;
+        color: #ffffff;
+        box-shadow: 0 18px 44px rgba(0,0,0,0.24);
+    }
+
+    .social-icon {
+        width: 48px;
+        height: 48px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.14);
+        font-size: 23px;
+        margin-bottom: 14px;
+    }
+
+    .social-kicker {
+        margin: 0;
+        color: rgba(255,255,255,0.72);
+        font-size: 12px;
+        font-weight: 1000;
+    }
+
+    .social h3 {
+        margin: 8px 0 0;
+        font-size: 22px;
+        font-weight: 1000;
+    }
+
+    .social p {
+        margin: 14px 0 0;
+        color: rgba(255,255,255,0.88);
+        line-height: 1.85;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .social a {
+        margin-top: 18px;
+        min-height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        background: rgba(255,255,255,0.17);
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 1000;
+        transition: 0.2s ease;
+    }
+
+    .social a:hover {
+        background: rgba(255,255,255,0.28);
+        transform: translateY(-1px);
+    }
+
+    .youtube { background: linear-gradient(135deg, #991b1b, #ef4444); }
+    .instagram { background: linear-gradient(135deg, #833AB4, #E1306C, #FCAF45); }
+    .telegram { background: linear-gradient(135deg, #0ea5e9, #2563eb); }
+
+    .main {
+        display: grid;
+        gap: 18px;
+    }
+
+    .section {
+        border-radius: 18px;
+        padding: 26px;
+    }
+
+    .section-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 22px;
+    }
+
+    .section-kicker {
+        margin: 0 0 8px;
+        color: #fb7185;
+        font-size: 13px;
+        font-weight: 1000;
+        text-align: right;
+    }
+
+    .section-title {
+        margin: 0;
+        color: #ffffff;
+        font-size: 34px;
+        line-height: 1.25;
+        font-weight: 1000;
+        letter-spacing: -0.03em;
+    }
+
+    .section-desc {
+        margin: 10px 0 0;
+        color: #94a3b8;
+        line-height: 1.9;
+        font-weight: 650;
+    }
+
+    .section-link {
+        color: #60a5fa;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 1000;
+        white-space: nowrap;
+    }
+
+    .videos-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .video-card {
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+    .video-thumb {
+        position: relative;
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        border-radius: 18px;
+        border: 1px solid rgba(100,116,139,0.48);
+        background: linear-gradient(145deg, rgba(15,23,42,0.98), rgba(2,6,23,0.985));
+        transition: 0.25s ease;
+    }
+
+    .video-card:hover .video-thumb {
+        transform: translateY(-3px);
+        border-color: rgba(96,165,250,0.48);
+    }
+
+    .video-thumb img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        transition: 0.5s ease;
+    }
+
+    .video-card:hover .video-thumb img {
+        transform: scale(1.06);
+    }
+
+    .video-thumb::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.72), rgba(0,0,0,0.08), transparent);
+        pointer-events: none;
+    }
+
+    .video-thumb-red { background: radial-gradient(circle at 35% 32%, rgba(239,68,68,0.45), transparent 34%), linear-gradient(145deg, #24090e, #020617); }
+    .video-thumb-blue { background: radial-gradient(circle at 40% 30%, rgba(59,130,246,0.45), transparent 34%), linear-gradient(145deg, #07152d, #020617); }
+    .video-thumb-green { background: radial-gradient(circle at 40% 30%, rgba(34,197,94,0.45), transparent 34%), linear-gradient(145deg, #052e16, #020617); }
+
+    .video-illustration {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        font-size: 64px;
+        opacity: 0.95;
+    }
+
+    .play {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        display: grid;
+        place-items: center;
+    }
+
+    .play span {
+        width: 66px;
+        height: 66px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.18);
+        border: 1px solid rgba(255,255,255,0.28);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 18px 34px rgba(0,0,0,0.30);
+        transition: 0.25s ease;
+    }
+
+    .video-card:hover .play span {
+        transform: scale(1.08);
+        background: #dc0d19;
+    }
+
+    .duration {
+        position: absolute;
+        z-index: 4;
+        left: 12px;
+        bottom: 12px;
+        border-radius: 999px;
+        background: rgba(2,6,23,0.78);
+        padding: 6px 10px;
+        color: #ffffff;
+        font-size: 12px;
+        font-weight: 1000;
+    }
+
+    .video-title {
+        margin: 16px 0 0;
+        text-align: center;
+        font-size: 17px;
+        line-height: 1.5;
+        font-weight: 1000;
+    }
+
+    .category-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .category-card {
+        min-height: 145px;
+        border-radius: 18px;
+        border: 1px solid rgba(100,116,139,0.52);
+        background:
+            radial-gradient(circle at 50% 0%, rgba(37,99,235,0.14), transparent 34%),
+            rgba(2,6,23,0.48);
+        color: #ffffff;
+        text-decoration: none;
+        padding: 18px 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 13px;
+        transition: 0.25s ease;
+    }
+
+    .category-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(96,165,250,0.54);
+        background:
+            radial-gradient(circle at 50% 0%, rgba(37,99,235,0.20), transparent 36%),
+            rgba(15,23,42,0.78);
+    }
+
+    .cat-icon {
+        width: 64px;
+        height: 64px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        border: 1px solid;
+        font-size: 26px;
+    }
+
+    .cat-blue { color: #60a5fa; background: rgba(59,130,246,0.12); border-color: rgba(96,165,250,0.44); }
+    .cat-green { color: #4ade80; background: rgba(34,197,94,0.12); border-color: rgba(74,222,128,0.44); }
+    .cat-yellow { color: #facc15; background: rgba(234,179,8,0.12); border-color: rgba(250,204,21,0.44); }
+    .cat-red { color: #fb7185; background: rgba(244,63,94,0.12); border-color: rgba(251,113,133,0.44); }
+    .cat-purple { color: #a78bfa; background: rgba(168,85,247,0.12); border-color: rgba(167,139,250,0.44); }
+
+    .category-card h3 {
+        margin: 0;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 1000;
+    }
+
+    .category-card p {
+        margin: -6px 0 0;
+        color: #94a3b8;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .stat-card {
+        min-height: 104px;
+        border-radius: 16px;
+        border: 1px solid rgba(100,116,139,0.52);
+        background:
+            radial-gradient(circle at 15% 0%, rgba(37,99,235,0.12), transparent 32%),
+            rgba(2,6,23,0.50);
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 16px 20px;
+    }
+
+    .stat-icon {
+        width: 58px;
+        height: 58px;
+        flex: 0 0 58px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        font-size: 26px;
+        border: 1px solid;
+    }
+
+    .stat-body {
+        text-align: right;
+    }
+
+    .stat-value {
+        margin: 0;
+        font-size: 32px;
+        line-height: 1;
+        font-weight: 1000;
+    }
+
+    .stat-label {
+        margin: 8px 0 0;
+        color: #94a3b8;
+        font-size: 13px;
+        font-weight: 850;
+    }
+
+    .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .blog-card {
+        min-height: 98px;
+        border-radius: 16px;
+        border: 1px solid rgba(100,116,139,0.52);
+        background: rgba(2,6,23,0.50);
+        padding: 18px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .blog-icon {
+        width: 54px;
+        height: 54px;
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        font-size: 24px;
+        flex: 0 0 54px;
+    }
+
+    .blog-card p {
+        margin: 0;
+        color: #94a3b8;
+        font-size: 13px;
+        font-weight: 750;
+    }
+
+    .blog-card h3 {
+        margin: 5px 0 0;
+        color: #ffffff;
+        font-size: 16px;
+        line-height: 1.6;
+        font-weight: 1000;
+    }
+
+    .home-footer {
+        border-top: 1px solid rgba(148, 163, 184, 0.16);
+        background: rgba(2, 6, 23, 0.94);
+        padding: 44px 22px;
+    }
+
+    .home-footer-inner {
+        max-width: 1560px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 40px;
+    }
+
+    .footer-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #ffffff;
+        font-size: 24px;
+        font-weight: 1000;
+        margin-bottom: 18px;
+    }
+
+    .footer-brand-icon {
+        width: 48px;
+        height: 48px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        border: 1px solid rgba(248, 113, 113, 0.45);
+        background: rgba(244, 63, 94, 0.13);
+    }
+
+    .home-footer p {
+        margin: 0;
+        max-width: 500px;
+        color: #94a3b8;
+        line-height: 2;
+        font-weight: 650;
+    }
+
+    .home-footer h3 {
+        margin: 0 0 16px;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 1000;
+    }
+
+    .home-footer a {
+        display: block;
+        margin-top: 10px;
+        color: #94a3b8;
+        text-decoration: none;
+        font-weight: 750;
+        transition: 0.2s ease;
+    }
+
+    .home-footer a:hover {
+        color: #ffffff;
+    }
+
+
+    .home-language {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.20);
+        background: rgba(255,255,255,0.055);
+        padding: 5px;
+        direction: ltr;
+    }
+
+    .home-language form {
+        margin: 0;
+    }
+
+    .home-language button {
+        min-width: 38px;
+        height: 30px;
+        border: 0;
+        border-radius: 999px;
+        background: transparent;
+        color: #cbd5e1;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 11px;
+        font-weight: 1000;
+        transition: 0.2s ease;
+    }
+
+    .home-language button:hover {
+        color: #ffffff;
+        background: rgba(255,255,255,0.08);
+        transform: translateY(-1px);
+    }
+
+    .home-language button.active {
+        color: #ffffff;
+        background: #dc0d19;
+        box-shadow: 0 10px 22px rgba(220, 13, 25, 0.28);
+    }
+
+    @media (max-width: 640px) {
+        .home-language {
+            position: fixed;
+            z-index: 9999;
+            left: 50%;
+            bottom: 12px;
+            transform: translateX(-50%);
+            background: rgba(2,6,23,0.88);
+            backdrop-filter: blur(16px);
+        }
+    }
+
+    @media (max-width: 1200px) {
+        .hero-inner {
+            grid-template-columns: 1fr;
+        }
+
+        .home-shell {
+            grid-template-columns: 1fr;
+        }
+
+        .side {
+            position: static;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .profile-card {
+            grid-column: 1 / -1;
+        }
+    }
+
+    @media (max-width: 900px) {
+        .home-menu {
+            display: none;
+        }
+
+        .videos-grid,
+        .stats-grid,
+        .blog-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .category-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .home-footer-inner {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .home-body {
+            padding: 14px 10px;
+        }
+
+        .home-logo span {
+            display: none;
+        }
+
+        .home-top-btn.hide-mobile {
+            display: none;
+        }
+
+        .hero-inner {
+            padding: 30px 20px;
+        }
+
+        .hero-title {
+            font-size: 40px;
+        }
+
+        .hero-slider-button {
+            display: none;
+        }
+
+        .side {
+            grid-template-columns: 1fr;
+        }
+
+        .section {
+            padding: 20px;
+        }
+
+        .section-head {
+            flex-direction: column;
+        }
+
+        .section-title {
+            font-size: 28px;
+        }
+
+        .category-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="home-full" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}">
+
+    <header class="home-header">
+        <div class="home-header-inner">
+            <a href="{% url 'home' %}" class="home-logo">
+                <div class="home-logo-icon">🚗</div>
+                <span>{% trans "آموزش گواهینامه آلمان" %}</span>
+            </a>
+
+            <nav class="home-menu">
+                <a href="{% url 'home' %}" class="active">{% trans "صفحه اصلی" %}</a>
+                <a href="{% url 'video_list' %}">{% trans "ویدیوها" %}</a>
+                <a href="{% url 'category_list' %}">{% trans "دسته‌بندی‌ها" %}</a>
+                <a href="{% url 'official_exams' %}">{% trans "آزمون‌های رسمی" %}</a>
+                <a href="#blog">{% trans "بلاگ" %}</a>
+            </nav>
+
+            <div class="home-header-actions">
+
+                <div class="home-language" aria-label="{% trans 'انتخاب زبان' %}">
+                    <form action="{% url 'set_language' %}" method="post">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                        <input name="language" type="hidden" value="fa">
+                        <button type="submit" class="{% if CURRENT_LANGUAGE == 'fa' %}active{% endif %}">🇮🇷 FA</button>
+                    </form>
+
+                    <form action="{% url 'set_language' %}" method="post">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                        <input name="language" type="hidden" value="de">
+                        <button type="submit" class="{% if CURRENT_LANGUAGE == 'de' %}active{% endif %}">🇩🇪 DE</button>
+                    </form>
+
+                    <form action="{% url 'set_language' %}" method="post">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                        <input name="language" type="hidden" value="en">
+                        <button type="submit" class="{% if CURRENT_LANGUAGE == 'en' %}active{% endif %}">🇬🇧 EN</button>
+                    </form>
+                </div>
+
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="home-top-btn home-top-btn-red">{% trans "داشبورد" %}</a>
+                    <a href="{% url 'accounts:logout' %}" class="home-top-btn hide-mobile">{% trans "خروج" %}</a>
+                    
+                {% else %}
+                    <a href="{% url 'accounts:login' %}" class="home-top-btn hide-mobile">{% trans "ورود" %}</a>
+                    <a href="{% url 'accounts:register' %}" class="home-top-btn home-top-btn-red">{% trans "شروع رایگان" %}</a>
+                {% endif %}
             </div>
-            <p class="text-xl font-black">آموزش گواهینامه آلمان</p>
-        </a>
-
-        <div class="hidden items-center gap-8 text-sm font-bold text-slate-200 md:flex">
-            <a href="/" class="border-b-2 border-blue-500 pb-2">صفحه اصلی</a>
-            <a href="/videos/" class="hover:text-blue-300">ویدیوها</a>
-            <a href="/quiz/categories/" class="hover:text-blue-300">دسته‌بندی‌ها</a>
-            <a href="/quiz/official-exams/" class="hover:text-blue-300">آزمون‌های رسمی</a>
-            <a href="#blog" class="hover:text-blue-300">بلاگ</a>
         </div>
+    </header>
 
-        <div class="flex items-center gap-3">
-            {% if request.user.is_authenticated %}
-                <a href="/dashboard/" class="rounded-xl bg-blue-500 px-4 py-2 text-sm font-bold hover:bg-blue-600">
-                    داشبورد
-                </a>
-                <a href="/accounts/logout/" class="rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-2 text-sm font-bold text-red-300 hover:bg-red-500/20">
-                    خروج
-                </a>
-            {% else %}
-                <a href="/accounts/login/" class="hidden rounded-xl px-4 py-2 text-sm font-bold hover:bg-white/10 md:block">
-                    ورود
-                </a>
-                <a href="/accounts/register/" class="rounded-xl bg-blue-500 px-4 py-2 text-sm font-bold hover:bg-blue-600">
-                    شروع رایگان
-                </a>
-            {% endif %}
-        </div>
-    </nav>
-</header>
+    <main class="home-body">
+        <div class="home-container">
 
-<main class="bg-slate-50 text-slate-900">
+            <section class="hero-slider-wrap">
+                <div class="swiper hero-swiper">
+                    <div class="swiper-wrapper">
 
-    <section class="mx-auto max-w-7xl px-6 py-8">
-        <div class="relative overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm">
-            <div class="absolute inset-0 bg-gradient-to-l from-blue-100 via-white to-white"></div>
+                        {% if hero_slides %}
+                            {% for slide in hero_slides %}
+                                <div class="swiper-slide hero-slide slide-{{ slide.color }}">
+                                    {% if slide.image %}
+                                        <img src="{{ slide.image.url }}" alt="{{ slide.title }}" class="hero-slide-image">
+                                    {% endif %}
 
-            <div class="relative grid min-h-[360px] items-center gap-8 p-8 lg:grid-cols-2 lg:p-12">
-                <div>
-                    <h1 class="text-4xl font-black leading-tight md:text-6xl">
-                        آموزش گواهینامه آلمان
-                    </h1>
+                                    {% if not slide.image %}
+                                        <svg class="hero-road" viewBox="0 0 560 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61" stroke="white" stroke-width="22" stroke-linecap="round" opacity="0.055"/>
+                                            <path d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10" stroke="white" stroke-width="22" stroke-linecap="round" opacity="0.055"/>
+                                            <path d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61" stroke="white" stroke-width="3.2" stroke-linecap="round" opacity="0.68"/>
+                                            <path d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10" stroke="white" stroke-width="3.2" stroke-linecap="round" opacity="0.68"/>
+                                        </svg>
+                                    {% endif %}
 
-                    <p class="mt-6 max-w-xl text-xl leading-9 text-slate-700">
-                        آموزش کامل و ساده برای آزمون تئوری گواهینامه آلمان به زبان فارسی.
-                    </p>
+                                    <div class="hero-inner">
+                                        <div>
+                                            <div class="hero-badge">
+                                                <span>{{ slide.badge_text }}</span>
+                                                <span>{{ slide.badge_icon }}</span>
+                                            </div>
 
-                    <div class="mt-8 flex flex-col gap-4 sm:flex-row">
-                        <a href="/videos/" class="rounded-xl bg-blue-600 px-7 py-4 text-center font-black text-white shadow-lg shadow-blue-500/20 hover:bg-blue-700">
-                            ▶ مشاهده ویدیوها
-                        </a>
+                                            <h1 class="hero-title">
+                                                {{ slide.title }}
+                                                {% if slide.highlighted_text %}
+                                                    <span>{{ slide.highlighted_text }}</span>
+                                                {% endif %}
+                                            </h1>
 
-                        <a href="/quiz/official-exams/" class="rounded-xl bg-green-500 px-7 py-4 text-center font-black text-white hover:bg-green-600">
-                            شروع آزمون
-                        </a>
-                    </div>
-                </div>
+                                            <p class="hero-text">
+                                                {{ slide.subtitle }}
+                                            </p>
 
-                <div class="hidden lg:block">
-                    <div class="rounded-[2rem] bg-gradient-to-br from-blue-200 to-slate-200 p-8">
-                        <div class="rounded-[1.5rem] bg-white p-6 shadow-xl">
-                            <div class="text-8xl">🚗</div>
-                            <p class="mt-4 text-2xl font-black">مسیر یادگیری هوشمند</p>
-                            <p class="mt-2 text-slate-500">ویدیو، آزمون، پیشرفت و تمرین در یک پنل</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                                            <div class="hero-actions">
+                                                <a href="{{ slide.primary_button_link }}" class="hero-btn {% if slide.color == 'blue' %}hero-btn-blue{% elif slide.color == 'green' %}hero-btn-green{% else %}hero-btn-red{% endif %}">
+                                                    {{ slide.primary_button_text }}
+                                                </a>
 
-    <section class="mx-auto grid max-w-7xl gap-6 px-6 pb-10 lg:grid-cols-4">
+                                                {% if slide.secondary_button_text %}
+                                                    <a href="{{ slide.secondary_button_link }}" class="hero-btn hero-btn-soft">
+                                                        {{ slide.secondary_button_text }}
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
 
-        <div class="space-y-6 lg:col-span-3">
-
-            <section class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
-                <div class="mb-6 flex items-center justify-between">
-                    <h2 class="text-2xl font-black">🎥 ویدیوهای رایگان</h2>
-                    <a href="/videos/" class="text-sm font-bold text-blue-600 hover:text-blue-700">مشاهده همه</a>
-                </div>
-
-                <div class="grid gap-5 md:grid-cols-3">
-                    <a href="/videos/" class="group">
-                        <div class="flex aspect-video items-center justify-center rounded-2xl bg-slate-900 text-5xl text-white transition group-hover:scale-[1.02]">
-                            🛑
-                        </div>
-                        <h3 class="mt-3 font-black">تابلوهای مهم در آلمان</h3>
-                    </a>
-
-                    <a href="/videos/" class="group">
-                        <div class="flex aspect-video items-center justify-center rounded-2xl bg-blue-100 text-5xl transition group-hover:scale-[1.02]">
-                            🚦
-                        </div>
-                        <h3 class="mt-3 font-black">حق تقدم در تقاطع‌ها</h3>
-                    </a>
-
-                    <a href="/quiz/official-exams/" class="group">
-                        <div class="flex aspect-video items-center justify-center rounded-2xl bg-green-100 text-5xl transition group-hover:scale-[1.02]">
-                            ✅
-                        </div>
-                        <h3 class="mt-3 font-black">آشنایی با آزمون تئوری</h3>
-                    </a>
-                </div>
-            </section>
-
-            <section id="categories" class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
-                <h2 class="mb-6 text-2xl font-black">🧩 دسته‌بندی‌ها</h2>
-
-                <div class="grid gap-5 md:grid-cols-5">
-                    <a href="/quiz/official-exams/" class="rounded-2xl border border-slate-200 p-5 text-center transition hover:border-blue-400 hover:bg-blue-50">
-                        <p class="text-4xl">🎓</p>
-                        <p class="mt-3 font-black">آمادگی آزمون</p>
-                    </a>
-
-                    <a href="/videos/" class="rounded-2xl border border-slate-200 p-5 text-center transition hover:border-blue-400 hover:bg-blue-50">
-                        <p class="text-4xl">📘</p>
-                        <p class="mt-3 font-black">قوانین</p>
-                    </a>
-
-                    <a href="/videos/" class="rounded-2xl border border-slate-200 p-5 text-center transition hover:border-blue-400 hover:bg-blue-50">
-                        <p class="text-4xl">⚠️</p>
-                        <p class="mt-3 font-black">تابلوها</p>
-                    </a>
-
-                    <a href="/videos/" class="rounded-2xl border border-slate-200 p-5 text-center transition hover:border-blue-400 hover:bg-blue-50">
-                        <p class="text-4xl">🛞</p>
-                        <p class="mt-3 font-black">رانندگی</p>
-                    </a>
-
-                    <a href="/quiz/categories/" class="rounded-2xl border border-slate-200 p-5 text-center transition hover:border-blue-400 hover:bg-blue-50">
-                        <p class="text-4xl">❓</p>
-                        <p class="mt-3 font-black">تمرین سوال</p>
-                    </a>
-                </div>
-            </section>
-
-            <section class="grid gap-5 md:grid-cols-4">
-                <div class="rounded-[1.5rem] border border-slate-200 bg-white p-6 text-center shadow-sm">
-                    <p class="text-5xl">📚</p>
-                    <p class="mt-4 text-4xl font-black text-blue-600">{{ courses_count }}</p>
-                    <p class="mt-2 font-bold text-slate-500">دوره‌ها</p>
-                </div>
-
-                <div class="rounded-[1.5rem] border border-slate-200 bg-white p-6 text-center shadow-sm">
-                    <p class="text-5xl">🎥</p>
-                    <p class="mt-4 text-4xl font-black text-teal-600">{{ videos_count }}</p>
-                    <p class="mt-2 font-bold text-slate-500">ویدیوها</p>
-                </div>
-
-                <div class="rounded-[1.5rem] border border-slate-200 bg-white p-6 text-center shadow-sm">
-                    <p class="text-5xl">🎓</p>
-                    <p class="mt-4 text-4xl font-black text-indigo-600">{{ students_count }}</p>
-                    <p class="mt-2 font-bold text-slate-500">کاربران</p>
-                </div>
-
-                <div class="rounded-[1.5rem] border border-slate-200 bg-white p-6 text-center shadow-sm">
-                    <p class="text-5xl">✍️</p>
-                    <p class="mt-4 text-4xl font-black text-rose-500">{{ blog_count }}</p>
-                    <p class="mt-2 font-bold text-slate-500">مقالات</p>
-                </div>
-            </section>
-
-            <section id="blog" class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
-                <div class="mb-6 flex items-center justify-between">
-                    <h2 class="text-2xl font-black">📰 بلاگ آموزشی</h2>
-                    <a href="/coming-soon/" class="text-sm font-bold text-blue-600">صفحه بلاگ به‌زودی</a>
-                </div>
-
-                <div class="grid gap-5 md:grid-cols-3">
-                    <article class="rounded-2xl border border-slate-200 p-5">
-                        <p class="text-sm font-bold text-blue-600">راهنما</p>
-                        <h3 class="mt-3 font-black">مراحل گرفتن گواهینامه</h3>
-                    </article>
-
-                    <article class="rounded-2xl border border-slate-200 p-5">
-                        <p class="text-sm font-bold text-green-600">آزمون</p>
-                        <h3 class="mt-3 font-black">آمادگی برای آزمون</h3>
-                    </article>
-
-                    <article class="rounded-2xl border border-slate-200 p-5">
-                        <p class="text-sm font-bold text-rose-600">نکته‌ها</p>
-                        <h3 class="mt-3 font-black">اشتباهات رایج</h3>
-                    </article>
-                </div>
-            </section>
-
-        </div>
-
-        <aside class="space-y-6">
-
-            <section class="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm">
-                <div class="flex items-center gap-4">
-                    <div class="flex h-16 w-16 items-center justify-center rounded-full bg-slate-200 text-3xl">
-                        👤
-                    </div>
-
-                    <div>
-                        {% if request.user.is_authenticated %}
-                            <p class="text-xl font-black">سلام {{ request.user.username }}</p>
-                            <p class="text-sm text-slate-500">خوش آمدید</p>
+                                        <div class="hero-preview">
+                                            <div class="hero-preview-inner">
+                                                <div class="hero-preview-car">{{ slide.preview_icon }}</div>
+                                                <h3>{{ slide.preview_title }}</h3>
+                                                <p>{{ slide.preview_text }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
                         {% else %}
-                            <p class="text-xl font-black">سلام!</p>
-                            <p class="text-sm text-slate-500">برای شروع وارد شوید</p>
+                            <div class="swiper-slide hero-slide">
+                                <svg class="hero-road" viewBox="0 0 560 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61" stroke="white" stroke-width="22" stroke-linecap="round" opacity="0.055"/>
+                                    <path d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10" stroke="white" stroke-width="22" stroke-linecap="round" opacity="0.055"/>
+                                    <path d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61" stroke="white" stroke-width="3.2" stroke-linecap="round" opacity="0.68"/>
+                                    <path d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10" stroke="white" stroke-width="3.2" stroke-linecap="round" opacity="0.68"/>
+                                </svg>
+
+                                <div class="hero-inner">
+                                    <div>
+                                        <div class="hero-badge">
+                                            <span>{% trans "Driving Theory MVP" %}</span>
+                                            <span>🚗</span>
+                                        </div>
+
+                                        <h1 class="hero-title">
+                                            {% trans "آموزش گواهینامه" %} <span>{% trans "آلمان" %}</span>
+                                        </h1>
+
+                                        <p class="hero-text">
+                                            {% trans "آموزش کامل و ساده برای آزمون تئوری گواهینامه آلمان به زبان فارسی؛ ویدیو، آزمون، پیشرفت و تمرین در یک پنل." %}
+                                        </p>
+
+                                        <div class="hero-actions">
+                                            <a href="{% url 'video_list' %}" class="hero-btn hero-btn-red">▶ {% trans "مشاهده ویدیوها" %}</a>
+                                            <a href="{% url 'official_exams' %}" class="hero-btn hero-btn-soft">{% trans "شروع آزمون" %}</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="hero-preview">
+                                        <div class="hero-preview-inner">
+                                            <div class="hero-preview-car">🚗</div>
+                                            <h3>{% trans "مسیر یادگیری هوشمند" %}</h3>
+                                            <p>{% trans "ویدیو، آزمون، پیشرفت و تمرین در یک پنل" %}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         {% endif %}
+
                     </div>
-                </div>
 
-                <div class="mt-6 space-y-2">
-                    <a href="/dashboard/" class="flex items-center justify-between rounded-xl bg-blue-50 px-4 py-3 font-bold text-blue-600">
-                        داشبورد
-                        <span>🏠</span>
-                    </a>
-
-                    <a href="/videos/" class="flex items-center justify-between rounded-xl px-4 py-3 font-bold text-slate-600 hover:bg-slate-50">
-                        ویدیوها
-                        <span>🎥</span>
-                    </a>
-
-                    <a href="/quiz/official-exams/" class="flex items-center justify-between rounded-xl px-4 py-3 font-bold text-slate-600 hover:bg-slate-50">
-                        آزمون‌های رسمی
-                        <span>📝</span>
-                    </a>
-
-                    <a href="/quiz/categories/" class="flex items-center justify-between rounded-xl px-4 py-3 font-bold text-slate-600 hover:bg-slate-50">
-                        دسته‌بندی‌ها
-                        <span>📚</span>
-                    </a>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-next hero-slider-button"></div>
+                    <div class="swiper-button-prev hero-slider-button"></div>
                 </div>
             </section>
 
-            <section class="overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-red-600 to-red-500 p-5 text-white shadow-lg">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-xs font-bold text-white/70">
-                            شبکه‌های اجتماعی
-                        </p>
+            <div class="home-shell">
 
-                        <h3 class="mt-2 text-xl font-black">
-                            یوتیوب
-                        </h3>
-                    </div>
+                <aside class="side">
+                    <section class="glass profile-card">
+                        <div class="profile-head">
+                            <div class="avatar">👤</div>
 
-                    <div class="text-4xl">
-                        ▶
-                    </div>
+                            <div>
+                                {% if request.user.is_authenticated %}
+                                    <p class="profile-name">{% trans "سلام" %} {{ request.user.username }}</p>
+                                    <p class="profile-sub">{% trans "خوش آمدید" %}</p>
+                                {% else %}
+                                    <p class="profile-name">{% trans "سلام!" %}</p>
+                                    <p class="profile-sub">{% trans "برای شروع وارد شوید" %}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <a href="{% url 'dashboard' %}" class="side-link active">{% trans "داشبورد" %} <span>🏠</span></a>
+                        <a href="{% url 'video_list' %}" class="side-link">{% trans "ویدیوها" %} <span>🎥</span></a>
+                        <a href="{% url 'official_exams' %}" class="side-link">{% trans "آزمون‌های رسمی" %} <span>📝</span></a>
+                        <a href="{% url 'category_list' %}" class="side-link">{% trans "دسته‌بندی‌ها" %} <span>🧩</span></a>
+                        <a href="{% url 'coming_soon' %}" class="side-link">{% trans "تنظیمات" %} <span>⚙️</span></a>
+                    </section>
+
+                    <section class="social youtube">
+                        <div class="social-icon">▶</div>
+                        <p class="social-kicker">{% trans "شبکه‌های اجتماعی" %}</p>
+                        <h3>{% trans "یوتیوب" %}</h3>
+                        <p>{% trans "ویدیوهای آموزشی جدید و نکات مهم آزمون" %}</p>
+                        <a href="{% url 'coming_soon' %}">{% trans "مشاهده کانال" %}</a>
+                    </section>
+
+                    <section class="social instagram">
+                        <div class="social-icon">◎</div>
+                        <p class="social-kicker">{% trans "شبکه‌های اجتماعی" %}</p>
+                        <h3>{% trans "اینستاگرام" %}</h3>
+                        <p>{% trans "آموزش‌های کوتاه و اخبار جدید" %}</p>
+                        <a href="{% url 'coming_soon' %}">{% trans "دنبال کردن" %}</a>
+                    </section>
+
+                    <section class="social telegram">
+                        <div class="social-icon">✈</div>
+                        <p class="social-kicker">{% trans "پشتیبانی" %}</p>
+                        <h3>{% trans "تلگرام" %}</h3>
+                        <p>{% trans "پشتیبانی و ارتباط مستقیم با ما" %}</p>
+                        <a href="{% url 'coming_soon' %}">{% trans "پیام به پشتیبانی" %}</a>
+                    </section>
+                </aside>
+
+                <div class="main">
+
+                    <section class="glass section">
+                        <div class="section-head">
+                            <a href="{% url 'video_list' %}" class="section-link">{% trans "مشاهده همه" %}</a>
+
+                            <div>
+                                <p class="section-kicker">{% trans "درس‌های رایگان" %}</p>
+                                <h1 class="section-title">{% trans "ویدیوهای رایگان" %}</h1>
+                                <p class="section-desc">{% trans "چند درس مهم برای شروع سریع مسیر یادگیری." %}</p>
+                            </div>
+                        </div>
+
+                        <div class="videos-grid">
+                            {% if featured_videos %}
+                                {% for video in featured_videos %}
+                                    <a href="{% url 'video_detail' video.id %}" class="video-card">
+                                        <div class="video-thumb {% cycle 'video-thumb-red' 'video-thumb-blue' 'video-thumb-green' %}">
+                                            {% if video.youtube_thumbnail %}
+                                                <img src="{{ video.youtube_thumbnail }}" alt="{{ video.title }}">
+                                            {% else %}
+                                                <div class="video-illustration">▶</div>
+                                            {% endif %}
+                                            <div class="play"><span>▶</span></div>
+                                            <span class="duration">{% trans "درس" %}</span>
+                                        </div>
+                                        <h3 class="video-title">{{ video.title }}</h3>
+                                    </a>
+                                {% endfor %}
+                            {% else %}
+                                <a href="{% url 'video_list' %}" class="video-card">
+                                    <div class="video-thumb video-thumb-red">
+                                        <div class="video-illustration">🛑</div>
+                                        <div class="play"><span>▶</span></div>
+                                        <span class="duration">12:45</span>
+                                    </div>
+                                    <h3 class="video-title">{% trans "تابلوهای مهم در آلمان" %}</h3>
+                                </a>
+
+                                <a href="{% url 'video_list' %}" class="video-card">
+                                    <div class="video-thumb video-thumb-blue">
+                                        <div class="video-illustration">🚦</div>
+                                        <div class="play"><span>▶</span></div>
+                                        <span class="duration">14:20</span>
+                                    </div>
+                                    <h3 class="video-title">{% trans "حق تقدم در تقاطع‌ها" %}</h3>
+                                </a>
+
+                                <a href="{% url 'official_exams' %}" class="video-card">
+                                    <div class="video-thumb video-thumb-green">
+                                        <div class="video-illustration">✅</div>
+                                        <div class="play"><span>▶</span></div>
+                                        <span class="duration">10:30</span>
+                                    </div>
+                                    <h3 class="video-title">{% trans "آشنایی با آزمون تئوری" %}</h3>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </section>
+
+                    <section class="glass section">
+                        <div class="section-head">
+                            <a href="{% url 'category_list' %}" class="section-link">{% trans "مشاهده همه دسته‌بندی‌ها" %}</a>
+
+                            <div>
+                                <p class="section-kicker">{% trans "دسته‌بندی‌ها" %}</p>
+                                <h2 class="section-title">{% trans "دسته‌بندی‌های اصلی" %}</h2>
+                            </div>
+                        </div>
+
+                        <div class="category-grid">
+                            <a href="{% url 'official_exams' %}" class="category-card">
+                                <div class="cat-icon cat-green">🎓</div>
+                                <h3>{% trans "آمادگی آزمون" %}</h3>
+                                <p>{% trans "98 سؤال" %}</p>
+                            </a>
+
+                            <a href="{% url 'video_list' %}" class="category-card">
+                                <div class="cat-icon cat-blue">📘</div>
+                                <h3>{% trans "قوانین" %}</h3>
+                                <p>{% trans "134 سؤال" %}</p>
+                            </a>
+
+                            <a href="{% url 'video_list' %}" class="category-card">
+                                <div class="cat-icon cat-yellow">⚠️</div>
+                                <h3>{% trans "تابلوها" %}</h3>
+                                <p>{% trans "156 سؤال" %}</p>
+                            </a>
+
+                            <a href="{% url 'video_list' %}" class="category-card">
+                                <div class="cat-icon cat-red">🛞</div>
+                                <h3>{% trans "رانندگی" %}</h3>
+                                <p>{% trans "189 سؤال" %}</p>
+                            </a>
+
+                            <a href="{% url 'category_list' %}" class="category-card">
+                                <div class="cat-icon cat-purple">?</div>
+                                <h3>{% trans "تمرین سؤال" %}</h3>
+                                <p>{% trans "245 سؤال" %}</p>
+                            </a>
+                        </div>
+                    </section>
+
+                    <section class="glass section">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon cat-blue">📚</div>
+                                <div class="stat-body">
+                                    <p class="stat-value" style="color:#60a5fa;">{{ courses_count|default:0 }}</p>
+                                    <p class="stat-label">{% trans "دوره‌ها" %}</p>
+                                </div>
+                            </div>
+
+                            <div class="stat-card">
+                                <div class="stat-icon cat-green">🎥</div>
+                                <div class="stat-body">
+                                    <p class="stat-value" style="color:#2dd4bf;">{{ videos_count|default:0 }}</p>
+                                    <p class="stat-label">{% trans "ویدیوها" %}</p>
+                                </div>
+                            </div>
+
+                            <div class="stat-card">
+                                <div class="stat-icon cat-purple">🎓</div>
+                                <div class="stat-body">
+                                    <p class="stat-value" style="color:#a78bfa;">{{ students_count|default:0 }}</p>
+                                    <p class="stat-label">{% trans "کاربران" %}</p>
+                                </div>
+                            </div>
+
+                            <div class="stat-card">
+                                <div class="stat-icon cat-red">✍️</div>
+                                <div class="stat-body">
+                                    <p class="stat-value" style="color:#fb7185;">{{ blog_count|default:0 }}</p>
+                                    <p class="stat-label">{% trans "مقالات" %}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="blog" class="glass section">
+                        <div class="section-head">
+                            <a href="{% url 'coming_soon' %}" class="section-link">{% trans "مشاهده همه مقالات" %}</a>
+
+                            <div>
+                                <p class="section-kicker">{% trans "وبلاگ" %}</p>
+                                <h2 class="section-title">{% trans "وبلاگ آموزشی" %}</h2>
+                            </div>
+                        </div>
+
+                        <div class="blog-grid">
+                            <article class="blog-card">
+                                <div class="blog-icon cat-blue">🚗</div>
+                                <div>
+                                    <p>{% trans "راهنما" %}</p>
+                                    <h3>{% trans "مراحل گرفتن گواهینامه آلمان" %}</h3>
+                                </div>
+                            </article>
+
+                            <article class="blog-card">
+                                <div class="blog-icon cat-green">✅</div>
+                                <div>
+                                    <p>{% trans "آزمون" %}</p>
+                                    <h3>{% trans "آمادگی کامل برای آزمون تئوری" %}</h3>
+                                </div>
+                            </article>
+
+                            <article class="blog-card">
+                                <div class="blog-icon cat-red">📕</div>
+                                <div>
+                                    <p>{% trans "نکات طلایی" %}</p>
+                                    <h3>{% trans "اشتباهات رایج در آزمون تئوری" %}</h3>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="home-footer">
+        <div class="home-footer-inner">
+            <div>
+                <div class="footer-brand">
+                    <div class="footer-brand-icon">🚗</div>
+                    <span>{% trans "آموزش گواهینامه آلمان" %}</span>
                 </div>
 
-                <p class="mt-4 text-sm leading-7 text-white/85">
-                    ویدیوهای آموزشی جدید و نکات مهم آزمون
+                <p>
+                    {% trans "آموزش آزمون تئوری گواهینامه آلمان به زبان فارسی، همراه با ویدیوهای آموزشی و آزمون شبیه‌سازی‌شده." %}
                 </p>
 
-                <a
-                    href="/coming-soon/"
-                    class="mt-5 inline-flex w-full items-center justify-center rounded-xl bg-white/20 px-4 py-3 text-sm font-black backdrop-blur hover:bg-white/30"
-                >
-                    مشاهده کانال
-                </a>
-            </section>
-
-            <section class="overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-[#833AB4] via-[#E1306C] to-[#FCAF45] p-5 text-white shadow-lg">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-xs font-bold text-white/70">
-                            شبکه‌های اجتماعی
-                        </p>
-
-                        <h3 class="mt-2 text-xl font-black">
-                            اینستاگرام
-                        </h3>
-                    </div>
-
-                    <div class="text-4xl">
-                        ◎
-                    </div>
-                </div>
-
-                <p class="mt-4 text-sm leading-7 text-white/90">
-                    آموزش‌های کوتاه و اخبار جدید
-                </p>
-
-                <a
-                    href="/coming-soon/"
-                    class="mt-5 inline-flex w-full items-center justify-center rounded-xl bg-white/20 px-4 py-3 text-sm font-black backdrop-blur hover:bg-white/30"
-                >
-                    دنبال کردن
-                </a>
-            </section>
-
-            <section class="overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-sky-500 to-blue-600 p-5 text-white shadow-lg">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-xs font-bold text-white/70">
-                            پشتیبانی
-                        </p>
-
-                        <h3 class="mt-2 text-xl font-black">
-                            تلگرام
-                        </h3>
-                    </div>
-
-                    <div class="text-4xl">
-                        ✈
-                    </div>
-                </div>
-
-                <p class="mt-4 text-sm leading-7 text-white/90">
-                    پشتیبانی و ارتباط مستقیم با ما
-                </p>
-
-                <a
-                    href="/coming-soon/"
-                    class="mt-5 inline-flex w-full items-center justify-center rounded-xl bg-white/20 px-4 py-3 text-sm font-black backdrop-blur hover:bg-white/30"
-                >
-                    پیام به پشتیبانی
-                </a>
-            </section>
-
-        </aside>
-
-    </section>
-
-</main>
-
-<footer class="bg-slate-950 px-6 py-12 text-white">
-    <div class="mx-auto grid max-w-7xl gap-10 md:grid-cols-4">
-        <div class="md:col-span-2">
-            <div class="flex items-center gap-3">
-                <div class="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 text-2xl">
-                    🚘
-                </div>
-
-                <p class="text-2xl font-black">آموزش گواهینامه آلمان</p>
+                <p style="margin-top:14px;">driving.school@example.com</p>
             </div>
 
-            <p class="mt-5 max-w-md leading-8 text-slate-400">
-                آموزش آزمون تئوری گواهینامه آلمان به زبان فارسی، همراه با ویدیوهای آموزشی و آزمون شبیه‌سازی‌شده.
-            </p>
+            <div>
+                <h3>{% trans "اطلاعات" %}</h3>
+                <a href="#blog">{% trans "بلاگ" %}</a>
+                <a href="{% url 'category_list' %}">{% trans "دسته‌بندی‌ها" %}</a>
+                <a href="{% url 'official_exams' %}">{% trans "آزمون‌های رسمی" %}</a>
+            </div>
 
-            <p class="mt-4 text-slate-400">
-                driving.school@example.com
-            </p>
-        </div>
-
-        <div>
-            <h3 class="font-black">اطلاعات</h3>
-
-            <div class="mt-4 space-y-3 text-slate-400">
-                <a href="#blog" class="block hover:text-white">بلاگ</a>
-                <a href=/quiz/categories/ class="block hover:text-white">دسته‌بندی‌ها</a>
-                <a href="/quiz/official-exams/" class="block hover:text-white">آزمون‌های رسمی</a>
+            <div>
+                <h3>{% trans "ارتباط با ما" %}</h3>
+                <a href="{% url 'coming_soon' %}">{% trans "درباره ما" %}</a>
+                <a href="{% url 'coming_soon' %}">{% trans "تماس با ما" %}</a>
+                <a href="{% url 'coming_soon' %}">{% trans "یوتیوب" %}</a>
+                <a href="{% url 'coming_soon' %}">{% trans "اینستاگرام" %}</a>
             </div>
         </div>
+    </footer>
 
-        <div>
-            <h3 class="font-black">ارتباط با ما</h3>
+</div>
 
-            <div class="mt-4 space-y-3 text-slate-400">
-                <a href="/coming-soon/" class="block hover:text-white">درباره ما</a>
-                <a href="/coming-soon/" class="block hover:text-white">تماس با ما</a>
-                <a href="/coming-soon/" class="block hover:text-white">یوتیوب</a>
-                <a href="/coming-soon/" class="block hover:text-white">اینستاگرام</a>
-            </div>
-        </div>
-    </div>
-</footer>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        new Swiper(".hero-swiper", {
+            loop: true,
+            speed: 850,
+            effect: "fade",
+            fadeEffect: {
+                crossFade: true
+            },
+            autoplay: {
+                delay: 4500,
+                disableOnInteraction: false
+            },
+            pagination: {
+                el: ".hero-swiper .swiper-pagination",
+                clickable: true
+            },
+            navigation: {
+                nextEl: ".hero-swiper .swiper-button-next",
+                prevEl: ".hero-swiper .swiper-button-prev"
+            }
+        });
+    });
+</script>
 
 {% endblock %}

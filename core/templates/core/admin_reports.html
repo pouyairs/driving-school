@@ -1,202 +1,755 @@
 {% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% get_current_language_bidi as LANGUAGE_BIDI %}
 
 {% block content %}
+<style>
+    .report-page {
+        color: #e5e7eb;
+        background:
+            radial-gradient(
+                circle at 50% -20%,
+                rgba(30, 64, 175, 0.16),
+                transparent 34%
+            ),
+            radial-gradient(
+                circle at 14% 8%,
+                rgba(127, 29, 29, 0.18),
+                transparent 28%
+            ),
+            #020617;
+        margin: -20px -40px;
+        padding: 34px 40px 54px;
+        min-height: 100vh;
+        font-family: inherit;
+    }
 
-<h1 style="margin-bottom:24px;">Project Reports</h1>
+    .report-wrap {
+        max-width: 1480px;
+        margin: 0 auto;
+    }
 
-<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;">
+    .report-hero {
+        position: relative;
+        overflow: hidden;
+        border-radius: 30px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        background:
+            radial-gradient(
+                circle at 76% 0%,
+                rgba(127, 29, 29, 0.62),
+                transparent 34%
+            ),
+            linear-gradient(
+                135deg,
+                #07111f 0%,
+                #020617 46%,
+                #3b0208 100%
+            );
+        box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
+        padding: 36px;
+        margin-bottom: 24px;
+    }
 
-    <div style="background:#111827;color:white;padding:20px;border-radius:16px;">
-        <h3>Total Users</h3>
-        <p style="font-size:34px;font-weight:bold;">{{ total_users }}</p>
+    .report-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(
+                90deg,
+                rgba(7, 17, 31, 0.90) 0%,
+                rgba(7, 17, 31, 0.45) 45%,
+                transparent 72%
+            ),
+            radial-gradient(
+                circle at 22% 88%,
+                rgba(59, 130, 246, 0.12),
+                transparent 30%
+            );
+        pointer-events: none;
+    }
+
+    .report-page[dir="rtl"] .report-hero::before {
+        background:
+            linear-gradient(
+                270deg,
+                rgba(7, 17, 31, 0.90) 0%,
+                rgba(7, 17, 31, 0.45) 45%,
+                transparent 72%
+            ),
+            radial-gradient(
+                circle at 78% 88%,
+                rgba(59, 130, 246, 0.12),
+                transparent 30%
+            );
+    }
+
+    .report-hero-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 28px;
+    }
+
+    .report-badge {
+        width: fit-content;
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        background: rgba(255, 255, 255, 0.055);
+        padding: 10px 18px;
+        font-size: 13px;
+        font-weight: 900;
+        margin-bottom: 16px;
+        color: #fca5a5;
+    }
+
+    .report-title {
+        margin: 0;
+        color: #ffffff;
+        font-size: clamp(34px, 4vw, 58px);
+        line-height: 1.1;
+        letter-spacing: -0.04em;
+        font-weight: 1000;
+    }
+
+    .report-title span {
+        color: #fb7185;
+    }
+
+    .report-subtitle {
+        margin: 16px 0 0;
+        max-width: 760px;
+        color: #cbd5e1;
+        font-size: 16px;
+        line-height: 1.8;
+        font-weight: 650;
+    }
+
+    .report-hero-card {
+        min-width: 260px;
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        padding: 22px;
+        text-align: center;
+    }
+
+    .report-hero-card strong {
+        display: block;
+        color: #ffffff;
+        font-size: 42px;
+        line-height: 1;
+        font-weight: 1000;
+    }
+
+    .report-hero-card span {
+        display: block;
+        margin-top: 10px;
+        color: #94a3b8;
+        font-weight: 800;
+    }
+
+    .report-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .report-card {
+        min-height: 142px;
+        border-radius: 24px;
+        border: 1px solid rgba(100, 116, 139, 0.52);
+        background:
+            radial-gradient(
+                circle at 14% 8%,
+                rgba(37, 99, 235, 0.12),
+                transparent 32%
+            ),
+            linear-gradient(
+                145deg,
+                rgba(15, 23, 42, 0.98),
+                rgba(2, 6, 23, 0.985)
+            );
+        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.26);
+        padding: 20px;
+        transition: 0.22s ease;
+    }
+
+    .report-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(255, 255, 255, 0.26);
+    }
+
+    .report-card-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+    }
+
+    .report-card h3 {
+        margin: 0;
+        color: #94a3b8;
+        font-size: 13px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .report-icon {
+        width: 52px;
+        height: 52px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        border: 1px solid;
+        font-size: 24px;
+    }
+
+    .blue {
+        color: #60a5fa;
+        background: rgba(59, 130, 246, 0.12);
+        border-color: rgba(96, 165, 250, 0.44);
+    }
+
+    .green {
+        color: #4ade80;
+        background: rgba(34, 197, 94, 0.12);
+        border-color: rgba(74, 222, 128, 0.44);
+    }
+
+    .red {
+        color: #fb7185;
+        background: rgba(244, 63, 94, 0.12);
+        border-color: rgba(251, 113, 133, 0.44);
+    }
+
+    .yellow {
+        color: #facc15;
+        background: rgba(234, 179, 8, 0.12);
+        border-color: rgba(250, 204, 21, 0.44);
+    }
+
+    .purple {
+        color: #a78bfa;
+        background: rgba(168, 85, 247, 0.12);
+        border-color: rgba(167, 139, 250, 0.44);
+    }
+
+    .teal {
+        color: #2dd4bf;
+        background: rgba(20, 184, 166, 0.12);
+        border-color: rgba(45, 212, 191, 0.44);
+    }
+
+    .orange {
+        color: #fb923c;
+        background: rgba(249, 115, 22, 0.12);
+        border-color: rgba(251, 146, 60, 0.44);
+    }
+
+    .report-number {
+        margin: 22px 0 0;
+        color: #ffffff;
+        font-size: 38px;
+        line-height: 1;
+        font-weight: 1000;
+    }
+
+    .report-note {
+        margin: 10px 0 0;
+        color: #94a3b8;
+        font-size: 13px;
+        font-weight: 750;
+    }
+
+    .report-section {
+        border-radius: 26px;
+        border: 1px solid rgba(100, 116, 139, 0.52);
+        background:
+            radial-gradient(
+                circle at 14% 8%,
+                rgba(37, 99, 235, 0.10),
+                transparent 32%
+            ),
+            linear-gradient(
+                145deg,
+                rgba(15, 23, 42, 0.98),
+                rgba(2, 6, 23, 0.985)
+            );
+        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+        padding: 22px;
+        margin-bottom: 24px;
+    }
+
+    .report-section-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 18px;
+    }
+
+    .report-section h2 {
+        margin: 0;
+        color: #ffffff;
+        font-size: 26px;
+        line-height: 1.3;
+        font-weight: 1000;
+        letter-spacing: -0.03em;
+    }
+
+    .report-section p {
+        margin: 7px 0 0;
+        color: #94a3b8;
+        font-weight: 700;
+    }
+
+    .report-table-wrap {
+        overflow-x: auto;
+        border-radius: 18px;
+        border: 1px solid rgba(100, 116, 139, 0.34);
+        background: rgba(2, 6, 23, 0.54);
+    }
+
+    .report-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 760px;
+    }
+
+    .report-table thead {
+        background: rgba(15, 23, 42, 0.88);
+    }
+
+    .report-table th {
+        padding: 14px 16px;
+        color: #cbd5e1;
+        font-size: 12px;
+        font-weight: 1000;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    .report-page[dir="ltr"] .report-table th,
+    .report-page[dir="ltr"] .report-table td {
+        text-align: left;
+    }
+
+    .report-page[dir="rtl"] .report-table th,
+    .report-page[dir="rtl"] .report-table td {
+        text-align: right;
+    }
+
+    .report-table td {
+        padding: 15px 16px;
+        color: #e5e7eb;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.10);
+        vertical-align: top;
+        line-height: 1.65;
+        font-weight: 650;
+    }
+
+    .report-table tbody tr {
+        transition: 0.16s ease;
+    }
+
+    .report-table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.04);
+    }
+
+    .report-table tbody tr:last-child td {
+        border-bottom: 0;
+    }
+
+    .report-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 12px;
+        font-weight: 1000;
+    }
+
+    .pill-red {
+        color: #fb7185;
+        background: rgba(244, 63, 94, 0.12);
+        border: 1px solid rgba(251, 113, 133, 0.28);
+    }
+
+    .pill-blue {
+        color: #60a5fa;
+        background: rgba(59, 130, 246, 0.12);
+        border: 1px solid rgba(96, 165, 250, 0.28);
+    }
+
+    .empty {
+        padding: 18px;
+        color: #94a3b8 !important;
+        font-weight: 750;
+        text-align: center !important;
+    }
+
+    @media (max-width: 1100px) {
+        .report-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .report-hero-content {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .report-hero-card {
+            width: 100%;
+            min-width: 0;
+        }
+    }
+
+    @media (max-width: 720px) {
+        .report-page {
+            margin: -20px;
+            padding: 22px 14px 40px;
+        }
+
+        .report-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .report-hero {
+            padding: 26px 18px;
+            border-radius: 24px;
+        }
+
+        .report-section {
+            padding: 18px;
+        }
+    }
+</style>
+
+<div
+    class="report-page"
+    dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}"
+>
+    <div class="report-wrap">
+
+        <section class="report-hero">
+            <div class="report-hero-content">
+                <div>
+                    <div class="report-badge">
+                        <span>{% trans "تحلیل پنل مدیریت" %}</span>
+                        <span aria-hidden="true">📊</span>
+                    </div>
+
+                    <h1 class="report-title">
+                        {% trans "گزارش‌های" %}
+                        <span>{% trans "پروژه" %}</span>
+                    </h1>
+
+                    <p class="report-subtitle">
+                        {% trans "نمای کلی کاربران، آزمون‌ها، فعالیت‌های آموزشی، دشوارترین سوالات، میزان مشاهده ویدیوها و شاخص‌های درآمدی آینده." %}
+                    </p>
+                </div>
+
+                <div class="report-hero-card">
+                    <strong>{{ pass_rate }}%</strong>
+                    <span>{% trans "نرخ قبولی کلی" %}</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="report-grid">
+            <div class="report-card">
+                <div class="report-card-top">
+                    <h3>{% trans "کل کاربران" %}</h3>
+                    <div class="report-icon blue" aria-hidden="true">👤</div>
+                </div>
+
+                <p class="report-number">{{ total_users }}</p>
+                <p class="report-note">{% trans "کاربران ثبت‌نام‌شده" %}</p>
+            </div>
+
+            <div class="report-card">
+                <div class="report-card-top">
+                    <h3>{% trans "کل آزمون‌ها" %}</h3>
+                    <div class="report-icon purple" aria-hidden="true">📝</div>
+                </div>
+
+                <p class="report-number">{{ total_exams }}</p>
+                <p class="report-note">{% trans "تمام جلسات آزمون" %}</p>
+            </div>
+
+            <div class="report-card">
+                <div class="report-card-top">
+                    <h3>{% trans "آزمون‌های قبول‌شده" %}</h3>
+                    <div class="report-icon green" aria-hidden="true">✅</div>
+                </div>
+
+                <p class="report-number">{{ passed_exams }}</p>
+
+                <p class="report-note">
+                    {% blocktrans with rate=pass_rate %}
+                        نرخ قبولی {{ rate }}٪
+                    {% endblocktrans %}
+                </p>
+            </div>
+
+            <div class="report-card">
+                <div class="report-card-top">
+                    <h3>{% trans "آزمون‌های ردشده" %}</h3>
+                    <div class="report-icon red" aria-hidden="true">❌</div>
+                </div>
+
+                <p class="report-number">{{ failed_exams }}</p>
+
+                <p class="report-note">
+                    {% blocktrans with rate=fail_rate %}
+                        نرخ ردشدن {{ rate }}٪
+                    {% endblocktrans %}
+                </p>
+            </div>
+        </div>
+
+        <div class="report-grid">
+            <div class="report-card">
+                <div class="report-card-top">
+                    <h3>{% trans "ویدیوها" %}</h3>
+                    <div class="report-icon teal" aria-hidden="true">🎥</div>
+                </div>
+
+                <p class="report-number">{{ total_videos }}</p>
+                <p class="report-note">{% trans "ویدیوهای منتشرشده" %}</p>
+            </div>
+
+            <div class="report-card">
+                <div class="report-card-top">
+                    <h3>{% trans "ویدیوهای مشاهده‌شده" %}</h3>
+                    <div class="report-icon blue" aria-hidden="true">▶</div>
+                </div>
+
+                <p class="report-number">{{ total_watched_videos }}</p>
+                <p class="report-note">{% trans "کل سوابق مشاهده" %}</p>
+            </div>
+
+            <div class="report-card">
+                <div class="report-card-top">
+                    <h3>{% trans "میانگین امتیاز خطا" %}</h3>
+                    <div class="report-icon orange" aria-hidden="true">⚠️</div>
+                </div>
+
+                <p class="report-number">{{ average_error_points }}</p>
+                <p class="report-note">{% trans "میانگین هر آزمون" %}</p>
+            </div>
+
+            <div class="report-card">
+                <div class="report-card-top">
+                    <h3>{% trans "درآمد" %}</h3>
+                    <div class="report-icon yellow" aria-hidden="true">€</div>
+                </div>
+
+                <p class="report-number">{{ total_revenue }} €</p>
+
+                <p class="report-note">
+                    {% blocktrans with count=total_payments %}
+                        {{ count }} پرداخت
+                    {% endblocktrans %}
+                </p>
+            </div>
+        </div>
+
+        <section class="report-section">
+            <div class="report-section-head">
+                <div>
+                    <h2>{% trans "سوالات با بیشترین پاسخ اشتباه" %}</h2>
+
+                    <p>
+                        {% trans "سوالاتی که بیشترین تعداد پاسخ نادرست را داشته‌اند." %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="report-table-wrap">
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>{% trans "سوال" %}</th>
+                            <th>{% trans "دسته‌بندی" %}</th>
+                            <th>{% trans "بخش" %}</th>
+                            <th>{% trans "تعداد پاسخ اشتباه" %}</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in most_wrong_questions %}
+                            <tr>
+                                <td>{{ item.question__title }}</td>
+                                <td>{{ item.question__category__name }}</td>
+                                <td>{{ item.question__section }}</td>
+
+                                <td>
+                                    <span class="report-pill pill-red">
+                                        {{ item.wrong_count }}
+                                    </span>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4" class="empty">
+                                    {% trans "هنوز پاسخ اشتباهی ثبت نشده است." %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="report-section">
+            <div class="report-section-head">
+                <div>
+                    <h2>{% trans "دشوارترین دسته‌بندی‌ها" %}</h2>
+
+                    <p>
+                        {% trans "دسته‌بندی‌هایی که بیشترین پاسخ اشتباه را ایجاد کرده‌اند." %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="report-table-wrap">
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>{% trans "دسته‌بندی" %}</th>
+                            <th>{% trans "تعداد پاسخ اشتباه" %}</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in hardest_categories %}
+                            <tr>
+                                <td>{{ item.question__category__name }}</td>
+
+                                <td>
+                                    <span class="report-pill pill-red">
+                                        {{ item.wrong_count }}
+                                    </span>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="2" class="empty">
+                                    {% trans "هنوز اطلاعاتی برای دسته‌بندی‌ها ثبت نشده است." %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="report-section">
+            <div class="report-section-head">
+                <div>
+                    <h2>{% trans "فعال‌ترین کاربران" %}</h2>
+
+                    <p>
+                        {% trans "کاربرانی که بیشترین تعداد جلسات آزمون را تکمیل کرده‌اند." %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="report-table-wrap">
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>{% trans "نام کاربری" %}</th>
+                            <th>{% trans "ایمیل" %}</th>
+                            <th>{% trans "تعداد آزمون" %}</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for user in most_active_users %}
+                            <tr>
+                                <td>{{ user.user__username }}</td>
+                                <td>{{ user.user__email }}</td>
+
+                                <td>
+                                    <span class="report-pill pill-blue">
+                                        {{ user.exam_count }}
+                                    </span>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="3" class="empty">
+                                    {% trans "هنوز فعالیتی از کاربران ثبت نشده است." %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="report-section">
+            <div class="report-section-head">
+                <div>
+                    <h2>{% trans "پربازدیدترین ویدیوها" %}</h2>
+
+                    <p>
+                        {% trans "ویدیوها بر اساس تعداد دفعات مشاهده مرتب شده‌اند." %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="report-table-wrap">
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>{% trans "ویدیو" %}</th>
+                            <th>{% trans "دسته‌بندی" %}</th>
+                            <th>{% trans "تعداد مشاهده" %}</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for video in most_watched_videos %}
+                            <tr>
+                                <td>{{ video.video__title }}</td>
+                                <td>{{ video.video__category__name }}</td>
+
+                                <td>
+                                    <span class="report-pill pill-blue">
+                                        {{ video.watched_count }}
+                                    </span>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="3" class="empty">
+                                    {% trans "هنوز اطلاعاتی درباره مشاهده ویدیوها ثبت نشده است." %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
     </div>
-
-    <div style="background:#1d4ed8;color:white;padding:20px;border-radius:16px;">
-        <h3>Total Exams</h3>
-        <p style="font-size:34px;font-weight:bold;">{{ total_exams }}</p>
-    </div>
-
-    <div style="background:#15803d;color:white;padding:20px;border-radius:16px;">
-        <h3>Passed Exams</h3>
-        <p style="font-size:34px;font-weight:bold;">{{ passed_exams }}</p>
-        <p>{{ pass_rate }}% Pass Rate</p>
-    </div>
-
-    <div style="background:#b91c1c;color:white;padding:20px;border-radius:16px;">
-        <h3>Failed Exams</h3>
-        <p style="font-size:34px;font-weight:bold;">{{ failed_exams }}</p>
-        <p>{{ fail_rate }}% Fail Rate</p>
-    </div>
-
 </div>
-
-<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;">
-
-    <div style="background:#0f766e;color:white;padding:20px;border-radius:16px;">
-        <h3>Videos</h3>
-        <p style="font-size:34px;font-weight:bold;">{{ total_videos }}</p>
-    </div>
-
-    <div style="background:#7c3aed;color:white;padding:20px;border-radius:16px;">
-        <h3>Watched Videos</h3>
-        <p style="font-size:34px;font-weight:bold;">{{ total_watched_videos }}</p>
-    </div>
-
-    <div style="background:#ea580c;color:white;padding:20px;border-radius:16px;">
-        <h3>Average Error Points</h3>
-        <p style="font-size:34px;font-weight:bold;">{{ average_error_points }}</p>
-    </div>
-
-    <div style="background:#ca8a04;color:white;padding:20px;border-radius:16px;">
-        <h3>Revenue</h3>
-        <p style="font-size:34px;font-weight:bold;">{{ total_revenue }} €</p>
-        <p>{{ total_payments }} Payments</p>
-    </div>
-
-</div>
-
-<h2>Most Wrong Questions</h2>
-
-<table style="width:100%;border-collapse:collapse;margin-bottom:32px;background:white;">
-    <thead>
-        <tr>
-            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Question</th>
-            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Category</th>
-            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Section</th>
-            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Wrong Count</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        {% for item in most_wrong_questions %}
-            <tr>
-                <td style="padding:12px;border-bottom:1px solid #eee;">
-                    {{ item.question__title }}
-                </td>
-
-                <td style="padding:12px;border-bottom:1px solid #eee;">
-                    {{ item.question__category__name }}
-                </td>
-
-                <td style="padding:12px;border-bottom:1px solid #eee;">
-                    {{ item.question__section }}
-                </td>
-
-                <td style="padding:12px;border-bottom:1px solid #eee;font-weight:bold;color:#b91c1c;">
-                    {{ item.wrong_count }}
-                </td>
-            </tr>
-        {% empty %}
-            <tr>
-                <td colspan="4" style="padding:12px;">
-                    No wrong answers yet.
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<h2>Hardest Categories</h2>
-
-<table style="width:100%;border-collapse:collapse;margin-bottom:32px;background:white;">
-    <thead>
-        <tr>
-            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Category</th>
-            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Wrong Count</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        {% for item in hardest_categories %}
-            <tr>
-                <td style="padding:12px;border-bottom:1px solid #eee;">
-                    {{ item.question__category__name }}
-                </td>
-
-                <td style="padding:12px;border-bottom:1px solid #eee;font-weight:bold;color:#b91c1c;">
-                    {{ item.wrong_count }}
-                </td>
-            </tr>
-        {% empty %}
-            <tr>
-                <td colspan="2" style="padding:12px;">
-                    No category data yet.
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<h2>Most Active Users</h2>
-
-<table style="width:100%;border-collapse:collapse;margin-bottom:32px;background:white;">
-    <thead>
-        <tr>
-            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Username</th>
-            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Email</th>
-            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Exam Count</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        {% for user in most_active_users %}
-            <tr>
-                <td style="padding:12px;border-bottom:1px solid #eee;">
-                    {{ user.user__username }}
-                </td>
-
-                <td style="padding:12px;border-bottom:1px solid #eee;">
-                    {{ user.user__email }}
-                </td>
-
-                <td style="padding:12px;border-bottom:1px solid #eee;font-weight:bold;">
-                    {{ user.exam_count }}
-                </td>
-            </tr>
-        {% empty %}
-            <tr>
-                <td colspan="3" style="padding:12px;">
-                    No user activity yet.
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<h2>Most Watched Videos</h2>
-
-<table style="width:100%;border-collapse:collapse;background:white;">
-    <thead>
-        <tr>
-            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Video</th>
-            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Category</th>
-            <th style="text-align:left;padding:12px;border-bottom:1px solid #ddd;">Watched Count</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        {% for video in most_watched_videos %}
-            <tr>
-                <td style="padding:12px;border-bottom:1px solid #eee;">
-                    {{ video.video__title }}
-                </td>
-
-                <td style="padding:12px;border-bottom:1px solid #eee;">
-                    {{ video.video__category__name }}
-                </td>
-
-                <td style="padding:12px;border-bottom:1px solid #eee;font-weight:bold;">
-                    {{ video.watched_count }}
-                </td>
-            </tr>
-        {% empty %}
-            <tr>
-                <td colspan="3" style="padding:12px;">
-                    No watched video data yet.
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
 {% endblock %}

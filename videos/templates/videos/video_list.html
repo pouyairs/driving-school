@@ -1,104 +1,732 @@
 {% extends "base/base.html" %}
+{% load i18n %}
+
+{% get_current_language_bidi as LANGUAGE_BIDI %}
 
 {% block title %}
-ویدیوهای آموزشی گواهینامه آلمان
+    {% trans "ویدیوهای آموزشی گواهینامه آلمان" %}
 {% endblock %}
 
 {% block meta_description %}
-ویدیوهای آموزشی گواهینامه آلمان به زبان فارسی، دسته‌بندی‌شده برای یادگیری بهتر آزمون تئوری.
+    {% trans "ویدیوهای آموزشی گواهینامه آلمان به زبان فارسی، دسته‌بندی‌شده برای یادگیری بهتر آزمون تئوری." %}
 {% endblock %}
 
 {% block content %}
-<main class="min-h-screen bg-slate-950 px-6 py-8 text-white">
-    <div class="mx-auto max-w-7xl">
+<style>
+    .dt-page {
+        min-height: 100vh;
+        color: #ffffff;
+        background:
+            radial-gradient(
+                circle at 50% -20%,
+                rgba(30, 64, 175, 0.12),
+                transparent 35%
+            ),
+            radial-gradient(
+                circle at 16% 8%,
+                rgba(127, 29, 29, 0.18),
+                transparent 30%
+            ),
+            #020617;
+        padding: 28px 22px 48px;
+        font-family: inherit;
+    }
 
-        <header class="mb-8 rounded-[2rem] border border-white/10 bg-white/5 p-6">
-            <a
-                href="/dashboard/"
-                class="mb-5 inline-block text-sm font-bold text-blue-300 hover:text-blue-200"
+    .dt-wrap {
+        max-width: 1240px;
+        margin: 0 auto;
+    }
+
+    .dt-hero {
+        position: relative;
+        overflow: hidden;
+        min-height: 320px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 34px;
+        background:
+            radial-gradient(
+                circle at 74% 20%,
+                rgba(127, 29, 29, 0.72),
+                transparent 34%
+            ),
+            linear-gradient(
+                135deg,
+                #07111f 0%,
+                #020617 44%,
+                #3f030a 100%
+            );
+        box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
+        margin-bottom: 30px;
+    }
+
+    .dt-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            90deg,
+            rgba(7, 17, 31, 0.93) 0%,
+            rgba(7, 17, 31, 0.65) 32%,
+            transparent 58%
+        );
+        pointer-events: none;
+    }
+
+    .dt-page[dir="rtl"] .dt-hero::before {
+        background: linear-gradient(
+            270deg,
+            rgba(7, 17, 31, 0.93) 0%,
+            rgba(7, 17, 31, 0.65) 32%,
+            transparent 58%
+        );
+    }
+
+    .dt-road {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 52%;
+        height: 100%;
+        opacity: 0.18;
+        pointer-events: none;
+    }
+
+    .dt-page[dir="rtl"] .dt-road {
+        left: auto;
+        right: 0;
+        transform: scaleX(-1);
+    }
+
+    .dt-hero-content {
+        position: relative;
+        z-index: 2;
+        min-height: 320px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 42px 66px;
+    }
+
+    .dt-page[dir="rtl"] .dt-hero-content {
+        text-align: right;
+    }
+
+    .dt-page[dir="ltr"] .dt-hero-content {
+        text-align: left;
+    }
+
+    .dt-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 22px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.34);
+        background: rgba(255, 255, 255, 0.055);
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 900;
+        box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22);
+        margin-bottom: 22px;
+    }
+
+    .dt-title {
+        margin: 0;
+        font-size: clamp(34px, 4vw, 58px);
+        line-height: 1.18;
+        font-weight: 1000;
+        letter-spacing: -0.03em;
+        text-shadow: 0 4px 18px rgba(0, 0, 0, 0.42);
+    }
+
+    .dt-subtitle {
+        margin: 22px 0 0;
+        max-width: 720px;
+        font-size: 18px;
+        line-height: 2;
+        font-weight: 650;
+        color: rgba(226, 232, 240, 0.95);
+    }
+
+    .dt-actions {
+        margin-top: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .dt-hero-btn {
+        min-width: 165px;
+        height: 58px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        border-radius: 18px;
+        font-size: 16px;
+        font-weight: 950;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+    .dt-hero-btn svg {
+        width: 23px;
+        height: 23px;
+    }
+
+    .dt-hero-btn-main {
+        color: #ffffff;
+        background: #dc0d19;
+        border: 1px solid rgba(255, 120, 130, 0.66);
+        box-shadow: 0 18px 34px rgba(127, 29, 29, 0.35);
+    }
+
+    .dt-hero-btn-main:hover {
+        color: #ffffff;
+        background: #ef1723;
+        transform: translateY(-1px);
+    }
+
+    .dt-section {
+        margin-top: 28px;
+        border-radius: 30px;
+        border: 1px solid rgba(100, 116, 139, 0.55);
+        background:
+            radial-gradient(
+                circle at 12% 8%,
+                rgba(37, 99, 235, 0.13),
+                transparent 34%
+            ),
+            linear-gradient(
+                145deg,
+                rgba(15, 23, 42, 0.98),
+                rgba(2, 6, 23, 0.985)
+            );
+        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.26);
+        padding: 26px;
+    }
+
+    .dt-section-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 22px;
+    }
+
+    .dt-section-title {
+        margin: 0;
+        color: #ffffff;
+        font-size: 30px;
+        line-height: 1.4;
+        font-weight: 1000;
+    }
+
+    .dt-section-desc {
+        margin: 8px 0 0;
+        color: #94a3b8;
+        line-height: 1.9;
+        font-weight: 650;
+    }
+
+    .dt-section-icon {
+        width: 68px;
+        height: 68px;
+        flex: 0 0 68px;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        color: #60a5fa;
+        border: 1px solid rgba(96, 165, 250, 0.42);
+        background: rgba(59, 130, 246, 0.11);
+        box-shadow: 0 12px 26px rgba(0, 0, 0, 0.22);
+    }
+
+    .dt-section-icon svg {
+        width: 36px;
+        height: 36px;
+    }
+
+    .dt-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .dt-video-card {
+        overflow: hidden;
+        border-radius: 24px;
+        border: 1px solid rgba(100, 116, 139, 0.45);
+        background: rgba(2, 6, 23, 0.62);
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22);
+        transition: 0.25s ease;
+    }
+
+    .dt-video-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(96, 165, 250, 0.52);
+    }
+
+    .dt-thumb {
+        position: relative;
+        display: block;
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        background: #0f172a;
+        text-decoration: none;
+    }
+
+    .dt-thumb img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        transition: 0.55s ease;
+    }
+
+    .dt-video-card:hover .dt-thumb img {
+        transform: scale(1.06);
+    }
+
+    .dt-thumb::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.76),
+            rgba(0, 0, 0, 0.08),
+            transparent
+        );
+    }
+
+    .dt-play {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: grid;
+        place-items: center;
+    }
+
+    .dt-play-circle {
+        width: 72px;
+        height: 72px;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.30);
+        background: rgba(255, 255, 255, 0.16);
+        backdrop-filter: blur(12px);
+        transition: 0.25s ease;
+    }
+
+    .dt-video-card:hover .dt-play-circle {
+        transform: scale(1.10);
+        background: #dc0d19;
+        border-color: rgba(255, 120, 130, 0.66);
+    }
+
+    .dt-play-circle svg {
+        width: 34px;
+        height: 34px;
+    }
+
+    .dt-page[dir="rtl"] .dt-play-circle svg {
+        margin-right: 4px;
+    }
+
+    .dt-page[dir="ltr"] .dt-play-circle svg {
+        margin-left: 4px;
+    }
+
+    .dt-video-body {
+        padding: 18px;
+    }
+
+    .dt-video-title {
+        margin: 0;
+        color: #ffffff;
+        font-size: 17px;
+        line-height: 1.75;
+        font-weight: 1000;
+    }
+
+    .dt-video-desc {
+        margin: 10px 0 0;
+        color: #94a3b8;
+        font-size: 14px;
+        line-height: 1.85;
+        font-weight: 650;
+    }
+
+    .dt-watch-btn {
+        margin-top: 16px;
+        min-height: 46px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border-radius: 14px;
+        color: #93c5fd;
+        background: rgba(59, 130, 246, 0.12);
+        border: 1px solid rgba(96, 165, 250, 0.45);
+        text-decoration: none;
+        padding: 0 16px;
+        font-size: 14px;
+        font-weight: 950;
+        transition: 0.2s ease;
+    }
+
+    .dt-watch-btn:hover {
+        color: #bfdbfe;
+        background: rgba(59, 130, 246, 0.20);
+        transform: translateY(-1px);
+    }
+
+    .dt-page[dir="ltr"] .dt-watch-btn svg {
+        transform: rotate(180deg);
+    }
+
+    .dt-empty-text {
+        grid-column: 1 / -1;
+        color: #64748b;
+        font-weight: 750;
+        line-height: 1.8;
+    }
+
+    .dt-empty {
+        border-radius: 28px;
+        border: 1px dashed rgba(148, 163, 184, 0.28);
+        background: rgba(255, 255, 255, 0.035);
+        padding: 42px 24px;
+        text-align: center;
+        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.18);
+    }
+
+    .dt-empty h2 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 1000;
+    }
+
+    .dt-empty p {
+        margin: 12px auto 0;
+        max-width: 650px;
+        color: #94a3b8;
+        line-height: 1.9;
+        font-weight: 650;
+    }
+
+    @media (max-width: 1024px) {
+        .dt-road {
+            display: none;
+        }
+
+        .dt-hero-content {
+            padding: 34px 28px;
+            justify-content: center;
+        }
+
+        .dt-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 680px) {
+        .dt-page {
+            padding: 18px 14px 34px;
+        }
+
+        .dt-hero {
+            min-height: auto;
+        }
+
+        .dt-hero-content {
+            min-height: auto;
+            padding: 30px 20px;
+        }
+
+        .dt-title {
+            font-size: 34px;
+        }
+
+        .dt-subtitle {
+            font-size: 15px;
+        }
+
+        .dt-actions {
+            justify-content: stretch;
+        }
+
+        .dt-hero-btn {
+            width: 100%;
+        }
+
+        .dt-section {
+            padding: 20px;
+        }
+
+        .dt-section-head {
+            flex-direction: column-reverse;
+        }
+
+        .dt-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<main
+    class="dt-page"
+    dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}"
+>
+    <section class="dt-wrap">
+
+        <div class="dt-hero">
+            <svg
+                class="dt-road"
+                viewBox="0 0 560 340"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
             >
-                ← برگشت به داشبورد
-            </a>
+                <path
+                    d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61"
+                    stroke="white"
+                    stroke-width="22"
+                    stroke-linecap="round"
+                    opacity="0.055"
+                />
 
-            <h1 class="text-4xl font-black">
-                ویدیوهای آموزشی
-            </h1>
+                <path
+                    d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10"
+                    stroke="white"
+                    stroke-width="22"
+                    stroke-linecap="round"
+                    opacity="0.055"
+                />
 
-            <p class="mt-3 max-w-2xl leading-8 text-slate-400">
-                همه درس‌های ویدیویی بر اساس دسته‌بندی مرتب شده‌اند تا مسیر یادگیری گواهینامه آلمان ساده‌تر شود.
-            </p>
-        </header>
+                <path
+                    d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61"
+                    stroke="white"
+                    stroke-width="3.2"
+                    stroke-linecap="round"
+                    opacity="0.68"
+                />
 
-        <section class="space-y-10">
-            {% for category in categories %}
-                <div class="rounded-[2rem] border border-white/10 bg-white/5 p-6">
-                    <h2 class="text-2xl font-black">
-                        {{ category.name }}
-                    </h2>
+                <path
+                    d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10"
+                    stroke="white"
+                    stroke-width="3.2"
+                    stroke-linecap="round"
+                    opacity="0.68"
+                />
 
-                    <p class="mt-1 text-slate-400">
-                        آموزش‌های مربوط به {{ category.name }}
+                <path
+                    d="M76 294C125 265 166 232 177 197"
+                    stroke="white"
+                    stroke-width="3.1"
+                    stroke-linecap="round"
+                    stroke-dasharray="26 20"
+                    opacity="0.45"
+                />
+
+                <path
+                    d="M181 172C176 132 145 103 100 82"
+                    stroke="white"
+                    stroke-width="3.1"
+                    stroke-linecap="round"
+                    stroke-dasharray="26 20"
+                    opacity="0.43"
+                />
+
+                <path
+                    d="M323 32L450 159L323 286L196 159L323 32Z"
+                    stroke="white"
+                    stroke-width="8"
+                    opacity="0.09"
+                />
+
+                <path
+                    d="M323 99V168"
+                    stroke="white"
+                    stroke-width="14"
+                    stroke-linecap="round"
+                    opacity="0.09"
+                />
+
+                <circle
+                    cx="323"
+                    cy="211"
+                    r="8"
+                    fill="white"
+                    opacity="0.09"
+                />
+            </svg>
+
+            <div class="dt-hero-content">
+                <div>
+                    <div class="dt-badge">
+                        <span>{% trans "درس‌های رانندگی" %}</span>
+                        <span aria-hidden="true">▶</span>
+                    </div>
+
+                    <h1 class="dt-title">
+                        {% trans "ویدیوهای آموزشی" %}
+                    </h1>
+
+                    <p class="dt-subtitle">
+                        {% trans "همه درس‌های ویدیویی بر اساس دسته‌بندی مرتب شده‌اند تا مسیر یادگیری گواهینامه آلمان ساده‌تر و حرفه‌ای‌تر شود." %}
                     </p>
 
-                    <div class="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-                        {% for video in category.videos.all %}
-                            {% if video.is_published %}
-                                <article class="rounded-3xl bg-slate-900 p-4">
-                                    <a
-                                        href="/videos/{{ video.id }}/"
-                                        class="group relative block aspect-video overflow-hidden rounded-2xl bg-slate-800"
+                    <div class="dt-actions">
+                        <a
+                            href="{% url 'dashboard' %}"
+                            class="dt-hero-btn dt-hero-btn-main"
+                        >
+                            <span>{% trans "برگشت به داشبورد" %}</span>
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.1"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                aria-hidden="true"
+                            >
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% for category in categories %}
+            <section class="dt-section">
+                <div class="dt-section-head">
+                    <div>
+                        <h2 class="dt-section-title">
+                            {{ category.name }}
+                        </h2>
+
+                        <p class="dt-section-desc">
+                            {% blocktrans trimmed with category_name=category.name %}
+                                آموزش‌های مربوط به {{ category_name }}
+                            {% endblocktrans %}
+                        </p>
+                    </div>
+
+                    <div class="dt-section-icon" aria-hidden="true">
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.9"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <rect
+                                x="3"
+                                y="5"
+                                width="18"
+                                height="14"
+                                rx="2"
+                            ></rect>
+
+                            <path d="M10 9l5 3-5 3z"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="dt-grid">
+                    {% for video in category.videos.all %}
+                        {% if video.is_published %}
+                            <article class="dt-video-card">
+                                <a
+                                    href="{% url 'video_detail' video.id %}"
+                                    class="dt-thumb"
+                                    aria-label="{% blocktrans trimmed with video_title=video.title %}تماشای {{ video_title }}{% endblocktrans %}"
+                                >
+                                    <img
+                                        src="{{ video.youtube_thumbnail }}"
+                                        alt="{{ video.title }}"
+                                        loading="lazy"
                                     >
-                                        <img
-                                            src="{{ video.youtube_thumbnail }}"
-                                            alt="{{ video.title }}"
-                                            class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                                        />
 
-                                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
-
-                                        <div class="absolute inset-0 flex items-center justify-center">
-                                            <div class="flex h-16 w-16 items-center justify-center rounded-full bg-white/20 backdrop-blur transition duration-300 group-hover:scale-110 group-hover:bg-blue-500">
-                                                ▶
-                                            </div>
+                                    <div class="dt-play">
+                                        <div class="dt-play-circle">
+                                            <svg
+                                                viewBox="0 0 24 24"
+                                                fill="currentColor"
+                                                aria-hidden="true"
+                                            >
+                                                <path d="M8 5v14l11-7z"></path>
+                                            </svg>
                                         </div>
-                                    </a>
+                                    </div>
+                                </a>
 
-                                    <h3 class="mt-4 font-bold">
+                                <div class="dt-video-body">
+                                    <h3 class="dt-video-title">
                                         {{ video.title }}
                                     </h3>
 
-                                    <p class="mt-2 text-sm text-slate-400">
-                                        {{ video.description }}
-                                    </p>
+                                    {% if video.description %}
+                                        <p class="dt-video-desc">
+                                            {{ video.description }}
+                                        </p>
+                                    {% endif %}
 
                                     <a
-                                        href="/videos/{{ video.id }}/"
-                                        class="mt-4 inline-block rounded-xl bg-blue-500 px-4 py-2 text-sm font-bold hover:bg-blue-600"
+                                        href="{% url 'video_detail' video.id %}"
+                                        class="dt-watch-btn"
                                     >
-                                        تماشای درس
+                                        <span>{% trans "تماشای درس" %}</span>
+
+                                        <svg
+                                            width="18"
+                                            height="18"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2.1"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            aria-hidden="true"
+                                        >
+                                            <path d="M9 18l6-6-6-6"></path>
+                                        </svg>
                                     </a>
-                                </article>
-                            {% endif %}
-                        {% empty %}
-                            <p class="text-slate-500">
-                                هنوز ویدیویی داخل این دسته‌بندی نیست.
-                            </p>
-                        {% endfor %}
-                    </div>
-                </div>
-            {% empty %}
-                <div class="rounded-[2rem] border border-dashed border-white/10 bg-white/5 p-10 text-center">
-                    <h2 class="text-2xl font-black">
-                        هنوز دسته‌بندی‌ای ساخته نشده
-                    </h2>
+                                </div>
+                            </article>
+                        {% endif %}
 
-                    <p class="mt-4 text-slate-400">
-                        از پنل مدیریت Category و Video اضافه کن.
-                    </p>
+                    {% empty %}
+                        <p class="dt-empty-text">
+                            {% trans "هنوز ویدیویی داخل این دسته‌بندی نیست." %}
+                        </p>
+                    {% endfor %}
                 </div>
-            {% endfor %}
-        </section>
+            </section>
 
-    </div>
+        {% empty %}
+            <div class="dt-empty">
+                <h2>
+                    {% trans "هنوز دسته‌بندی‌ای ساخته نشده" %}
+                </h2>
+
+                <p>
+                    {% trans "از پنل مدیریت، دسته‌بندی و ویدیو اضافه کنید." %}
+                </p>
+            </div>
+        {% endfor %}
+
+    </section>
 </main>
 {% endblock %}

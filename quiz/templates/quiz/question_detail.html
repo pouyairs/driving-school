@@ -1,260 +1,942 @@
 {% extends "base/base.html" %}
+{% load i18n %}
+
+{% get_current_language_bidi as LANGUAGE_BIDI %}
 
 {% block title %}
-سوال آزمون
-{% endblock %}
-
+{% trans "سوال آزمون" %}{% endblock %}
 {% block content %}
-<main class="min-h-screen bg-slate-950 px-6 py-10 text-white">
+<style>
+.dt-quiz-page[dir="rtl"]{direction:rtl}.dt-quiz-page[dir="ltr"]{direction:ltr}.dt-quiz-page[dir="ltr"] .dt-hero-road{left:auto;right:0;transform:scaleX(-1)}.dt-quiz-page[dir="ltr"] .dt-back-link{left:42px;right:auto}.dt-quiz-page[dir="ltr"] .dt-hero::before{background:linear-gradient(180deg,rgba(2,6,23,.10),rgba(2,6,23,.88)),linear-gradient(270deg,rgba(2,6,23,.88)0%,rgba(2,6,23,.30)44%,rgba(2,6,23,.84)100%)}
+    .dt-quiz-page {
+        min-height: 100vh;
+        
+        color: #ffffff;
+        background:
+            radial-gradient(circle at 50% -15%, rgba(127, 29, 29, 0.18), transparent 36%),
+            radial-gradient(circle at 18% 10%, rgba(37, 99, 235, 0.12), transparent 28%),
+            #020617;
+        padding: 28px 22px 44px;
+        font-family: inherit;
+    }
 
-    <div class="mx-auto w-full max-w-6xl">
+    .dt-quiz-wrap {
+        max-width: 1180px;
+        margin: 0 auto;
+    }
 
-        <a
-            href="/dashboard/"
-            class="mb-6 inline-block text-sm font-bold text-blue-300 hover:text-blue-200"
-        >
-            ← برگشت به داشبورد
-        </a>
+    .dt-quiz-hero {
+        position: relative;
+        overflow: hidden;
+        min-height: 300px;
+        border-radius: 30px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        background:
+            radial-gradient(circle at 55% 0%, rgba(220, 38, 38, 0.38), transparent 32%),
+            linear-gradient(135deg, #17050a 0%, #07111f 48%, #020617 100%);
+        box-shadow: 0 26px 70px rgba(0,0,0,0.42);
+        margin-bottom: 24px;
+    }
 
-        <section class="rounded-[2rem] border border-white/10 bg-white/5 p-8">
+    .dt-quiz-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(180deg, rgba(2,6,23,0.10), rgba(2,6,23,0.88)),
+            linear-gradient(90deg, rgba(2,6,23,0.88) 0%, rgba(2,6,23,0.30) 44%, rgba(2,6,23,0.84) 100%);
+        pointer-events: none;
+    }
 
-            <div class="mb-8">
+    .dt-hero-mountains {
+        position: absolute;
+        inset: 0;
+        opacity: 0.32;
+        pointer-events: none;
+    }
 
-                <div class="mb-4 flex flex-wrap items-center gap-3">
+    .dt-hero-road {
+        position: absolute;
+        left: 0;
+        bottom: -4px;
+        width: 68%;
+        height: 82%;
+        opacity: 0.42;
+        pointer-events: none;
+    }
 
-                    <p class="rounded-full bg-blue-500/10 px-4 py-2 text-sm font-bold text-blue-300">
-                        {{ question.category.name }}
+    .dt-back-link {
+        position: absolute;
+        z-index: 3;
+        top: 34px;
+        right: 42px;
+        height: 52px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 0 20px;
+        border-radius: 16px;
+        border: 1px solid rgba(255,255,255,0.14);
+        background: rgba(255,255,255,0.07);
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 950;
+        box-shadow: 0 18px 34px rgba(0,0,0,0.18);
+        transition: 0.2s ease;
+    }
+
+    .dt-back-link:hover {
+        background: rgba(255,255,255,0.12);
+        transform: translateY(-1px);
+    }
+
+    .dt-back-link svg {
+        width: 21px;
+        height: 21px;
+    }
+
+    .dt-hero-center {
+        position: relative;
+        z-index: 2;
+        min-height: 300px;
+        display: grid;
+        grid-template-columns: 1fr 260px;
+        align-items: center;
+        gap: 28px;
+        padding: 44px 42px;
+        padding-top: 78px;
+    }
+
+    .dt-hero-title-box {
+        text-align: center;
+    }
+
+    .dt-hero-title {
+        margin: 0;
+        font-size: clamp(42px, 5vw, 68px);
+        line-height: 1.1;
+        font-weight: 1000;
+        letter-spacing: -0.04em;
+        text-shadow: 0 8px 26px rgba(0,0,0,0.45);
+    }
+
+    .dt-hero-subtitle {
+        margin: 18px auto 0;
+        max-width: 520px;
+        color: rgba(226,232,240,0.88);
+        font-size: 17px;
+        font-weight: 750;
+        line-height: 2;
+    }
+
+    .dt-progress-panel {
+        justify-self: end;
+        width: 238px;
+        border-radius: 22px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        background: rgba(15, 23, 42, 0.68);
+        box-shadow: 0 24px 54px rgba(0,0,0,0.32);
+        backdrop-filter: blur(18px);
+        padding: 24px;
+    }
+
+    .dt-progress-label {
+        margin: 0;
+        color: #cbd5e1;
+        font-size: 14px;
+        font-weight: 850;
+    }
+
+    .dt-progress-number {
+        margin: 10px 0 14px;
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        direction: ltr;
+        justify-content: flex-start;
+    }
+
+    .dt-progress-number strong {
+        font-size: 48px;
+        line-height: 1;
+        font-weight: 1000;
+        color: #ffffff;
+    }
+
+    .dt-progress-number span {
+        font-size: 24px;
+        font-weight: 900;
+        color: #94a3b8;
+    }
+
+    .dt-progress-track {
+        height: 10px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: rgba(100, 116, 139, 0.45);
+    }
+
+    .dt-progress-fill {
+        width: 40%;
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #fb7185, #ef4444);
+        box-shadow: 0 0 22px rgba(248,113,113,0.55);
+    }
+
+    .dt-progress-percent {
+        margin: 10px 0 0;
+        color: #e2e8f0;
+        font-size: 16px;
+        font-weight: 950;
+        text-align: left;
+    }
+
+    .dt-toolbar {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 16px;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .dt-tags,
+    .dt-tool-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        align-items: center;
+    }
+
+    .dt-pill {
+        height: 56px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border-radius: 16px;
+        padding: 0 22px;
+        font-size: 16px;
+        font-weight: 950;
+        border: 1px solid rgba(148, 163, 184, 0.20);
+        background: rgba(255,255,255,0.045);
+        color: #e2e8f0;
+        text-decoration: none;
+    }
+
+    .dt-pill-red {
+        border-color: rgba(248,113,113,0.42);
+        background: rgba(239,68,68,0.16);
+        color: #fecaca;
+    }
+
+    .dt-pill-blue {
+        border-color: rgba(96,165,250,0.48);
+        background: rgba(59,130,246,0.10);
+        color: #93c5fd;
+    }
+
+    .dt-pill-yellow {
+        border-color: rgba(250,204,21,0.58);
+        background: rgba(234,179,8,0.10);
+        color: #facc15;
+    }
+
+    .dt-pill svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .dt-card {
+        border-radius: 28px;
+        border: 1px solid rgba(100,116,139,0.56);
+        background:
+            radial-gradient(circle at 8% 0%, rgba(37,99,235,0.16), transparent 32%),
+            linear-gradient(145deg, rgba(15,23,42,0.98), rgba(2,6,23,0.985));
+        box-shadow: 0 22px 60px rgba(0,0,0,0.32);
+        padding: 24px;
+    }
+
+    .dt-scenario {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        border-radius: 18px;
+        border: 1px solid rgba(96,165,250,0.36);
+        background: rgba(59,130,246,0.10);
+        color: #bfdbfe;
+        padding: 18px 20px;
+        line-height: 2;
+        font-weight: 700;
+        margin-bottom: 22px;
+    }
+
+    .dt-info-icon {
+        flex: 0 0 34px;
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        border: 1px solid rgba(96,165,250,0.55);
+        color: #60a5fa;
+        font-weight: 1000;
+        font-size: 18px;
+    }
+
+    .dt-question-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 18px;
+        margin-bottom: 20px;
+    }
+
+    .dt-question-title {
+        margin: 0;
+        color: #ffffff;
+        font-size: clamp(26px, 3vw, 38px);
+        line-height: 1.55;
+        font-weight: 1000;
+        letter-spacing: -0.02em;
+    }
+
+    .dt-translate-btn {
+        height: 50px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        border-radius: 14px;
+        border: 1px solid rgba(96,165,250,0.36);
+        background: rgba(59,130,246,0.10);
+        color: #bfdbfe;
+        padding: 0 18px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 950;
+        transition: 0.2s ease;
+    }
+
+    .dt-translate-btn:hover {
+        background: rgba(59,130,246,0.18);
+    }
+
+    .dt-translation-box {
+        margin: 0 0 20px;
+        border-radius: 18px;
+        border: 1px solid rgba(250,204,21,0.30);
+        background: rgba(234,179,8,0.10);
+        color: #fde68a;
+        padding: 18px;
+        line-height: 2;
+        font-weight: 700;
+    }
+
+    .dt-hidden {
+        display: none;
+    }
+
+    .dt-media {
+        overflow: hidden;
+        border-radius: 24px;
+        border: 1px solid rgba(148,163,184,0.25);
+        background: #020617;
+        margin-bottom: 22px;
+    }
+
+    .dt-media img,
+    .dt-media iframe {
+        display: block;
+        width: 100%;
+        border: 0;
+    }
+
+    .dt-media img {
+        max-height: 620px;
+        object-fit: cover;
+    }
+
+    .dt-media iframe {
+        height: 620px;
+    }
+
+    .dt-options {
+        display: grid;
+        gap: 12px;
+    }
+
+    .dt-option {
+        width: 100%;
+        border: 1px solid rgba(100,116,139,0.55);
+        background:
+            radial-gradient(circle at 8% 50%, rgba(99,102,241,0.16), transparent 22%),
+            rgba(15,23,42,0.80);
+        color: #e5e7eb;
+        border-radius: 16px;
+        min-height: 78px;
+        display: grid;
+        grid-template-columns: 58px 1fr 44px;
+        align-items: center;
+        gap: 16px;
+        padding: 14px 20px;
+        cursor: pointer;
+        text-align: right;
+        font-size: 20px;
+        line-height: 1.75;
+        font-weight: 850;
+        transition: 0.2s ease;
+    }
+
+    .dt-option:hover {
+        border-color: rgba(96,165,250,0.55);
+        background:
+            radial-gradient(circle at 8% 50%, rgba(59,130,246,0.20), transparent 25%),
+            rgba(15,23,42,0.95);
+        transform: translateY(-1px);
+    }
+
+    .dt-option-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        background: rgba(99,102,241,0.18);
+        color: #a5b4fc;
+    }
+
+    .dt-option-icon svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .dt-option-number {
+        justify-self: end;
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        border: 1px solid rgba(129,140,248,0.45);
+        color: #c7d2fe;
+        font-weight: 1000;
+    }
+
+    .dt-option-correct {
+        border-color: rgba(34,197,94,0.90);
+        background:
+            radial-gradient(circle at 8% 50%, rgba(34,197,94,0.28), transparent 28%),
+            linear-gradient(90deg, rgba(22,101,52,0.55), rgba(15,23,42,0.90));
+        color: #dcfce7;
+        box-shadow: 0 0 24px rgba(34,197,94,0.16);
+    }
+
+    .dt-option-correct .dt-option-icon,
+    .dt-option-correct .dt-option-number {
+        color: #86efac;
+        border-color: rgba(34,197,94,0.75);
+        background: rgba(22,163,74,0.24);
+    }
+
+    .dt-option-wrong {
+        border-color: rgba(248,113,113,0.95);
+        background:
+            radial-gradient(circle at 8% 50%, rgba(239,68,68,0.30), transparent 28%),
+            linear-gradient(90deg, rgba(127,29,29,0.62), rgba(15,23,42,0.90));
+        color: #fecdd3;
+        box-shadow: 0 0 24px rgba(239,68,68,0.16);
+    }
+
+    .dt-option-wrong .dt-option-icon,
+    .dt-option-wrong .dt-option-number {
+        color: #fca5a5;
+        border-color: rgba(248,113,113,0.75);
+        background: rgba(220,38,38,0.24);
+    }
+
+    .dt-option-state {
+        display: block;
+        margin-top: 4px;
+        font-size: 14px;
+        font-weight: 950;
+    }
+
+    .dt-result-box {
+        margin-top: 22px;
+        border-radius: 20px;
+        border: 1px solid rgba(100,116,139,0.45);
+        background: rgba(2,6,23,0.72);
+        padding: 20px;
+    }
+
+    .dt-result-title {
+        margin: 0;
+        font-size: 25px;
+        font-weight: 1000;
+    }
+
+    .dt-result-correct { color: #4ade80; }
+    .dt-result-wrong { color: #fb7185; }
+
+    .dt-result-text {
+        margin: 12px 0 0;
+        color: #cbd5e1;
+        font-weight: 800;
+    }
+
+    .dt-explanation {
+        margin-top: 18px;
+        border-radius: 18px;
+        border: 1px solid rgba(96,165,250,0.28);
+        background: rgba(59,130,246,0.10);
+        padding: 18px;
+        display: grid;
+        grid-template-columns: 90px 1fr;
+        gap: 18px;
+        align-items: center;
+    }
+
+    .dt-book-icon {
+        width: 86px;
+        height: 86px;
+        border-radius: 22px;
+        display: grid;
+        place-items: center;
+        color: #60a5fa;
+        background: rgba(59,130,246,0.14);
+        border: 1px solid rgba(96,165,250,0.30);
+    }
+
+    .dt-book-icon svg {
+        width: 54px;
+        height: 54px;
+    }
+
+    .dt-explanation-title {
+        margin: 0;
+        color: #60a5fa;
+        font-size: 19px;
+        font-weight: 1000;
+    }
+
+    .dt-explanation-text {
+        margin: 10px 0 0;
+        color: #cbd5e1;
+        line-height: 2;
+        font-weight: 700;
+    }
+
+    .dt-bottom-actions {
+        margin-top: 26px;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1.1fr;
+        gap: 18px;
+    }
+
+    .dt-bottom-btn {
+        height: 70px;
+        border-radius: 18px;
+        border: 1px solid rgba(148,163,184,0.28);
+        background: rgba(15,23,42,0.78);
+        color: #e2e8f0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: 950;
+        transition: 0.2s ease;
+    }
+
+    .dt-bottom-btn:hover {
+        background: rgba(30,41,59,0.88);
+        transform: translateY(-1px);
+    }
+
+    .dt-bottom-btn svg {
+        width: 26px;
+        height: 26px;
+    }
+
+    .dt-next-btn {
+        border-color: rgba(248,113,113,0.62);
+        background: linear-gradient(135deg, #991b1b, #dc2626);
+        color: #ffffff;
+        box-shadow: 0 18px 34px rgba(127,29,29,0.35);
+    }
+
+    .dt-next-btn:hover {
+        background: linear-gradient(135deg, #b91c1c, #ef4444);
+    }
+
+    @media (max-width: 980px) {
+        .dt-hero-center {
+            grid-template-columns: 1fr;
+            padding: 84px 24px 32px;
+        }
+        .dt-progress-panel {
+            justify-self: center;
+            width: min(100%, 320px);
+        }
+        .dt-toolbar {
+            grid-template-columns: 1fr;
+        }
+        .dt-tool-actions {
+            justify-content: flex-start;
+        }
+        .dt-bottom-actions {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 680px) {
+        .dt-quiz-page {
+            padding: 16px 12px 32px;
+        }
+        .dt-quiz-hero,
+        .dt-card {
+            border-radius: 22px;
+        }
+        .dt-back-link {
+            right: 18px;
+            top: 20px;
+        }
+        .dt-hero-road,
+        .dt-hero-mountains {
+            opacity: 0.22;
+        }
+        .dt-card {
+            padding: 16px;
+        }
+        .dt-option {
+            grid-template-columns: 44px 1fr 38px;
+            font-size: 16px;
+            padding: 12px;
+        }
+        .dt-option-icon,
+        .dt-option-number {
+            width: 36px;
+            height: 36px;
+        }
+        .dt-explanation {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<main class="dt-quiz-page" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}">
+    <div class="dt-quiz-wrap">
+
+        <section class="dt-quiz-hero">
+            <svg class="dt-hero-mountains" viewBox="0 0 1200 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 205L95 125L170 170L270 80L395 188L510 90L650 205L760 118L870 185L1000 72L1200 210V360H0V205Z" fill="rgba(15,23,42,0.85)"/>
+                <path d="M0 240L120 155L230 215L350 120L470 228L610 130L745 240L860 168L990 238L1120 150L1200 205V360H0V240Z" fill="rgba(2,6,23,0.72)"/>
+            </svg>
+
+            <svg class="dt-hero-road" viewBox="0 0 760 270" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 250C125 195 220 174 338 164C462 154 570 110 760 10" stroke="#ef4444" stroke-width="8" opacity="0.45"/>
+                <path d="M0 255C135 215 245 198 360 190C500 180 610 130 760 55" stroke="#fecaca" stroke-width="3" opacity="0.32"/>
+                <path d="M0 270C145 232 270 218 397 210C535 201 650 156 760 100" stroke="#ffffff" stroke-width="2.4" opacity="0.22"/>
+                <path d="M165 220C230 204 286 195 345 190" stroke="#ffffff" stroke-width="3" stroke-dasharray="26 22" opacity="0.35"/>
+                <path d="M425 178C492 160 550 137 610 106" stroke="#ffffff" stroke-width="3" stroke-dasharray="26 22" opacity="0.35"/>
+            </svg>
+
+            <a href="{% url 'dashboard' %}" class="dt-back-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5"></path>
+                    <path d="M12 19l-7-7 7-7"></path>
+                </svg>
+                {% trans "برگشت به داشبورد" %}
+            </a>
+
+            <div class="dt-hero-center">
+                <div class="dt-hero-title-box">
+                    <h1 class="dt-hero-title">{% trans "سوال آزمون" %}</h1>
+                    <p class="dt-hero-subtitle">
+                        {% trans "با تمرین مداوم، رانندگی ایمن را یاد بگیر" %}
                     </p>
-
-                    {% if question.video_url %}
-                        <span class="rounded-full border border-red-400/30 bg-red-500/10 px-4 py-2 text-sm font-bold text-red-300">
-                            🎥 سوال ویدیویی
-                        </span>
-                    {% endif %}
-
                 </div>
 
-                {% if question.scenario %}
-                    <div class="mb-5 rounded-2xl border border-blue-400/20 bg-blue-500/10 p-5 leading-8 text-slate-200">
-                        {{ question.scenario }}
+                <aside class="dt-progress-panel">
+                    <p class="dt-progress-label">{% trans "سوال" %}</p>
+                    <div class="dt-progress-number">
+                        <strong>1</strong>
+                        <span>/ 1</span>
                     </div>
-                {% endif %}
-
-                <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-
-                    <h1 class="text-3xl font-black leading-relaxed">
-                        {{ question.title }}
-                    </h1>
-
-                    <button
-                        type="button"
-                        onclick="speakQuestion()"
-                        class="w-fit rounded-full border border-blue-400/20 bg-blue-500/10 px-3 py-1.5 text-sm font-medium text-blue-300 hover:bg-blue-500/20"
-                    >
-                        🔊 خواندن سوال
-                    </button>
-
-                </div>
-
-                {% if question.title_translation or question.scenario_translation %}
-                    <button
-                        type="button"
-                        onclick="toggleTranslation()"
-                        class="mt-4 rounded-full border border-yellow-400/30 bg-yellow-500/10 px-4 py-2 text-sm font-bold text-yellow-300 hover:bg-yellow-500/20"
-                    >
-                        🇮🇷 نمایش ترجمه فارسی
-                    </button>
-
-                    <div
-                        id="translation-box"
-                        class="mt-4 hidden rounded-2xl border border-yellow-400/20 bg-yellow-500/10 p-4 leading-8 text-slate-200"
-                    >
-                        {% if question.scenario_translation %}
-                            <p class="mb-3">
-                                {{ question.scenario_translation }}
-                            </p>
-                        {% endif %}
-
-                        {% if question.title_translation %}
-                            <p>
-                                {{ question.title_translation }}
-                            </p>
-                        {% endif %}
+                    <div class="dt-progress-track">
+                        <div class="dt-progress-fill"></div>
                     </div>
-                {% endif %}
+                    <p class="dt-progress-percent">{% trans "Practice" %}</p>
+                </aside>
+            </div>
+        </section>
 
-                {% if question.image %}
-                    <div class="mt-6 overflow-hidden rounded-2xl bg-slate-900">
-                        <img
-                            src="{{ question.image.url }}"
-                            alt="{{ question.title }}"
-                            class="w-full object-cover"
-                            style="max-height: 620px;"
-                        >
-                    </div>
-                {% endif %}
+        <div class="dt-toolbar">
+            <div class="dt-tags">
+                <span class="dt-pill dt-pill-red">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3l8 16H4z"></path><path d="M12 8v5"></path><path d="M12 17h.01"></path>
+                    </svg>
+                    {{ question.category.name }}
+                </span>
 
                 {% if question.video_url %}
-                    <div class="mt-6 overflow-hidden rounded-2xl bg-slate-900">
-                        <iframe
-                            src="{{ question.video_url }}"
-                            class="w-full"
-                            style="height: 620px;"
-                            allowfullscreen
-                        ></iframe>
-                    </div>
+                    <span class="dt-pill">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                            <path d="M10 9l5 3-5 3z"></path>
+                        </svg>
+                        {% trans "سوال" %} ویدیویی
+                    </span>
                 {% endif %}
-
             </div>
 
-            <form method="post" class="space-y-4">
+            <div class="dt-tool-actions">
+                {% if question.title_translation or question.scenario_translation %}
+                    <button type="button" onclick="toggleTranslation()" class="dt-pill dt-pill-yellow">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 8h14"></path>
+                            <path d="M12 4v4"></path>
+                            <path d="M7 8c1 4 3 7 5 9"></path>
+                            <path d="M17 8c-1 4-3 7-5 9"></path>
+                        </svg>
+                        {% trans "نمایش ترجمه فارسی" %}
+                    </button>
+                {% endif %}
+
+                <button type="button" onclick="speakQuestion()" class="dt-pill dt-pill-blue">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 5L6 9H3v6h3l5 4z"></path>
+                        <path d="M15 9a5 5 0 0 1 0 6"></path>
+                        <path d="M18 7a9 9 0 0 1 0 10"></path>
+                    </svg>
+                    خواندن {% trans "سوال" %}
+                </button>
+            </div>
+        </div>
+
+        <section class="dt-card">
+            {% if question.scenario %}
+                <div class="dt-scenario">
+                    <div class="dt-info-icon">i</div>
+                    <div>{{ question.scenario }}</div>
+                </div>
+            {% endif %}
+
+            <div class="dt-question-head">
+                <h2 class="dt-question-title">
+                    {{ question.title }}
+                </h2>
+            </div>
+
+            {% if question.title_translation or question.scenario_translation %}
+                <div id="translation-box" class="dt-translation-box dt-hidden">
+                    {% if question.scenario_translation %}
+                        <p style="margin:0 0 10px;">{{ question.scenario_translation }}</p>
+                    {% endif %}
+
+                    {% if question.title_translation %}
+                        <p style="margin:0;">{{ question.title_translation }}</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            {% if question.image %}
+                <div class="dt-media">
+                    <img src="{{ question.image.url }}" alt="{{ question.title }}">
+                </div>
+            {% endif %}
+
+            {% if question.video_url %}
+                <div class="dt-media">
+                    <iframe src="{{ question.video_url }}" allowfullscreen></iframe>
+                </div>
+            {% endif %}
+
+            <form method="post" class="dt-options">
                 {% csrf_token %}
 
-                <button
-                    type="submit"
-                    name="answer"
-                    value="1"
-                    class="block w-full rounded-2xl border p-5 text-right text-lg transition duration-200
+                <button type="submit" name="answer" value="1" class="dt-option
                     {% if selected_answer == 1 and is_correct %}
-                        border-green-400 bg-green-500/20 text-green-300
+                        dt-option-correct
                     {% elif selected_answer == 1 and not is_correct %}
-                        border-red-400 bg-red-500/20 text-red-300
+                        dt-option-wrong
                     {% elif selected_answer and question.correct_answer == 1 %}
-                        border-green-400 bg-green-500/20 text-green-300
-                    {% else %}
-                        border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-500/10 hover:text-white
+                        dt-option-correct
                     {% endif %}
-                    "
-                >
-                    1. {{ question.option_1 }}
+                ">
+                    <span class="dt-option-icon">
+                        {% if selected_answer == 1 and not is_correct %}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>
+                        {% elif selected_answer and question.correct_answer == 1 %}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"></path></svg>
+                        {% else %}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="M9 18l6-6-6-6"></path></svg>
+                        {% endif %}
+                    </span>
+                    <span>
+                        {{ question.option_1 }}
+                        {% if selected_answer == 1 and not is_correct %}
+                            <span class="dt-option-state">{% trans "پاسخ شما" %}</span>
+                        {% elif selected_answer and question.correct_answer == 1 %}
+                            <span class="dt-option-state">{% trans "پاسخ صحیح" %}</span>
+                        {% endif %}
+                    </span>
+                    <span class="dt-option-number">1</span>
                 </button>
 
-                <button
-                    type="submit"
-                    name="answer"
-                    value="2"
-                    class="block w-full rounded-2xl border p-5 text-right text-lg transition duration-200
+                <button type="submit" name="answer" value="2" class="dt-option
                     {% if selected_answer == 2 and is_correct %}
-                        border-green-400 bg-green-500/20 text-green-300
+                        dt-option-correct
                     {% elif selected_answer == 2 and not is_correct %}
-                        border-red-400 bg-red-500/20 text-red-300
+                        dt-option-wrong
                     {% elif selected_answer and question.correct_answer == 2 %}
-                        border-green-400 bg-green-500/20 text-green-300
-                    {% else %}
-                        border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-500/10 hover:text-white
+                        dt-option-correct
                     {% endif %}
-                    "
-                >
-                    2. {{ question.option_2 }}
+                ">
+                    <span class="dt-option-icon">
+                        {% if selected_answer == 2 and not is_correct %}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>
+                        {% elif selected_answer and question.correct_answer == 2 %}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"></path></svg>
+                        {% else %}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="M9 18l6-6-6-6"></path></svg>
+                        {% endif %}
+                    </span>
+                    <span>
+                        {{ question.option_2 }}
+                        {% if selected_answer == 2 and not is_correct %}
+                            <span class="dt-option-state">{% trans "پاسخ شما" %}</span>
+                        {% elif selected_answer and question.correct_answer == 2 %}
+                            <span class="dt-option-state">{% trans "پاسخ صحیح" %}</span>
+                        {% endif %}
+                    </span>
+                    <span class="dt-option-number">2</span>
                 </button>
 
-                <button
-                    type="submit"
-                    name="answer"
-                    value="3"
-                    class="block w-full rounded-2xl border p-5 text-right text-lg transition duration-200
+                <button type="submit" name="answer" value="3" class="dt-option
                     {% if selected_answer == 3 and is_correct %}
-                        border-green-400 bg-green-500/20 text-green-300
+                        dt-option-correct
                     {% elif selected_answer == 3 and not is_correct %}
-                        border-red-400 bg-red-500/20 text-red-300
+                        dt-option-wrong
                     {% elif selected_answer and question.correct_answer == 3 %}
-                        border-green-400 bg-green-500/20 text-green-300
-                    {% else %}
-                        border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-500/10 hover:text-white
+                        dt-option-correct
                     {% endif %}
-                    "
-                >
-                    3. {{ question.option_3 }}
+                ">
+                    <span class="dt-option-icon">
+                        {% if selected_answer == 3 and not is_correct %}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>
+                        {% elif selected_answer and question.correct_answer == 3 %}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"></path></svg>
+                        {% else %}
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="M9 18l6-6-6-6"></path></svg>
+                        {% endif %}
+                    </span>
+                    <span>
+                        {{ question.option_3 }}
+                        {% if selected_answer == 3 and not is_correct %}
+                            <span class="dt-option-state">{% trans "پاسخ شما" %}</span>
+                        {% elif selected_answer and question.correct_answer == 3 %}
+                            <span class="dt-option-state">{% trans "پاسخ صحیح" %}</span>
+                        {% endif %}
+                    </span>
+                    <span class="dt-option-number">3</span>
                 </button>
 
                 {% if question.option_4 %}
-                    <button
-                        type="submit"
-                        name="answer"
-                        value="4"
-                        class="block w-full rounded-2xl border p-5 text-right text-lg transition duration-200
+                    <button type="submit" name="answer" value="4" class="dt-option
                         {% if selected_answer == 4 and is_correct %}
-                            border-green-400 bg-green-500/20 text-green-300
+                            dt-option-correct
                         {% elif selected_answer == 4 and not is_correct %}
-                            border-red-400 bg-red-500/20 text-red-300
+                            dt-option-wrong
                         {% elif selected_answer and question.correct_answer == 4 %}
-                            border-green-400 bg-green-500/20 text-green-300
-                        {% else %}
-                            border-white/10 bg-slate-900 hover:border-blue-400 hover:bg-blue-500/10 hover:text-white
+                            dt-option-correct
                         {% endif %}
-                        "
-                    >
-                        4. {{ question.option_4 }}
+                    ">
+                        <span class="dt-option-icon">
+                            {% if selected_answer == 4 and not is_correct %}
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>
+                            {% elif selected_answer and question.correct_answer == 4 %}
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"></path></svg>
+                            {% else %}
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="M9 18l6-6-6-6"></path></svg>
+                            {% endif %}
+                        </span>
+                        <span>
+                            {{ question.option_4 }}
+                            {% if selected_answer == 4 and not is_correct %}
+                                <span class="dt-option-state">{% trans "پاسخ شما" %}</span>
+                            {% elif selected_answer and question.correct_answer == 4 %}
+                                <span class="dt-option-state">{% trans "پاسخ صحیح" %}</span>
+                            {% endif %}
+                        </span>
+                        <span class="dt-option-number">4</span>
                     </button>
                 {% endif %}
             </form>
 
             {% if selected_answer %}
-                <div class="mt-8">
+                <div class="dt-result-box">
                     {% if is_correct %}
-                        <div class="rounded-2xl border border-green-400/30 bg-green-500/10 p-5">
-                            <h2 class="text-2xl font-black text-green-300">
-                                جواب صحیح بود ✅
-                            </h2>
-                        </div>
+                        <h3 class="dt-result-title dt-result-correct">{% trans "جواب صحیح بود ✅" %}</h3>
                     {% else %}
-                        <div class="rounded-2xl border border-red-400/30 bg-red-500/10 p-5">
-                            <h2 class="text-2xl font-black text-red-300">
-                                جواب اشتباه بود ❌
-                            </h2>
-
-                            <p class="mt-3 text-slate-300">
-                                جواب صحیح:
-                                <span class="font-black text-green-300">
-                                    گزینه {{ question.correct_answer }}
-                                </span>
-                            </p>
-                        </div>
+                        <h3 class="dt-result-title dt-result-wrong">{% trans "جواب اشتباه بود ❌" %}</h3>
+                        <p class="dt-result-text">
+                            {% trans "جواب صحیح:" %}
+                            <strong style="color:#4ade80;">گزینه {{ question.correct_answer }}</strong>
+                        </p>
                     {% endif %}
+                </div>
 
-                    {% if question.explanation %}
-                        <div class="mt-5 rounded-2xl border border-blue-400/20 bg-blue-500/10 p-5">
-                            <h3 class="font-bold text-blue-300">
-                                توضیح:
-                            </h3>
-
-                            <p class="mt-3 leading-8 text-slate-300">
-                                {{ question.explanation }}
-                            </p>
+                {% if question.explanation %}
+                    <div class="dt-explanation">
+                        <div class="dt-book-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"></path>
+                            </svg>
                         </div>
-                    {% endif %}
-
-                    <div class="mt-6 flex flex-wrap gap-3">
-
-                        <a
-                            href="/quiz/"
-                            class="rounded-2xl border border-blue-400/30 bg-blue-500/10 px-5 py-3 font-bold text-blue-300 hover:bg-blue-500/20"
-                        >
-                            سوال بعدی
-                        </a>
-
-                        <a
-                            href="/quiz/categories/"
-                            class="rounded-2xl border border-indigo-400/30 bg-indigo-500/10 px-5 py-3 font-bold text-indigo-300 hover:bg-indigo-500/20"
-                        >
-                            دسته‌بندی‌ها
-                        </a>
-
-                        <a
-                            href="/dashboard/"
-                            class="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 font-bold hover:bg-white/10"
-                        >
-                            برگشت به داشبورد
-                        </a>
-
+                        <div>
+                            <h3 class="dt-explanation-title">{% trans "توضیح" %}</h3>
+                            <p class="dt-explanation-text">{{ question.explanation }}</p>
+                        </div>
                     </div>
+                {% endif %}
+
+                <div class="dt-bottom-actions">
+                    <a href="{% url 'category_list' %}" class="dt-bottom-btn">
+                        {% trans "دسته‌بندی‌ها" %}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                        </svg>
+                    </a>
+
+                    <a href="{% url 'dashboard' %}" class="dt-bottom-btn">
+                        {% trans "بازگشت به داشبورد" %}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 11L12 4l9 7"></path>
+                            <path d="M5 10v10h14V10"></path>
+                        </svg>
+                    </a>
+
+                    <a href="{% url 'random_question' %}" class="dt-bottom-btn dt-next-btn">
+                        {% trans "سوال" %} بعدی
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 12H5"></path>
+                            <path d="M12 5l-7 7 7 7"></path>
+                        </svg>
+                    </a>
                 </div>
             {% endif %}
-
         </section>
 
     </div>
-
 </main>
 
 <script>
@@ -262,7 +944,7 @@ function toggleTranslation() {
     const box = document.getElementById("translation-box");
 
     if (box) {
-        box.classList.toggle("hidden");
+        box.classList.toggle("dt-hidden");
     }
 }
 
@@ -270,7 +952,7 @@ function speakQuestion() {
     const text = `{{ question.title|escapejs }}`;
 
     if (!("speechSynthesis" in window)) {
-        alert("مرورگر شما از خواندن متن پشتیبانی نمی‌کند.");
+        alert("{% trans "مرورگر شما از خواندن متن پشتیبانی نمی‌کند." %}");
         return;
     }
 
@@ -295,9 +977,10 @@ function speakQuestion() {
     window.speechSynthesis.speak(speech);
 }
 
-window.speechSynthesis.onvoiceschanged = function() {
-    window.speechSynthesis.getVoices();
-};
+if ("speechSynthesis" in window) {
+    window.speechSynthesis.onvoiceschanged = function() {
+        window.speechSynthesis.getVoices();
+    };
+}
 </script>
-
 {% endblock %}

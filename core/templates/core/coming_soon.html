@@ -1,76 +1,498 @@
 {% extends "base/base.html" %}
+{% load i18n %}
+
+{% get_current_language_bidi as LANGUAGE_BIDI %}
 
 {% block title %}
-این مسیر هنوز آماده نیست
+    {% trans "این مسیر هنوز آماده نیست" %}
+{% endblock %}
+
+{% block meta_description %}
+    {% trans "این بخش از سایت هنوز در دست ساخت است و به‌زودی فعال خواهد شد." %}
 {% endblock %}
 
 {% block content %}
-<main class="min-h-screen overflow-hidden bg-slate-950 px-6 py-16 text-white">
+<style>
+    .cs-page {
+        min-height: 100vh;
+        overflow: hidden;
+        color: #ffffff;
+        background:
+            radial-gradient(
+                circle at 50% -20%,
+                rgba(30, 64, 175, 0.13),
+                transparent 32%
+            ),
+            radial-gradient(
+                circle at 12% 12%,
+                rgba(127, 29, 29, 0.18),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at 85% 85%,
+                rgba(234, 179, 8, 0.10),
+                transparent 30%
+            ),
+            #020617;
+        padding: 28px 22px 48px;
+        font-family: inherit;
+    }
 
-    <div class="relative mx-auto max-w-5xl">
+    .cs-wrap {
+        max-width: 1120px;
+        margin: 0 auto;
+    }
 
-        <div class="absolute -top-20 left-10 h-56 w-56 rounded-full bg-yellow-400/10 blur-3xl"></div>
-        <div class="absolute -bottom-20 right-10 h-56 w-56 rounded-full bg-blue-500/10 blur-3xl"></div>
+    .cs-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 36px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        background:
+            radial-gradient(
+                circle at 75% 0%,
+                rgba(127, 29, 29, 0.55),
+                transparent 34%
+            ),
+            linear-gradient(
+                135deg,
+                #07111f 0%,
+                #020617 45%,
+                #3b0208 100%
+            );
+        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
+        padding: 52px 42px;
+        text-align: center;
+    }
 
-        <section class="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/5 p-8 text-center shadow-2xl backdrop-blur md:p-12">
+    .cs-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(
+                180deg,
+                rgba(2, 6, 23, 0.05),
+                rgba(2, 6, 23, 0.80)
+            ),
+            radial-gradient(
+                circle at 25% 90%,
+                rgba(59, 130, 246, 0.14),
+                transparent 32%
+            );
+        pointer-events: none;
+    }
 
-            <div class="mx-auto mb-8 flex h-32 w-32 items-center justify-center rounded-full border border-yellow-400/30 bg-yellow-500/10 text-7xl shadow-lg">
-                🚧
-            </div>
+    .cs-page[dir="rtl"] .cs-card::before {
+        background:
+            linear-gradient(
+                180deg,
+                rgba(2, 6, 23, 0.05),
+                rgba(2, 6, 23, 0.80)
+            ),
+            radial-gradient(
+                circle at 75% 90%,
+                rgba(59, 130, 246, 0.14),
+                transparent 32%
+            );
+    }
 
-            <div class="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-red-400/30 bg-red-500/10 px-5 py-2 text-sm font-black text-red-300">
-                <span>⛔</span>
-                <span>مسیر موقتاً بسته است</span>
-            </div>
+    .cs-road {
+        position: absolute;
+        left: 0;
+        bottom: -10px;
+        width: 58%;
+        height: 100%;
+        opacity: 0.18;
+        pointer-events: none;
+    }
 
-            <h1 class="text-4xl font-black leading-tight md:text-6xl">
-                ای بابا! پیچ رو اشتباه پیچیدی 😄
-            </h1>
+    .cs-page[dir="rtl"] .cs-road {
+        left: auto;
+        right: 0;
+        transform: scaleX(-1);
+    }
 
-            <p class="mx-auto mt-6 max-w-2xl text-lg leading-9 text-slate-300">
-                این صفحه هنوز آماده نشده. افسر راهنمایی و رانندگی اجازه ورود نمی‌دهد،
-                ولی مسیرهای اصلی سایت باز هستند.
-            </p>
+    .cs-content {
+        position: relative;
+        z-index: 2;
+    }
 
-            <div class="mx-auto mt-10 max-w-3xl rounded-[2rem] border border-yellow-400/20 bg-yellow-500/10 p-6">
-                <div class="mb-4 text-5xl">
-                    🚗💨 🚦
+    .cs-icon {
+        width: 136px;
+        height: 136px;
+        margin: 0 auto 28px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        border: 1px solid rgba(250, 204, 21, 0.42);
+        background: rgba(234, 179, 8, 0.13);
+        color: #facc15;
+        font-size: 70px;
+        box-shadow:
+            0 0 0 16px rgba(234, 179, 8, 0.035),
+            0 22px 50px rgba(0, 0, 0, 0.34);
+        animation: csFloat 2.8s ease-in-out infinite;
+    }
+
+    @keyframes csFloat {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    .cs-badge {
+        margin: 0 auto 22px;
+        width: fit-content;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(248, 113, 113, 0.44);
+        background: rgba(244, 63, 94, 0.12);
+        color: #fb7185;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 1000;
+    }
+
+    .cs-title {
+        margin: 0;
+        font-size: clamp(38px, 5vw, 68px);
+        line-height: 1.2;
+        font-weight: 1000;
+        letter-spacing: -0.045em;
+        text-shadow: 0 8px 26px rgba(0, 0, 0, 0.45);
+    }
+
+    .cs-title span {
+        color: #facc15;
+    }
+
+    .cs-text {
+        margin: 24px auto 0;
+        max-width: 760px;
+        color: #cbd5e1;
+        font-size: 18px;
+        line-height: 2.05;
+        font-weight: 700;
+    }
+
+    .cs-warning {
+        margin: 36px auto 0;
+        max-width: 760px;
+        border-radius: 28px;
+        border: 1px solid rgba(250, 204, 21, 0.28);
+        background: rgba(234, 179, 8, 0.10);
+        padding: 24px;
+        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.20);
+    }
+
+    .cs-warning-icon {
+        margin-bottom: 12px;
+        font-size: 48px;
+    }
+
+    .cs-warning h2 {
+        margin: 0;
+        color: #facc15;
+        font-size: 26px;
+        font-weight: 1000;
+    }
+
+    .cs-warning p {
+        margin: 12px 0 0;
+        color: #cbd5e1;
+        line-height: 2;
+        font-weight: 700;
+    }
+
+    .cs-grid {
+        margin-top: 34px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .cs-link-card {
+        min-height: 150px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        border-radius: 24px;
+        border: 1px solid rgba(100, 116, 139, 0.50);
+        background:
+            radial-gradient(
+                circle at 50% 0%,
+                rgba(37, 99, 235, 0.13),
+                transparent 35%
+            ),
+            rgba(2, 6, 23, 0.55);
+        color: #ffffff;
+        text-decoration: none;
+        transition: 0.25s ease;
+    }
+
+    .cs-link-card:hover {
+        color: #ffffff;
+        transform: translateY(-5px);
+        border-color: rgba(255, 255, 255, 0.28);
+        background:
+            radial-gradient(
+                circle at 50% 0%,
+                rgba(37, 99, 235, 0.20),
+                transparent 36%
+            ),
+            rgba(15, 23, 42, 0.82);
+    }
+
+    .cs-link-icon {
+        width: 62px;
+        height: 62px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        font-size: 28px;
+        border: 1px solid;
+    }
+
+    .cs-green {
+        color: #4ade80;
+        background: rgba(34, 197, 94, 0.12);
+        border-color: rgba(74, 222, 128, 0.44);
+    }
+
+    .cs-blue {
+        color: #60a5fa;
+        background: rgba(59, 130, 246, 0.12);
+        border-color: rgba(96, 165, 250, 0.44);
+    }
+
+    .cs-purple {
+        color: #a78bfa;
+        background: rgba(168, 85, 247, 0.12);
+        border-color: rgba(167, 139, 250, 0.44);
+    }
+
+    .cs-link-card h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 1000;
+    }
+
+    .cs-link-card p {
+        margin: 0;
+        color: #94a3b8;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .cs-home {
+        margin-top: 34px;
+        min-height: 58px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border-radius: 18px;
+        color: #ffffff;
+        background: #dc0d19;
+        border: 1px solid rgba(255, 120, 130, 0.66);
+        box-shadow: 0 18px 34px rgba(127, 29, 29, 0.35);
+        text-decoration: none;
+        padding: 0 26px;
+        font-size: 15px;
+        font-weight: 1000;
+        transition: 0.2s ease;
+    }
+
+    .cs-home:hover {
+        color: #ffffff;
+        background: #ef1723;
+        transform: translateY(-2px);
+    }
+
+    .cs-page[dir="ltr"] .cs-home-arrow {
+        transform: rotate(180deg);
+    }
+
+    @media (max-width: 760px) {
+        .cs-page {
+            padding: 18px 12px 32px;
+        }
+
+        .cs-card {
+            padding: 34px 18px;
+            border-radius: 28px;
+        }
+
+        .cs-road {
+            display: none;
+        }
+
+        .cs-icon {
+            width: 112px;
+            height: 112px;
+            font-size: 58px;
+        }
+
+        .cs-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .cs-home {
+            width: 100%;
+        }
+    }
+</style>
+
+<main
+    class="cs-page"
+    dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}"
+>
+    <div class="cs-wrap">
+        <section class="cs-card">
+
+            <svg
+                class="cs-road"
+                viewBox="0 0 560 340"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+            >
+                <path
+                    d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61"
+                    stroke="white"
+                    stroke-width="22"
+                    stroke-linecap="round"
+                    opacity="0.055"
+                />
+
+                <path
+                    d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10"
+                    stroke="white"
+                    stroke-width="22"
+                    stroke-linecap="round"
+                    opacity="0.055"
+                />
+
+                <path
+                    d="M0 326C95 285 205 238 188 166C174 106 94 70 32 61"
+                    stroke="white"
+                    stroke-width="3.2"
+                    stroke-linecap="round"
+                    opacity="0.68"
+                />
+
+                <path
+                    d="M157 334C262 280 389 191 312 92C268 36 216 22 180 10"
+                    stroke="white"
+                    stroke-width="3.2"
+                    stroke-linecap="round"
+                    opacity="0.68"
+                />
+
+                <path
+                    d="M76 294C125 265 166 232 177 197"
+                    stroke="white"
+                    stroke-width="3.1"
+                    stroke-linecap="round"
+                    stroke-dasharray="26 20"
+                    opacity="0.45"
+                />
+
+                <path
+                    d="M181 172C176 132 145 103 100 82"
+                    stroke="white"
+                    stroke-width="3.1"
+                    stroke-linecap="round"
+                    stroke-dasharray="26 20"
+                    opacity="0.43"
+                />
+            </svg>
+
+            <div class="cs-content">
+                <div class="cs-icon" aria-hidden="true">
+                    🚧
                 </div>
 
-                <h2 class="text-2xl font-black text-yellow-300">
-                    در دست ساخت
-                </h2>
+                <div class="cs-badge">
+                    <span aria-hidden="true">⛔</span>
+                    <span>{% trans "مسیر موقتاً بسته است" %}</span>
+                </div>
 
-                <p class="mt-3 leading-8 text-slate-300">
-                    این بخش به‌زودی فعال می‌شود. فعلاً از آزمون‌ها، تمرین سوالات یا داشبورد استفاده کن.
+                <h1 class="cs-title">
+                    {% trans "اوه... این مسیر هنوز" %}
+                    <span>{% trans "باز نشده است!" %}</span>
+                </h1>
+
+                <p class="cs-text">
+                    {% trans "این صفحه هنوز در دست ساخت است. مانند یک خیابان در حال تعمیر، فعلاً امکان ورود به آن وجود ندارد؛ اما مسیرهای اصلی سایت باز هستند و می‌توانید از آن‌ها استفاده کنید." %}
                 </p>
+
+                <div class="cs-warning">
+                    <div class="cs-warning-icon" aria-hidden="true">
+                        🚗💨 🚦
+                    </div>
+
+                    <h2>{% trans "در دست ساخت" %}</h2>
+
+                    <p>
+                        {% trans "این بخش به‌زودی فعال می‌شود. فعلاً می‌توانید از آزمون‌ها، تمرین سوالات یا داشبورد استفاده کنید." %}
+                    </p>
+                </div>
+
+                <div class="cs-grid">
+                    <a
+                        href="{% url 'official_exams' %}"
+                        class="cs-link-card"
+                    >
+                        <div class="cs-link-icon cs-green" aria-hidden="true">
+                            📝
+                        </div>
+
+                        <h3>{% trans "آزمون‌های رسمی" %}</h3>
+                        <p>{% trans "شروع آزمون شبیه‌سازی‌شده" %}</p>
+                    </a>
+
+                    <a
+                        href="{% url 'category_list' %}"
+                        class="cs-link-card"
+                    >
+                        <div class="cs-link-icon cs-blue" aria-hidden="true">
+                            📚
+                        </div>
+
+                        <h3>{% trans "تمرین سوالات" %}</h3>
+                        <p>{% trans "یادگیری مرحله‌ای" %}</p>
+                    </a>
+
+                    <a
+                        href="{% url 'dashboard' %}"
+                        class="cs-link-card"
+                    >
+                        <div class="cs-link-icon cs-purple" aria-hidden="true">
+                            🏠
+                        </div>
+
+                        <h3>{% trans "داشبورد" %}</h3>
+                        <p>{% trans "مشاهده پیشرفت" %}</p>
+                    </a>
+                </div>
+
+                <a href="{% url 'home' %}" class="cs-home">
+                    <span>{% trans "برگشت به صفحه اصلی" %}</span>
+                    <span class="cs-home-arrow" aria-hidden="true">←</span>
+                </a>
             </div>
-
-            <div class="mt-10 grid gap-4 sm:grid-cols-3">
-                <a href="/quiz/official-exams/"
-                   class="rounded-2xl border border-green-400/30 bg-green-500/10 px-5 py-4 font-black text-green-300 transition hover:bg-green-500/20">
-                    📝 آزمون‌های رسمی
-                </a>
-
-                <a href="/quiz/categories/"
-                   class="rounded-2xl border border-blue-400/30 bg-blue-500/10 px-5 py-4 font-black text-blue-300 transition hover:bg-blue-500/20">
-                    📚 تمرین سوالات
-                </a>
-
-                <a href="/dashboard/"
-                   class="rounded-2xl border border-purple-400/30 bg-purple-500/10 px-5 py-4 font-black text-purple-300 transition hover:bg-purple-500/20">
-                    🏠 داشبورد
-                </a>
-            </div>
-
-            <a href="/"
-               class="mt-8 inline-block rounded-2xl bg-white px-6 py-3 font-black text-slate-950 transition hover:bg-slate-200">
-                برگشت به صفحه اصلی
-            </a>
-
         </section>
-
     </div>
-
 </main>
 {% endblock %}

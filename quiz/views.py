@@ -552,6 +552,32 @@ def exam_history(request):
 @login_required
 def category_list(request):
     categories = (
+        QuizCategory.objects.filter(parent__isnull=True)
+        .exclude(slug="hftd-zmon-sl")
+        .order_by("id")
+    )
+
+    for category in categories:
+        direct_count = Question.objects.filter(
+            category=category,
+            is_published=True,
+        ).count()
+
+        children_count = Question.objects.filter(
+            category__parent=category,
+            is_published=True,
+        ).count()
+
+        category.total_questions_count = direct_count + children_count
+
+    return render(
+        request,
+        "quiz/category_list.html",
+        {
+            "categories": categories,
+        },
+    )
+    categories = (
         QuizCategory.objects.filter(
             parent__isnull=True
         )
@@ -595,9 +621,44 @@ def category_list(request):
         },
     )
 
-
 @login_required
 def category_detail(request, category_id):
+    parent_category = get_object_or_404(
+        QuizCategory,
+        id=category_id,
+    )
+
+    child_categories = QuizCategory.objects.filter(
+        parent=parent_category
+    ).order_by("id")
+
+    for category in child_categories:
+        direct_count = Question.objects.filter(
+            category=category,
+            is_published=True,
+        ).count()
+
+        children_count = Question.objects.filter(
+            category__parent=category,
+            is_published=True,
+        ).count()
+
+        category.total_questions_count = direct_count + children_count
+
+    if not child_categories.exists():
+        return redirect(
+            "category_practice",
+            category_id=parent_category.id,
+        )
+
+    return render(
+        request,
+        "quiz/category_detail.html",
+        {
+            "parent_category": parent_category,
+            "child_categories": child_categories,
+        },
+    )
     parent_category = get_object_or_404(
         QuizCategory,
         id=category_id,
